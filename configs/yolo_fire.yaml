@@ -1,0 +1,6 @@
+path: datasets/D-Fire
+train: images/train
+val: images/val
+names:
+  0: smoke
+  1: fire
