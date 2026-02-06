@@ -42,11 +42,13 @@ ultralytics-main/
 ## 🚀 使用方法
 
 ### 1. 运行GUI应用（推荐）
+
 ```bash
 python scripts/run_gui.py
 ```
 
 ### 2. 测试模型
+
 ```bash
 # 测试图片
 python scripts/test_model.py --source image.jpg
@@ -59,11 +61,13 @@ python scripts/test_model.py --source 0
 ```
 
 ### 3. 训练模型
+
 ```bash
 python scripts/train_model.py
 ```
 
 ### 4. 验证模型
+
 ```bash
 python scripts/validate_model.py
 ```
