@@ -32,14 +32,18 @@ EmberGuard AI 是一款基于YOLOv8的智能火灾检测训练系统，专注于
 
 ### 当前已实现
 - ✅ 基于YOLOv8的火灾检测模型训练
-- ✅ D-Fire数据集支持
+- ✅ D-Fire数据集支持（21,527张图像）
 - ✅ 图形化操作界面（GUI）
 - ✅ 图片/视频/摄像头实时检测
 - ✅ 模型验证与性能评估
 - ✅ 检测结果可视化保存
+- ✅ **LSTM时序分析模块**（新增）
+- ✅ **8维特征提取器**（新增）
+- ✅ **YOLO+LSTM检测管道**（新增）
 
 ### 开发中
-- 🚧 YOLO-LSTM时序行为分析
+- 🚧 LSTM模型训练（数据准备中）
+- 🚧 GUI界面LSTM集成
 - 🚧 热红外特征融合
 - 🚧 多传感器数据融合
 - 🚧 边缘设备部署优化
@@ -80,7 +84,7 @@ python scripts/run_gui.py
 
 ## 📚 使用说明
 
-### 1. 训练模型
+### 1. 训练YOLOv8模型
 ```bash
 python scripts/train_model.py
 ```
@@ -107,7 +111,26 @@ python scripts/test_model.py --source video.mp4
 python scripts/test_model.py --source 0
 ```
 
-### 4. GUI界面使用
+### 4. LSTM时序分析（新增）
+
+**准备训练数据**
+```bash
+python scripts/prepare_lstm_data.py
+```
+
+**训练LSTM模型**
+```bash
+python scripts/train_lstm.py --data_dir datasets/lstm_data --epochs 50
+```
+
+**测试YOLO+LSTM管道**
+```bash
+python scripts/test_pipeline.py
+```
+
+详细使用说明请参考：`emberguard/README.md`
+
+### 5. GUI界面使用
 运行GUI后可以：
 - 选择检测源（图片/视频/摄像头）
 - 实时查看检测结果
@@ -125,22 +148,34 @@ EmberGuard-AI-train/
 │   └── yolo_fire.yaml         # 数据集配置
 ├── datasets/                   # 数据集目录
 │   └── D-Fire/                # 火灾检测数据集
+├── docs/                       # 文档目录
+│   ├── TECHNICAL_RESEARCH.md  # 技术研究报告
+│   ├── SUMMARY.md             # 项目总结
+│   └── QUICK_START.md         # 快速开始指南
+├── emberguard/                 # LSTM时序分析模块 ⭐新增
+│   ├── feature_extractor.py   # 特征提取器
+│   ├── lstm_model.py          # LSTM模型
+│   ├── pipeline.py            # 检测管道
+│   └── README.md              # 模块文档
 ├── models/                     # 预训练模型
 │   ├── yolov8n.pt
 │   └── yolo11n.pt
 ├── runs/                       # 训练结果
 │   └── detect/train2/weights/
-│       └── best.pt            # 最佳模型
+│       └── best.pt            # 最佳YOLOv8模型
 ├── scripts/                    # 脚本文件
 │   ├── run_gui.py             # GUI启动脚本
-│   ├── train_model.py         # 训练脚本
+│   ├── train_model.py         # YOLO训练脚本
 │   ├── validate_model.py      # 验证脚本
-│   └── test_model.py          # 测试脚本
+│   ├── test_model.py          # 测试脚本
+│   ├── prepare_lstm_data.py   # LSTM数据准备 ⭐新增
+│   ├── train_lstm.py          # LSTM训练脚本 ⭐新增
+│   └── test_pipeline.py       # 管道测试 ⭐新增
 ├── UI/                         # GUI界面模块
 │   ├── gui_main.py            # 主界面
 │   ├── detection_processor.py # 检测处理器
 │   └── ...
-├── ultralytics/                # YOLOv8核心库
+├── DEVELOPMENT_LOG.md          # 开发日志 ⭐新增
 └── PROJECT_STRUCTURE.md        # 详细结构说明
 ```
 
@@ -148,18 +183,22 @@ EmberGuard-AI-train/
 
 ## 🛣️ 开发路线
 
-### Phase 1: 基础检测优化 ✅
+### Phase 1: 基础检测 ✅
 - [x] YOLOv8模型集成
-- [x] D-Fire数据集训练
+- [x] D-Fire数据集训练（50 epochs）
 - [x] GUI界面开发
-- [ ] 数据增强优化
-- [ ] 后处理优化
+- [x] 基础检测功能
 
-### Phase 2: 时序分析 🚧
-- [ ] 帧间目标追踪
-- [ ] LSTM时序模块
-- [ ] 炊烟vs火灾烟雾区分
-- [ ] 误报率优化
+### Phase 2: LSTM时序分析 🚧 (80%完成)
+- [x] 8维特征提取器
+- [x] LSTM模型架构（2层，211K参数）
+- [x] YOLO+LSTM检测管道
+- [x] 数据准备工具
+- [x] 训练脚本
+- [ ] 视频数据收集与标注
+- [ ] LSTM模型训练
+- [ ] GUI集成
+- [ ] 炊烟vs火灾烟雾区分测试
 
 ### Phase 3: 多模态融合 📋
 - [ ] 温度传感器接口
