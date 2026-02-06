@@ -157,49 +157,94 @@ class LSTMDataPreparer:
         print(f"- metadata.json")
 
 
+def load_video_list_from_organized():
+    """从整理好的目录加载视频列表"""
+    from pathlib import Path
+    
+    base_dir = Path("datasets/fire_videos_organized")
+    video_list = []
+    
+    # 加载火灾视频（标签2）
+    fire_dir = base_dir / "fire"
+    if fire_dir.exists():
+        for video_file in fire_dir.glob("*"):
+            if video_file.suffix.lower() in ['.avi', '.mp4', '.mov']:
+                video_list.append((str(video_file), 2))
+    
+    # 加载烟雾视频（标签1）
+    smoke_dir = base_dir / "smoke"
+    if smoke_dir.exists():
+        for video_file in smoke_dir.glob("*"):
+            if video_file.suffix.lower() in ['.avi', '.mp4', '.mov']:
+                video_list.append((str(video_file), 1))
+    
+    # 加载正常视频（标签0）
+    normal_dir = base_dir / "normal"
+    if normal_dir.exists():
+        for video_file in normal_dir.glob("*"):
+            if video_file.suffix.lower() in ['.avi', '.mp4', '.mov']:
+                video_list.append((str(video_file), 0))
+    
+    return video_list
+
+
 def main():
     """主函数"""
     print("=" * 60)
     print("LSTM训练数据准备工具")
     print("=" * 60)
     
+    # 检查整理好的数据是否存在
+    from pathlib import Path
+    organized_dir = Path("datasets/fire_videos_organized")
+    
+    if not organized_dir.exists():
+        print("\n❌ 错误: 未找到整理好的数据目录")
+        print("请先运行: python scripts/organize_downloaded_data.py")
+        return
+    
+    # 加载视频列表
+    print("\n📂 加载整理好的视频数据...")
+    video_list = load_video_list_from_organized()
+    
+    if not video_list:
+        print("❌ 错误: 未找到视频文件")
+        return
+    
+    # 统计
+    fire_count = sum(1 for _, label in video_list if label == 2)
+    smoke_count = sum(1 for _, label in video_list if label == 1)
+    normal_count = sum(1 for _, label in video_list if label == 0)
+    
+    print(f"\n找到视频:")
+    print(f"  火灾视频: {fire_count}")
+    print(f"  烟雾视频: {smoke_count}")
+    print(f"  正常视频: {normal_count}")
+    print(f"  总计: {len(video_list)}")
+    
     # 初始化
+    print("\n🔧 初始化特征提取器...")
     preparer = LSTMDataPreparer(
         yolo_model_path='runs/detect/train2/weights/best.pt',
         sequence_length=30
     )
     
-    # 示例：准备数据集
-    # 注意：需要准备标注好的视频数据
-    print("\n⚠️  数据准备说明:")
-    print("1. 准备视频数据，分为三类：")
-    print("   - 无火视频（标签0）")
-    print("   - 烟雾视频（标签1）")
-    print("   - 火焰视频（标签2）")
-    print("\n2. 创建视频列表，格式：")
-    print("   video_list = [")
-    print("       ('path/to/no_fire.mp4', 0),")
-    print("       ('path/to/smoke.mp4', 1),")
-    print("       ('path/to/fire.mp4', 2),")
-    print("   ]")
-    print("\n3. 调用 preparer.prepare_dataset(video_list, 'datasets/lstm_data')")
+    # 准备数据集
+    print("\n🚀 开始准备训练数据...")
+    print("这可能需要30-60分钟，请耐心等待...")
+    print()
     
-    # 示例代码（需要实际视频数据）
-    """
-    video_list = [
-        ('videos/no_fire_1.mp4', 0),
-        ('videos/no_fire_2.mp4', 0),
-        ('videos/smoke_1.mp4', 1),
-        ('videos/smoke_2.mp4', 1),
-        ('videos/fire_1.mp4', 2),
-        ('videos/fire_2.mp4', 2),
-    ]
-    
-    preparer.prepare_dataset(video_list, 'datasets/lstm_data')
-    """
-    
-    print("\n✅ 数据准备工具已就绪")
-    print("请根据实际视频数据修改代码并运行")
+    try:
+        preparer.prepare_dataset(video_list, 'datasets/lstm_data')
+        print("\n" + "=" * 60)
+        print("✅ 数据准备完成！")
+        print("=" * 60)
+        print("\n下一步:")
+        print("  python scripts/4_train_lstm.py --data_dir datasets/lstm_data --epochs 50")
+    except Exception as e:
+        print(f"\n❌ 错误: {e}")
+        import traceback
+        traceback.print_exc()
 
 
 if __name__ == "__main__":
