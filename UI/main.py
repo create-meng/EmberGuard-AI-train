@@ -1,9 +1,8 @@
-"""
-程序入口
-"""
-import tkinter as tk
-import sys
+"""程序入口."""
+
 import os
+import sys
+import tkinter as tk
 
 # 添加父目录到路径，以便导入hys包
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
@@ -19,18 +18,17 @@ except ImportError:
 
 
 def main():
-    """主函数"""
+    """主函数."""
     # 使用TkinterDnD来支持拖拽功能（如果可用）
     if DND_AVAILABLE:
         root = TkinterDnD.Tk()
     else:
         root = tk.Tk()
         print("提示: 安装 tkinterdnd2 库可启用文件拖拽功能: pip install tkinterdnd2")
-    
-    app = YOLODetectionGUI(root)
+
+    YOLODetectionGUI(root)
     root.mainloop()
 
 
 if __name__ == "__main__":
     main()
-

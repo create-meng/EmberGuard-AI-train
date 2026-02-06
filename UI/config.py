@@ -1,18 +1,20 @@
-"""
-配置和常量定义
-"""
+"""配置和常量定义."""
+
 import tkinter as tk
 
 # 尝试导入拖拽支持库（可选）
 try:
     from tkinterdnd2 import DND_FILES, TkinterDnD
+
     DND_AVAILABLE = True
 except ImportError:
     DND_AVAILABLE = False
+
     # 创建一个兼容类
     class TkinterDnD:
         class Tk(tk.Tk):
             pass
+
     # 定义 DND_FILES 占位符（即使不使用）
     DND_FILES = None
 
@@ -35,8 +37,7 @@ GUI_QUEUE_INTERVAL = 100
 
 # 默认检测参数
 DEFAULT_CONF = 0.25  # 默认置信度阈值 (0-1)
-DEFAULT_IOU = 0.45   # 默认IoU阈值 (0-1)
+DEFAULT_IOU = 0.45  # 默认IoU阈值 (0-1)
 
 # 默认保存文件夹
 DEFAULT_SAVE_DIR = "detection_saves"  # 默认检测结果保存文件夹
-
