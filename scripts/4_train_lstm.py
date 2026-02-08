@@ -38,14 +38,19 @@ def run_quick_test(lstm_model, device='cpu'):
     
     # 测试图片
     test_images = [
-        'test_picture/1.png',
-        'test_picture/2.jpg',
-        'test_picture/3.jpg',
-        'test_picture/4.jpg'
+        'test_picture/1.png',  # 烟雾
+        'test_picture/2.jpg',  # 烟雾
+        'test_picture/3.jpg',  # 火焰+烟雾
+        'test_picture/4.jpg'   # 火焰
     ]
     
     # 已知标签（手动标注）
-    true_labels = [2, 2, 2, 2]  # 都是火焰
+    # 标注策略：有火焰就标记为火焰(2)，只有烟雾标记为烟雾(1)
+    # 这与训练数据的标注策略一致（fire目录→2, smoke目录→1）
+    true_labels = [1, 1, 2, 2]  # 0=无火, 1=烟雾, 2=火焰
+    
+    # 注意：图片3既有火又有烟，但在单标签系统中只能标记为火焰(2)
+    # 这是当前模型设计的局限性，未来可以改为多标签分类
     
     correct = 0
     total = 0
@@ -291,6 +296,15 @@ def train_lstm_model(
         best_epoch = checkpoint['best_epoch']
         history = checkpoint['history']
         
+        # 检查损失函数一致性
+        if 'use_focal_loss' in checkpoint:
+            saved_focal = checkpoint['use_focal_loss']
+            if saved_focal != use_focal_loss:
+                print(f"⚠️  警告: 断点使用的损失函数与当前不同")
+                print(f"   断点: {'Focal Loss' if saved_focal else 'CrossEntropyLoss'}")
+                print(f"   当前: {'Focal Loss' if use_focal_loss else 'CrossEntropyLoss'}")
+                print(f"   将使用当前设置继续训练")
+        
         print(f"从 Epoch {start_epoch} 继续训练")
         print(f"当前最佳验证准确率: {best_val_acc:.2f}% (Epoch {best_epoch})")
     else:
@@ -387,7 +401,9 @@ def train_lstm_model(
                 'scheduler_state_dict': scheduler.state_dict(),
                 'best_val_acc': best_val_acc,
                 'best_epoch': best_epoch,
-                'history': history
+                'history': history,
+                'use_focal_loss': use_focal_loss,
+                'focal_gamma': focal_gamma if use_focal_loss else None
             }
             torch.save(checkpoint, output_dir / 'checkpoint.pt')
             
