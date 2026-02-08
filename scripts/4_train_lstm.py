@@ -120,6 +120,16 @@ def train_lstm_model(
     train_loader = DataLoader(train_dataset, batch_size=batch_size, shuffle=True)
     val_loader = DataLoader(val_dataset, batch_size=batch_size, shuffle=False)
     
+    # 计算类别权重（处理类别不平衡）
+    label_counts = np.array(metadata['label_distribution'])
+    total_samples = label_counts.sum()
+    class_weights = total_samples / (len(label_counts) * label_counts)
+    class_weights = torch.FloatTensor(class_weights).to(device)
+    
+    print(f"\n类别权重（处理不平衡）:")
+    for i, (name, count, weight) in enumerate(zip(metadata['class_names'], label_counts, class_weights)):
+        print(f"  {name} (标签{i}): {count}个样本 ({count/total_samples*100:.1f}%), 权重={weight:.3f}")
+    
     # 创建模型
     print("\n创建模型...")
     model = LSTMFireClassifier(
@@ -132,12 +142,19 @@ def train_lstm_model(
     
     print(f"模型参数: {sum(p.numel() for p in model.parameters())} 个")
     
-    # 创建训练器
+    # 创建训练器（使用类别权重）
     trainer = LSTMTrainer(model, device=device)
-    trainer.compile(learning_rate=learning_rate)
+    trainer.compile(learning_rate=learning_rate, class_weights=class_weights)
+    
+    # 验证trainer已正确初始化
+    if trainer.criterion is None or trainer.optimizer is None:
+        raise RuntimeError("训练器初始化失败：criterion或optimizer为None")
     
     # 训练
     print(f"\n开始训练 (epochs={epochs})...")
+    print(f"设备: {device}")
+    print(f"批次大小: {batch_size}")
+    print(f"学习率: {learning_rate}")
     print("=" * 60)
     
     best_val_acc = 0
@@ -149,12 +166,31 @@ def train_lstm_model(
         'val_acc': []
     }
     
+    # 创建日志文件
+    log_file = output_dir / 'training.log'
+    with open(log_file, 'w', encoding='utf-8') as f:
+        f.write(f"EmberGuard AI - LSTM训练日志\n")
+        f.write(f"{'='*60}\n")
+        f.write(f"开始时间: {__import__('datetime').datetime.now()}\n")
+        f.write(f"设备: {device}\n")
+        f.write(f"训练集: {len(train_dataset)} 样本\n")
+        f.write(f"验证集: {len(val_dataset)} 样本\n")
+        f.write(f"批次大小: {batch_size}\n")
+        f.write(f"学习率: {learning_rate}\n")
+        f.write(f"训练轮数: {epochs}\n")
+        f.write(f"{'='*60}\n\n")
+    
+    import time
+    start_time = time.time()
+    
     for epoch in range(epochs):
-        # 训练
-        train_loss, train_acc = trainer.train_epoch(train_loader)
+        epoch_start = time.time()
         
-        # 验证
-        val_loss, val_acc = trainer.validate(val_loader)
+        # 训练（显示进度条）
+        train_loss, train_acc = trainer.train_epoch(train_loader, show_progress=True)
+        
+        # 验证（显示进度条）
+        val_loss, val_acc = trainer.validate(val_loader, show_progress=True)
         
         # 记录
         history['train_loss'].append(train_loss)
@@ -162,21 +198,54 @@ def train_lstm_model(
         history['val_loss'].append(val_loss)
         history['val_acc'].append(val_acc)
         
-        # 打印
+        # 计算时间
+        epoch_time = time.time() - epoch_start
+        elapsed_time = time.time() - start_time
+        eta = (elapsed_time / (epoch + 1)) * (epochs - epoch - 1)
+        
+        # 打印到控制台
         print(f"Epoch [{epoch+1}/{epochs}] "
               f"Train Loss: {train_loss:.4f} Acc: {train_acc:.2f}% | "
-              f"Val Loss: {val_loss:.4f} Acc: {val_acc:.2f}%")
+              f"Val Loss: {val_loss:.4f} Acc: {val_acc:.2f}% | "
+              f"Time: {epoch_time:.1f}s ETA: {eta/60:.1f}min")
+        
+        # 写入日志文件
+        with open(log_file, 'a', encoding='utf-8') as f:
+            f.write(f"Epoch {epoch+1}/{epochs}\n")
+            f.write(f"  Train - Loss: {train_loss:.4f}, Acc: {train_acc:.2f}%\n")
+            f.write(f"  Val   - Loss: {val_loss:.4f}, Acc: {val_acc:.2f}%\n")
+            f.write(f"  Time: {epoch_time:.1f}s, Elapsed: {elapsed_time/60:.1f}min, ETA: {eta/60:.1f}min\n")
         
         # 保存最佳模型
         if val_acc > best_val_acc:
             best_val_acc = val_acc
             best_epoch = epoch + 1
             trainer.save_model(output_dir / 'best.pt')
-            print(f"  ✅ 保存最佳模型 (验证准确率: {val_acc:.2f}%)")
+            msg = f"  ✅ 保存最佳模型 (验证准确率: {val_acc:.2f}%)"
+            print(msg)
+            with open(log_file, 'a', encoding='utf-8') as f:
+                f.write(f"  {msg}\n")
+        
+        with open(log_file, 'a', encoding='utf-8') as f:
+            f.write("\n")
+    
+    total_time = time.time() - start_time
     
     print("=" * 60)
     print(f"\n训练完成!")
+    print(f"总耗时: {total_time/60:.1f} 分钟 ({total_time/3600:.2f} 小时)")
     print(f"最佳验证准确率: {best_val_acc:.2f}% (Epoch {best_epoch})")
+    
+    # 写入最终结果到日志
+    with open(log_file, 'a', encoding='utf-8') as f:
+        f.write(f"{'='*60}\n")
+        f.write(f"训练完成\n")
+        f.write(f"结束时间: {__import__('datetime').datetime.now()}\n")
+        f.write(f"总耗时: {total_time/60:.1f} 分钟\n")
+        f.write(f"最佳验证准确率: {best_val_acc:.2f}% (Epoch {best_epoch})\n")
+        f.write(f"{'='*60}\n")
+    
+    print(f"\n训练日志已保存: {log_file}")
     
     # 保存最终模型
     trainer.save_model(output_dir / 'last.pt')

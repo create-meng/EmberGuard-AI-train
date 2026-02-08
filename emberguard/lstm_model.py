@@ -117,39 +117,56 @@ class LSTMTrainer:
         """
         self.model = model.to(device)
         self.device = device
-        self.criterion = nn.CrossEntropyLoss()
+        self.criterion = None
         self.optimizer = None
         
-    def compile(self, learning_rate=0.001, weight_decay=1e-5):
+    def compile(self, learning_rate=0.001, weight_decay=1e-5, class_weights=None):
         """
-        配置优化器
+        配置优化器和损失函数
         
         Args:
             learning_rate: 学习率
             weight_decay: 权重衰减
+            class_weights: 类别权重（用于处理类别不平衡）
         """
+        # 设置损失函数（支持类别权重）
+        if class_weights is not None:
+            self.criterion = nn.CrossEntropyLoss(weight=class_weights)
+        else:
+            self.criterion = nn.CrossEntropyLoss()
+        
+        # 设置优化器
         self.optimizer = torch.optim.Adam(
             self.model.parameters(),
             lr=learning_rate,
             weight_decay=weight_decay
         )
         
-    def train_epoch(self, train_loader):
+    def train_epoch(self, train_loader, show_progress=False):
         """
         训练一个epoch
         
         Args:
             train_loader: 训练数据加载器
+            show_progress: 是否显示进度条
             
         Returns:
             平均损失和准确率
         """
+        from tqdm import tqdm
+        
         self.model.train()
         total_loss = 0
         correct = 0
         total = 0
         
-        for batch_x, batch_y in train_loader:
+        # 创建进度条
+        if show_progress:
+            pbar = tqdm(train_loader, desc="Training", leave=False)
+        else:
+            pbar = train_loader
+        
+        for batch_x, batch_y in pbar:
             batch_x = batch_x.to(self.device)
             batch_y = batch_y.to(self.device)
             
@@ -167,29 +184,45 @@ class LSTMTrainer:
             _, predicted = torch.max(outputs.data, 1)
             total += batch_y.size(0)
             correct += (predicted == batch_y).sum().item()
+            
+            # 更新进度条
+            if show_progress:
+                pbar.set_postfix({
+                    'loss': f'{loss.item():.4f}',
+                    'acc': f'{100 * correct / total:.2f}%'
+                })
         
         avg_loss = total_loss / len(train_loader)
         accuracy = 100 * correct / total
         
         return avg_loss, accuracy
     
-    def validate(self, val_loader):
+    def validate(self, val_loader, show_progress=False):
         """
         验证模型
         
         Args:
             val_loader: 验证数据加载器
+            show_progress: 是否显示进度条
             
         Returns:
             平均损失和准确率
         """
+        from tqdm import tqdm
+        
         self.model.eval()
         total_loss = 0
         correct = 0
         total = 0
         
+        # 创建进度条
+        if show_progress:
+            pbar = tqdm(val_loader, desc="Validation", leave=False)
+        else:
+            pbar = val_loader
+        
         with torch.no_grad():
-            for batch_x, batch_y in val_loader:
+            for batch_x, batch_y in pbar:
                 batch_x = batch_x.to(self.device)
                 batch_y = batch_y.to(self.device)
                 
@@ -202,6 +235,13 @@ class LSTMTrainer:
                 _, predicted = torch.max(outputs.data, 1)
                 total += batch_y.size(0)
                 correct += (predicted == batch_y).sum().item()
+                
+                # 更新进度条
+                if show_progress:
+                    pbar.set_postfix({
+                        'loss': f'{loss.item():.4f}',
+                        'acc': f'{100 * correct / total:.2f}%'
+                    })
         
         avg_loss = total_loss / len(val_loader)
         accuracy = 100 * correct / total

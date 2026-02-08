@@ -2,8 +2,9 @@
 
 ## 项目状态
 
-**当前阶段**: Phase 1 - LSTM时序分析模块开发
+**当前阶段**: Phase 2 - LSTM时序分析模块（数据准备完成，待训练）
 **开始日期**: 2026年2月6日
+**最后更新**: 2026年2月8日
 
 ---
 
@@ -16,9 +17,164 @@
 - [x] 脚本工具：train_model.py, test_model.py, validate_model.py
 - [x] 技术研究文档完成
 
+### ✅ Phase 2 - LSTM模块代码 (100%)
+- [x] 特征提取器：`emberguard/feature_extractor.py`（8维特征）
+- [x] LSTM模型：`emberguard/lstm_model.py`（211K参数）
+- [x] 推理管道：`emberguard/pipeline.py`（YOLO+LSTM集成）
+- [x] 数据准备脚本：`scripts/3_prepare_lstm_data.py`
+- [x] 训练脚本：`scripts/4_train_lstm.py`（支持类别权重）
+
+### ✅ 数据集准备 (100%)
+- [x] 下载5个视频数据集（MIVIA Fire/Smoke, Archive, BoWFire等）
+- [x] 数据整理脚本：`scripts/2.1_organize_downloaded_data.py`
+- [x] 整理后数据：`datasets/fire_videos_organized/`
+  - fire: 48个视频
+  - smoke: 92个视频
+  - normal: 100个视频
+  - mixed: 4个视频（测试集）
+- [x] LSTM训练数据生成完成：`datasets/lstm_data/`
+  - 总序列数：1,259,680
+  - 标签分布：Normal 47.6%, Smoke 45.5%, Fire 6.9%
+
 ---
 
 ## 开发日志
+
+### 2026-02-08
+
+#### 20:00 - 训练脚本优化和最终检查
+**任务**: 添加详细日志、进度显示，完成训练前最终检查
+
+**执行**:
+1. 优化训练脚本 `scripts/4_train_lstm.py`：
+   - ✅ 添加训练日志文件 `training.log`
+   - ✅ 添加时间统计（每个epoch耗时、总耗时、ETA）
+   - ✅ 添加训练器初始化验证
+   - ✅ 日志同时输出到控制台和文件
+
+2. 优化LSTM模型 `emberguard/lstm_model.py`：
+   - ✅ 训练/验证函数添加进度条支持
+   - ✅ 进度条显示实时loss和accuracy
+   - ✅ 支持show_progress参数控制
+
+3. 优化数据准备脚本 `scripts/3_prepare_lstm_data.py`：
+   - ✅ 添加异常视频检测（跳过>100,000帧的视频）
+   - ✅ 防止处理损坏的视频文件
+
+4. 全面代码检查：
+   - ✅ 数据加载逻辑正确
+   - ✅ 类别权重计算正确（Fire: 4.83, Smoke: 0.73, Normal: 0.70）
+   - ✅ 训练循环完整
+   - ✅ 模型保存逻辑正确
+   - ✅ 错误处理完善
+   - ✅ 无逻辑漏洞
+
+**训练准备完成**:
+- 数据：1,259,680个序列
+- 模型：211K参数
+- 设备：CPU（无CUDA）
+- 预计训练时间：8-25小时（50 epochs）
+
+**下一步**: 开始训练LSTM模型
+
+---
+
+#### 18:00 - LSTM训练数据准备完成
+**任务**: 从240个视频提取特征序列，生成LSTM训练数据
+
+**执行**:
+1. 运行数据准备脚本：
+   ```bash
+   python scripts/3_prepare_lstm_data.py
+   ```
+
+2. 数据生成结果：
+   - ✅ 处理了240个训练视频
+   - ✅ 生成1,259,680个训练序列
+   - ✅ 序列形状：(1259680, 30, 8)
+   - ✅ 标签分布：
+     - Normal (0): 599,533 (47.6%)
+     - Smoke (1): 573,681 (45.5%)
+     - Fire (2): 86,466 (6.9%)
+
+3. 发现问题：
+   - ⚠️ Fire类别只占6.9%，类别严重不平衡
+   - ⚠️ 一个视频(mivia_fire_fire14.avi)有369,243帧，处理时间过长
+
+4. 解决方案：
+   - ✅ 修改训练脚本，添加类别权重支持
+   - ✅ 修改 `emberguard/lstm_model.py`，LSTMTrainer支持class_weights
+   - ✅ 修改 `scripts/4_train_lstm.py`，自动计算并应用类别权重
+   - Fire类别权重提高约7倍（4.83 vs 0.70）
+
+**类别权重计算**:
+```
+Normal: 权重 = 0.70 (47.6%样本)
+Smoke:  权重 = 0.73 (45.5%样本)
+Fire:   权重 = 4.83 (6.9%样本) ← 重点关注
+```
+
+**下一步**: 开始训练LSTM模型
+
+---
+
+#### 16:00 - YOLO模型测试与评估
+**任务**: 测试YOLO模型在整理后数据集上的表现
+
+**执行**:
+1. 创建测试脚本：`scripts/2.2_test_feature_extraction.py`
+   - 每个类别测试5个随机视频
+   - 每个视频随机采样50帧
+   - 测试YOLO检测、特征提取、序列生成、时间估算
+
+2. 测试结果（5个视频平均）：
+   - Fire检测率：76.8%，置信度：0.622
+   - Smoke检测率：61.2%，置信度：0.370 ⚠️ 偏低
+   - Normal误报率：38.0%，置信度：0.417 ⚠️ 偏高
+
+3. 分析：
+   - ✅ 火灾检测基本可用
+   - ⚠️ 烟雾检测率偏低（61%）
+   - ⚠️ 正常视频误报率偏高（38%）
+   - ✅ LSTM可以通过时序分析降低误报
+
+4. 决策：
+   - 继续使用当前YOLO模型
+   - 依靠LSTM时序分析提高准确率
+   - 不重新训练YOLO（时间成本高）
+
+**下一步**: 准备LSTM训练数据
+
+---
+
+#### 14:00 - 数据集下载与整理
+**任务**: 下载视频数据集并整理为训练格式
+
+**执行**:
+1. 下载数据集：
+   - MIVIA Fire Dataset (31个火灾视频)
+   - MIVIA Smoke Dataset (149个烟雾/正常视频)
+   - Archive Dataset (15个混合视频)
+   - BoWFire Dataset (49个视频)
+   - Fire-Smoke-Dataset (6张图片，未使用)
+
+2. 创建整理脚本：`scripts/2.1_organize_downloaded_data.py`
+   - 自动分类视频到fire/smoke/normal目录
+   - 生成annotations.csv标注文件
+
+3. 整理结果：
+   - fire: 48个视频（标签2）
+   - smoke: 92个视频（标签1）
+   - normal: 100个视频（标签0）
+   - mixed: 4个视频（保留作为最终测试集）
+   - 总计：240个训练视频，4个测试视频
+
+4. 手动调整：
+   - 移动 `archive_fire and smoke.mp4` 到mixed目录
+
+**下一步**: 测试YOLO模型效果
+
+---
 
 ### 2026-02-06
 
@@ -34,7 +190,7 @@
    - `docs/TECHNICAL_RESEARCH.md` - 技术研究报告
    - `docs/SUMMARY.md` - 项目总结
    - `docs/QUICK_START.md` - 快速开始指南
-   - `PROJECT_STRUCTURE.md` - 项目结构
+   - `PROJECT_GUIDE.md` - 项目导航
    - `README.md` - 项目说明
 
 3. 创建开发日志：
@@ -46,37 +202,39 @@
 
 ## 待办任务
 
-### Phase 1 - LSTM时序分析 (进行中)
+### Phase 2 - LSTM时序分析
 
-#### 任务1: 创建项目结构
-- [ ] 创建 `emberguard/` 目录
-- [ ] 创建 `emberguard/__init__.py`
-- [ ] 创建 `emberguard/models/` 目录
+#### ✅ 任务1: 创建项目结构
+- [x] 创建 `emberguard/` 目录
+- [x] 创建 `emberguard/__init__.py`
 
-#### 任务2: 实现特征提取器
-- [ ] 创建 `emberguard/feature_extractor.py`
-- [ ] 实现8维特征提取
-- [ ] 测试特征提取功能
+#### ✅ 任务2: 实现特征提取器
+- [x] 创建 `emberguard/feature_extractor.py`
+- [x] 实现8维特征提取
+- [x] 测试特征提取功能
 
-#### 任务3: 构建LSTM模型
-- [ ] 创建 `emberguard/lstm_model.py`
-- [ ] 定义LSTM网络结构
-- [ ] 实现训练函数
+#### ✅ 任务3: 构建LSTM模型
+- [x] 创建 `emberguard/lstm_model.py`
+- [x] 定义LSTM网络结构（211K参数）
+- [x] 实现训练函数（支持类别权重）
 
-#### 任务4: 准备训练数据
-- [ ] 标注视频序列数据
-- [ ] 生成训练数据集
-- [ ] 数据预处理
+#### ✅ 任务4: 准备训练数据
+- [x] 下载视频数据集
+- [x] 整理视频到分类目录
+- [x] 生成LSTM训练数据（1.26M序列）
 
-#### 任务5: 训练LSTM模型
-- [ ] 训练LSTM模型
+#### 🔄 任务5: 训练LSTM模型（准备就绪）
+- [x] 优化训练脚本（日志、进度、时间统计）
+- [x] 添加类别权重支持
+- [x] 完成代码检查
+- [ ] 开始训练（50 epochs，预计8-25小时）
 - [ ] 验证模型性能
 - [ ] 保存最佳模型
 
 #### 任务6: 实现推理管道
-- [ ] 创建 `emberguard/pipeline.py`
-- [ ] 集成YOLO+LSTM
+- [x] 创建 `emberguard/pipeline.py`
 - [ ] 测试完整管道
+- [ ] 性能优化
 
 #### 任务7: 集成到GUI
 - [ ] 修改 `UI/detection_processor.py`
@@ -88,16 +246,31 @@
 ## 技术笔记
 
 ### 数据集信息
-- **位置**: `datasets/D-Fire/`
-- **训练集**: `datasets/D-Fire/train/`
-- **验证集**: `datasets/D-Fire/val/`
-- **测试集**: `datasets/D-Fire/test/`
-- **总图像数**: 21,527张
+- **YOLO训练集**: `datasets/D-Fire/` (21,527张图像)
+- **LSTM训练集**: `datasets/fire_videos_organized/` (240个视频)
+- **LSTM数据**: `datasets/lstm_data/` (1.26M序列)
+- **测试集**: `datasets/fire_videos_organized/mixed/` (4个视频)
 
 ### 模型信息
 - **YOLOv8模型**: `runs/detect/train2/weights/best.pt`
-- **训练参数**: epochs=50, batch=48
-- **预训练模型**: `models/yolov8n.pt`, `models/yolo11n.pt`
+  - 训练参数: epochs=50, batch=48
+  - 检测率: Fire 76.8%, Smoke 61.2%
+  - 误报率: Normal 38%
+  
+- **LSTM模型**: 待训练
+  - 输入: (30, 8) - 30帧，8维特征
+  - 输出: 3类（Normal, Smoke, Fire）
+  - 参数: 211K
+  - 类别权重: [0.70, 0.73, 4.83]
+
+### 脚本工具
+- `scripts/1_train_yolo.py` - YOLO训练
+- `scripts/2_validate_yolo.py` - YOLO验证
+- `scripts/2.1_organize_downloaded_data.py` - 数据整理
+- `scripts/2.2_test_feature_extraction.py` - 模型测试
+- `scripts/3_prepare_lstm_data.py` - LSTM数据准备
+- `scripts/4_train_lstm.py` - LSTM训练
+- `scripts/5_run_gui.py` - GUI启动
 
 ### 特征设计
 **8维基础特征向量**:

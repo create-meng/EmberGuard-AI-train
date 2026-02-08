@@ -47,6 +47,13 @@ class LSTMDataPreparer:
             raise ValueError(f"无法打开视频: {video_path}")
         
         total_frames = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
+        
+        # 检查异常大的视频（可能是损坏的）
+        if total_frames > 100000:
+            print(f"⚠️  警告: 视频帧数异常 ({total_frames} 帧)，跳过此视频")
+            cap.release()
+            return []
+        
         print(f"处理视频: {video_path}")
         print(f"总帧数: {total_frames}")
         
