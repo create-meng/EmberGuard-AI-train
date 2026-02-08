@@ -3,7 +3,79 @@ LSTM火灾分类器 - 基于时序特征的火灾识别
 """
 import torch
 import torch.nn as nn
+import torch.nn.functional as F
 import numpy as np
+
+
+class FocalLoss(nn.Module):
+    """
+    Focal Loss - 解决类别不平衡问题
+    
+    论文: Focal Loss for Dense Object Detection (Lin et al., 2017)
+    
+    公式: FL(pt) = -α(1-pt)^γ * log(pt)
+    
+    参数:
+        alpha: 类别权重，平衡正负样本
+        gamma: 聚焦参数，降低易分类样本的权重
+               gamma=0 时退化为交叉熵
+               gamma越大，对难分类样本的关注越多
+    
+    优势:
+        1. 自动降低易分类样本的loss贡献
+        2. 自动提高难分类样本的loss贡献
+        3. 不需要手动调整类别权重
+        4. 训练更稳定
+    """
+    
+    def __init__(self, alpha=None, gamma=2.0, reduction='mean'):
+        """
+        初始化Focal Loss
+        
+        Args:
+            alpha: 类别权重 (可选)，shape: (num_classes,)
+            gamma: 聚焦参数，推荐值2.0
+            reduction: 'mean' 或 'sum'
+        """
+        super(FocalLoss, self).__init__()
+        self.alpha = alpha
+        self.gamma = gamma
+        self.reduction = reduction
+    
+    def forward(self, inputs, targets):
+        """
+        计算Focal Loss
+        
+        Args:
+            inputs: 模型输出 (batch, num_classes)
+            targets: 真实标签 (batch,)
+            
+        Returns:
+            loss值
+        """
+        # 计算交叉熵
+        ce_loss = F.cross_entropy(inputs, targets, reduction='none')
+        
+        # 计算pt (预测正确的概率)
+        pt = torch.exp(-ce_loss)
+        
+        # 计算focal loss
+        focal_loss = (1 - pt) ** self.gamma * ce_loss
+        
+        # 应用类别权重
+        if self.alpha is not None:
+            if self.alpha.device != inputs.device:
+                self.alpha = self.alpha.to(inputs.device)
+            alpha_t = self.alpha[targets]
+            focal_loss = alpha_t * focal_loss
+        
+        # 返回
+        if self.reduction == 'mean':
+            return focal_loss.mean()
+        elif self.reduction == 'sum':
+            return focal_loss.sum()
+        else:
+            return focal_loss
 
 
 class LSTMFireClassifier(nn.Module):
@@ -88,13 +160,13 @@ class LSTMFireClassifier(nn.Module):
         """
         self.eval()
         with torch.no_grad():
-            # 处理单个样本
-            if len(x.shape) == 2:
-                x = x.unsqueeze(0)
-            
             # 转换为tensor
             if not isinstance(x, torch.Tensor):
                 x = torch.FloatTensor(x)
+            
+            # 处理单个样本
+            if len(x.shape) == 2:
+                x = x.unsqueeze(0)
             
             # 前向传播
             logits = self.forward(x)
@@ -120,7 +192,7 @@ class LSTMTrainer:
         self.criterion = None
         self.optimizer = None
         
-    def compile(self, learning_rate=0.001, weight_decay=1e-5, class_weights=None):
+    def compile(self, learning_rate=0.001, weight_decay=1e-5, class_weights=None, use_focal_loss=False, focal_gamma=2.0):
         """
         配置优化器和损失函数
         
@@ -128,12 +200,22 @@ class LSTMTrainer:
             learning_rate: 学习率
             weight_decay: 权重衰减
             class_weights: 类别权重（用于处理类别不平衡）
+            use_focal_loss: 是否使用Focal Loss（推荐）
+            focal_gamma: Focal Loss的gamma参数（默认2.0）
         """
-        # 设置损失函数（支持类别权重）
-        if class_weights is not None:
-            self.criterion = nn.CrossEntropyLoss(weight=class_weights)
+        # 设置损失函数
+        if use_focal_loss:
+            # 使用Focal Loss（推荐）
+            print(f"使用Focal Loss (gamma={focal_gamma})")
+            self.criterion = FocalLoss(alpha=class_weights, gamma=focal_gamma)
         else:
-            self.criterion = nn.CrossEntropyLoss()
+            # 使用传统交叉熵（支持类别权重）
+            if class_weights is not None:
+                print("使用加权交叉熵")
+                self.criterion = nn.CrossEntropyLoss(weight=class_weights)
+            else:
+                print("使用标准交叉熵")
+                self.criterion = nn.CrossEntropyLoss()
         
         # 设置优化器
         self.optimizer = torch.optim.Adam(
