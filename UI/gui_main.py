@@ -42,6 +42,10 @@ class YOLODetectionGUI:
         self.yolo = None
         self.model_loaded = False
         
+        # LSTM设置
+        self.use_lstm = False  # 默认不使用LSTM
+        self.lstm_model_path = 'models/lstm/train/best.pt'  # 默认LSTM模型路径
+        
         # 加载YOLO模型
         self.load_model(self.model_path)
         
@@ -98,6 +102,17 @@ class YOLODetectionGUI:
         except Exception as e:
             self.model_loaded = False
             messagebox.showerror("错误", f"无法加载YOLO模型: {str(e)}")
+    
+    def toggle_lstm(self):
+        """切换LSTM开关"""
+        self.use_lstm = self.lstm_var.get()
+        
+        # 更新状态标签
+        if hasattr(self, 'lstm_status_label'):
+            if self.use_lstm:
+                self.lstm_status_label.config(text="✓ LSTM已启用", foreground="green")
+            else:
+                self.lstm_status_label.config(text="○ LSTM未启用（仅使用YOLO）", foreground="gray")
             return False
     
     def select_model(self):
@@ -200,6 +215,37 @@ class YOLODetectionGUI:
                                font=("Arial", 9),
                                foreground=status_color)
         status_hint.pack(pady=2)
+        
+        # LSTM设置区域
+        lstm_frame = ttk.LabelFrame(main_frame, text="LSTM时序分析（可选）", padding="10")
+        lstm_frame.pack(pady=15, padx=20, fill=tk.X)
+        
+        # LSTM开关
+        lstm_switch_frame = ttk.Frame(lstm_frame)
+        lstm_switch_frame.pack(fill=tk.X, pady=5)
+        
+        self.lstm_var = tk.BooleanVar(value=self.use_lstm)
+        lstm_checkbox = ttk.Checkbutton(lstm_switch_frame, 
+                                        text="启用LSTM时序分析（提高准确率，降低误报）",
+                                        variable=self.lstm_var,
+                                        command=self.toggle_lstm)
+        lstm_checkbox.pack(side=tk.LEFT, padx=5)
+        
+        # LSTM状态提示
+        lstm_status_text = "✓ LSTM已启用" if self.use_lstm else "○ LSTM未启用（仅使用YOLO）"
+        lstm_status_color = "green" if self.use_lstm else "gray"
+        
+        self.lstm_status_label = ttk.Label(lstm_frame, text=lstm_status_text,
+                                          font=("Arial", 9),
+                                          foreground=lstm_status_color)
+        self.lstm_status_label.pack(pady=2)
+        
+        # LSTM说明
+        lstm_hint = ttk.Label(lstm_frame,
+                             text="LSTM通过分析30帧序列来判断火灾，准确率更高但需要更多时间",
+                             font=("Arial", 8),
+                             foreground="gray")
+        lstm_hint.pack(pady=2)
         
         # 保存文件夹设置区域
         save_frame = ttk.LabelFrame(main_frame, text="保存设置", padding="10")
@@ -332,6 +378,10 @@ class YOLODetectionGUI:
             'stop': ui_dict['stop_button']
         }
         
+        # 获取LSTM设置（如果有）
+        use_lstm = getattr(self, 'use_lstm', False)
+        lstm_model_path = getattr(self, 'lstm_model_path', None)
+        
         # 创建检测处理器
         self.detection_processor = DetectionProcessor(
             self.yolo,
@@ -339,7 +389,9 @@ class YOLODetectionGUI:
             self.buttons,
             ui_dict['status_label'],
             ui_dict['info_text'],
-            ui_dict['video_label']
+            ui_dict['video_label'],
+            use_lstm=use_lstm,
+            lstm_model_path=lstm_model_path
         )
         
         # 设置保存文件夹（仅在屏幕和摄像头检测模式下）
