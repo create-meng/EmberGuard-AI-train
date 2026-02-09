@@ -1,0 +1,12 @@
+{
+  "data_dir": "datasets/lstm_data",
+  "hidden_size": 128,
+  "num_layers": 2,
+  "dropout": 0.3,
+  "batch_size": 32,
+  "epochs": 50,
+  "learning_rate": 0.001,
+  "val_split": 0.2,
+  "best_val_acc": 85.54474152165629,
+  "best_epoch": 49
+}

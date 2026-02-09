@@ -247,7 +247,7 @@ def train_lstm_model(
     if use_focal_loss:
         # Focal Loss会自动处理类别不平衡，但仍可以结合类别权重
         # 这里使用较小的权重，让Focal Loss发挥主要作用
-        adjusted_weights = torch.FloatTensor([1.0, 1.0, 2.0]).to(device)  # Fire权重降低到2x
+        adjusted_weights = torch.FloatTensor([0.8, 1.0, 3.5]).to(device)  # 提高Fire权重到3.5x，降低Normal到0.8x
         trainer.compile(
             learning_rate=learning_rate, 
             class_weights=adjusted_weights,
@@ -255,7 +255,7 @@ def train_lstm_model(
             focal_gamma=focal_gamma
         )
         print(f"✅ 使用Focal Loss (gamma={focal_gamma}) + 调整后的类别权重")
-        print(f"   Normal: 1.0x, Smoke: 1.0x, Fire: 2.0x")
+        print(f"   Normal: 0.8x, Smoke: 1.0x, Fire: 3.5x")
     else:
         # 传统加权交叉熵
         trainer.compile(learning_rate=learning_rate, class_weights=class_weights)
@@ -537,8 +537,8 @@ def main():
                        help='从断点继续训练')
     parser.add_argument('--use_focal_loss', action='store_true', default=True,
                        help='使用Focal Loss（默认开启）')
-    parser.add_argument('--focal_gamma', type=float, default=2.0,
-                       help='Focal Loss的gamma参数（默认2.0）')
+    parser.add_argument('--focal_gamma', type=float, default=2.5,
+                       help='Focal Loss的gamma参数（默认2.5，提高以更关注难分类样本）')
     parser.add_argument('--test_interval', type=int, default=5,
                        help='测试间隔（每N个epoch测试一次，0表示不测试）')
     
@@ -548,6 +548,29 @@ def main():
     print("LSTM火灾分类模型训练")
     print("=" * 60)
     
+    # 自动检测并创建新的训练目录（类似YOLO的train, train2, train3）
+    base_output_dir = Path(args.output_dir)
+    if base_output_dir.exists() and not args.resume:
+        # 如果目录存在且不是继续训练，自动创建新目录
+        counter = 2
+        while True:
+            new_output_dir = Path(str(base_output_dir) + str(counter))
+            if not new_output_dir.exists():
+                args.output_dir = str(new_output_dir)
+                print(f"\n🔄 检测到已有训练，自动创建新目录")
+                print(f"📁 输出目录: {args.output_dir}")
+                break
+            counter += 1
+    elif args.resume:
+        # 继续训练时，检查是否有checkpoint
+        checkpoint_path = base_output_dir / 'checkpoint.pt'
+        if checkpoint_path.exists():
+            print(f"\n🔄 从断点继续训练")
+            print(f"📁 输出目录: {args.output_dir}")
+        else:
+            print(f"\n⚠️  未找到断点文件，将从头开始训练")
+            print(f"📁 输出目录: {args.output_dir}")
+    
     # 检查数据是否存在
     data_dir = Path(args.data_dir)
     if not data_dir.exists():
@@ -555,25 +578,31 @@ def main():
         print("\n请先运行 prepare_lstm_data.py 准备训练数据")
         return
     
-    # 自动检测断点
-    checkpoint_path = Path(args.output_dir) / 'checkpoint.pt'
-    if checkpoint_path.exists() and not args.resume:
+    # 自动检测断点（仅在指定输出目录时）
+    output_dir = Path(args.output_dir)
+    checkpoint_path = output_dir / 'checkpoint.pt'
+    
+    # 如果是默认目录且存在checkpoint，询问是否继续
+    if args.output_dir == 'models/lstm' and checkpoint_path.exists() and not args.resume:
         print(f"\n⚠️  检测到断点文件: {checkpoint_path}")
         print("是否从断点继续训练？")
         print("  1. 是 - 继续训练")
-        print("  2. 否 - 从头开始（会覆盖之前的训练）")
+        print("  2. 否 - 开始新的训练（自动创建train2目录）")
         choice = input("请选择 (1/2): ").strip()
         
         if choice == '1':
             args.resume = True
             print("✅ 将从断点继续训练")
         else:
-            print("⚠️  将从头开始训练")
-            # 备份旧的断点
-            import shutil
-            backup_path = Path(args.output_dir) / f'checkpoint_backup_{__import__("datetime").datetime.now().strftime("%Y%m%d_%H%M%S")}.pt'
-            shutil.copy(checkpoint_path, backup_path)
-            print(f"已备份旧断点到: {backup_path}")
+            # 自动创建新目录
+            counter = 2
+            while True:
+                new_output_dir = Path(f'models/lstm/train{counter}')
+                if not new_output_dir.exists():
+                    args.output_dir = str(new_output_dir)
+                    print(f"✅ 创建新训练目录: {args.output_dir}")
+                    break
+                counter += 1
     
     # 训练模型
     train_lstm_model(
