@@ -183,10 +183,36 @@ def detect_video(pipeline, video_path, output_path=None, show=True):
         print(f"  - 烟雾: {lstm_predictions[1]} ({100*lstm_predictions[1]/total_pred:.1f}%)")
         print(f"  - 火焰: {lstm_predictions[2]} ({100*lstm_predictions[2]/total_pred:.1f}%)")
         
-        # 最终判断
-        final_pred = max(lstm_predictions, key=lstm_predictions.get)
-        class_names = {0: "无火", 1: "烟雾", 2: "火焰"}
-        print(f"\n✅ 最终判断: {class_names[final_pred]} (出现 {lstm_predictions[final_pred]} 次)")
+        # 实时火灾检测判断逻辑：一旦检测到火焰/烟雾就报警
+        has_fire = lstm_predictions[2] > 0
+        has_smoke = lstm_predictions[1] > 0
+        
+        print(f"\n⚠️  实时火灾检测判断:")
+        if has_fire:
+            fire_ratio = 100 * lstm_predictions[2] / total_pred
+            fire_count = lstm_predictions[2]
+            print(f"  🔥 检测到火焰！({fire_count}次, {fire_ratio:.1f}%)")
+            if fire_ratio > 30:
+                print(f"  ⚠️  严重程度：高危！建议立即报警并疏散！")
+            elif fire_ratio > 10:
+                print(f"  ⚠️  严重程度：中危！建议立即报警！")
+            else:
+                print(f"  ⚠️  严重程度：低危，建议确认并报警！")
+        
+        if has_smoke:
+            smoke_ratio = 100 * lstm_predictions[1] / total_pred
+            smoke_count = lstm_predictions[1]
+            print(f"  💨 检测到烟雾！({smoke_count}次, {smoke_ratio:.1f}%)")
+            if not has_fire:
+                if smoke_ratio > 30:
+                    print(f"  ⚠️  严重程度：高危！可能即将起火，建议立即报警！")
+                elif smoke_ratio > 10:
+                    print(f"  ⚠️  严重程度：中危！发出预警，密切监控！")
+                else:
+                    print(f"  ⚠️  严重程度：低危，建议确认烟雾来源！")
+        
+        if not has_fire and not has_smoke:
+            print(f"  ✓ 未检测到火灾迹象")
     
     if output_path:
         print(f"\n💾 结果已保存: {output_path}")
@@ -278,7 +304,7 @@ def main():
                        help='输入源：图片路径、视频路径、摄像头ID（0,1,2...）')
     parser.add_argument('--yolo', type=str, default='runs/detect/train2/weights/best.pt',
                        help='YOLO模型路径')
-    parser.add_argument('--lstm', type=str, default='models/lstm/train/best.pt',
+    parser.add_argument('--lstm', type=str, default='models/lstm/best.pt',
                        help='LSTM模型路径（可选，不指定则只用YOLO）')
     parser.add_argument('--output', type=str, default=None,
                        help='输出路径（可选）')

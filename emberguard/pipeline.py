@@ -56,6 +56,10 @@ class FireDetectionPipeline:
         self.sequence_length = sequence_length
         self.feature_buffer = deque(maxlen=sequence_length)
         
+        # LSTM预测平滑（解决波动性问题）
+        self.prediction_buffer = deque(maxlen=10)  # 保存最近10次预测
+        self.use_smoothing = True  # 是否启用平滑
+        
         # 类别映射
         self.class_names = {
             0: "无火",
@@ -66,6 +70,7 @@ class FireDetectionPipeline:
     def reset_buffer(self):
         """重置特征缓冲区"""
         self.feature_buffer.clear()
+        self.prediction_buffer.clear()
     
     def detect_frame(self, frame, conf_threshold=0.25):
         """
@@ -99,7 +104,7 @@ class FireDetectionPipeline:
                     'bbox': [int(x1), int(y1), int(x2), int(y2)],
                     'confidence': conf,
                     'class': cls,
-                    'class_name': 'fire' if cls == 0 else 'smoke'
+                    'class_name': 'smoke' if cls == 0 else 'fire'  # 0=smoke, 1=fire
                 })
         
         result = {
@@ -118,7 +123,7 @@ class FireDetectionPipeline:
     
     def _lstm_classify(self):
         """
-        使用LSTM进行时序分类
+        使用LSTM进行时序分类（带平滑处理）
         
         Returns:
             dict: LSTM分类结果
@@ -132,16 +137,43 @@ class FireDetectionPipeline:
         pred_class = pred_class[0]
         probs = probs[0]
         
-        return {
-            'lstm_prediction': int(pred_class),
-            'lstm_class_name': self.class_names[pred_class],
-            'lstm_probabilities': {
-                '无火': float(probs[0]),
-                '烟雾': float(probs[1]),
-                '火焰': float(probs[2])
-            },
-            'lstm_confidence': float(probs[pred_class])
-        }
+        # 添加到预测缓冲区
+        self.prediction_buffer.append({
+            'class': int(pred_class),
+            'probs': probs.copy()
+        })
+        
+        # 如果启用平滑且缓冲区有足够数据
+        if self.use_smoothing and len(self.prediction_buffer) >= 3:
+            # 使用最近N次预测的平均概率
+            avg_probs = np.mean([p['probs'] for p in self.prediction_buffer], axis=0)
+            smoothed_class = int(np.argmax(avg_probs))
+            smoothed_confidence = float(avg_probs[smoothed_class])
+            
+            return {
+                'lstm_prediction': smoothed_class,
+                'lstm_class_name': self.class_names[smoothed_class],
+                'lstm_probabilities': {
+                    '无火': float(avg_probs[0]),
+                    '烟雾': float(avg_probs[1]),
+                    '火焰': float(avg_probs[2])
+                },
+                'lstm_confidence': smoothed_confidence,
+                'lstm_raw_prediction': int(pred_class),  # 原始预测（未平滑）
+                'lstm_raw_confidence': float(probs[pred_class])  # 原始置信度
+            }
+        else:
+            # 不平滑，直接返回
+            return {
+                'lstm_prediction': int(pred_class),
+                'lstm_class_name': self.class_names[pred_class],
+                'lstm_probabilities': {
+                    '无火': float(probs[0]),
+                    '烟雾': float(probs[1]),
+                    '火焰': float(probs[2])
+                },
+                'lstm_confidence': float(probs[pred_class])
+            }
     
     def process_video(self, video_path, output_path=None, conf_threshold=0.25, show_progress=True):
         """
@@ -225,8 +257,11 @@ class FireDetectionPipeline:
             绘制后的帧
         """
         import cv2
+        from PIL import Image, ImageDraw, ImageFont
+        import numpy as np
         
         frame_vis = frame.copy()
+        h, w = frame_vis.shape[:2]
         
         # 绘制YOLO检测框
         for det in result['yolo_detections']:
@@ -238,15 +273,79 @@ class FireDetectionPipeline:
             color = (0, 0, 255) if cls_name == 'fire' else (0, 255, 255)
             cv2.rectangle(frame_vis, (x1, y1), (x2, y2), color, 2)
             
-            # 绘制标签
+            # 绘制标签 - 确保不超出屏幕
             label = f"{cls_name} {conf:.2f}"
-            cv2.putText(frame_vis, label, (x1, y1-10), 
-                       cv2.FONT_HERSHEY_SIMPLEX, 0.5, color, 2)
+            
+            # 计算文字大小
+            font_scale = 0.6
+            thickness = 2
+            (text_w, text_h), baseline = cv2.getTextSize(label, cv2.FONT_HERSHEY_SIMPLEX, font_scale, thickness)
+            
+            # 调整标签位置，确保在屏幕内
+            label_y = y1 - 10
+            if label_y - text_h < 0:  # 如果标签会超出顶部
+                label_y = y2 + text_h + 10  # 放到框下方
+            
+            label_x = x1
+            if label_x + text_w > w:  # 如果标签会超出右边
+                label_x = w - text_w - 5
+            if label_x < 0:  # 如果标签会超出左边
+                label_x = 5
+            
+            # 绘制背景矩形（让文字更清晰）
+            cv2.rectangle(frame_vis, 
+                         (label_x - 2, label_y - text_h - 2),
+                         (label_x + text_w + 2, label_y + baseline + 2),
+                         (0, 0, 0), -1)
+            
+            # 绘制文字
+            cv2.putText(frame_vis, label, (label_x, label_y), 
+                       cv2.FONT_HERSHEY_SIMPLEX, font_scale, color, thickness)
         
-        # 绘制LSTM结果（如果有）
+        # 绘制LSTM结果（如果有）- 使用PIL支持中文
         if 'lstm_prediction' in result:
-            lstm_text = f"LSTM: {result['lstm_class_name']} ({result['lstm_confidence']:.2f})"
-            cv2.putText(frame_vis, lstm_text, (10, 30),
-                       cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 255, 0), 2)
+            lstm_class = result['lstm_class_name']
+            lstm_conf = result['lstm_confidence']
+            
+            # 转换为PIL Image
+            frame_pil = Image.fromarray(cv2.cvtColor(frame_vis, cv2.COLOR_BGR2RGB))
+            draw = ImageDraw.Draw(frame_pil)
+            
+            # 尝试加载中文字体，如果失败则使用英文
+            font_size = 28
+            try:
+                # Windows系统字体
+                font = ImageFont.truetype("msyh.ttc", font_size)  # 微软雅黑
+            except:
+                try:
+                    font = ImageFont.truetype("simhei.ttf", font_size)  # 黑体
+                except:
+                    # 如果没有中文字体，使用英文映射
+                    class_name_en = {
+                        '无火': 'Normal',
+                        '烟雾': 'Smoke',
+                        '火焰': 'Fire'
+                    }
+                    lstm_class = class_name_en.get(lstm_class, lstm_class)
+                    font = ImageFont.load_default()
+            
+            # 绘制文本 - 左上角，带背景
+            text = f"LSTM: {lstm_class} ({lstm_conf:.2f})"
+            
+            # 获取文本边界框
+            bbox = draw.textbbox((0, 0), text, font=font)
+            text_w = bbox[2] - bbox[0]
+            text_h = bbox[3] - bbox[1]
+            
+            # 绘制半透明背景
+            padding = 5
+            bg_box = [(10, 10), (10 + text_w + padding*2, 10 + text_h + padding*2)]
+            draw.rectangle(bg_box, fill=(0, 0, 0, 180))
+            
+            # 绘制文本
+            draw.text((10 + padding, 10 + padding), text, font=font, fill=(0, 255, 0))
+            
+            # 转回OpenCV格式
+            frame_vis = cv2.cvtColor(np.array(frame_pil), cv2.COLOR_RGB2BGR)
         
         return frame_vis

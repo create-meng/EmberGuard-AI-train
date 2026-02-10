@@ -98,10 +98,24 @@ def test_on_video(video_path, model_path, yolo_path='runs/detect/train2/weights/
         print(f"  火焰 (2): {lstm_predictions[2]} ({100*lstm_predictions[2]/total_lstm:.1f}%)")
         print(f"  平均置信度: {np.mean(lstm_confidences):.3f}")
         
-        # 判断最终结果
-        final_pred = max(lstm_predictions, key=lstm_predictions.get)
-        class_names = {0: "无火", 1: "烟雾", 2: "火焰"}
-        print(f"\n最终判断: {class_names[final_pred]} (出现 {lstm_predictions[final_pred]} 次)")
+        # 实时火灾检测判断逻辑：一旦检测到火焰/烟雾就报警
+        has_fire = lstm_predictions[2] > 0
+        has_smoke = lstm_predictions[1] > 0
+        
+        print(f"\n⚠️  实时火灾检测判断:")
+        if has_fire:
+            fire_ratio = 100 * lstm_predictions[2] / total_lstm
+            print(f"  🔥 检测到火焰！({lstm_predictions[2]}次, {fire_ratio:.1f}%)")
+            print(f"  ⚠️  建议：立即报警！")
+        if has_smoke:
+            smoke_ratio = 100 * lstm_predictions[1] / total_lstm
+            print(f"  💨 检测到烟雾！({lstm_predictions[1]}次, {smoke_ratio:.1f}%)")
+            if not has_fire:
+                print(f"  ⚠️  建议：发出预警，密切监控！")
+        
+        if not has_fire and not has_smoke:
+            print(f"  ✓ 未检测到火灾迹象")
+            
     else:
         print(f"\n⚠️  视频太短，LSTM缓冲区未满（需要至少30帧）")
 

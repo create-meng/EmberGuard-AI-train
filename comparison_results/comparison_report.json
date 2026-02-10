@@ -1,0 +1,1882 @@
+{
+  "timestamp": "2026-02-10 04:04:32",
+  "summary": {
+    "total_videos": 34,
+    "yolo_accuracy": 50.0,
+    "lstm_accuracy": 91.17647058823529,
+    "yolo_correct": 17,
+    "lstm_correct": 31
+  },
+  "details": [
+    {
+      "video_name": "mivia_fire_fire2.avi",
+      "video_path": "datasets\\fire_videos_organized\\fire\\mivia_fire_fire2.avi",
+      "ground_truth": "fire",
+      "yolo": {
+        "method": "YOLO",
+        "total_frames": 140,
+        "fps": 29.97002997002997,
+        "detections": {
+          "fire": 6,
+          "smoke": 0,
+          "none": 134
+        },
+        "detection_ratios": {
+          "fire": 0.04285714285714286,
+          "smoke": 0.0,
+          "none": 0.9571428571428572
+        },
+        "avg_confidence": 0.3559579402208328,
+        "volatility": 0.05714285714285714,
+        "prediction": "normal",
+        "confidence_level": 0.9571428571428572,
+        "has_fire": true,
+        "has_smoke": false
+      },
+      "lstm": {
+        "method": "YOLO+LSTM",
+        "total_frames": 140,
+        "fps": 29.97002997002997,
+        "yolo_detections": {
+          "fire": 6,
+          "smoke": 0,
+          "none": 134
+        },
+        "lstm_predictions": {
+          "0": 21,
+          "1": 1,
+          "2": 89
+        },
+        "lstm_ratios": {
+          "fire": 0.8018018018018018,
+          "smoke": 0.009009009009009009,
+          "normal": 0.1891891891891892
+        },
+        "avg_confidence": 0.7809283808544949,
+        "volatility": 0.036036036036036036,
+        "max_continuous_fire": 51,
+        "max_continuous_smoke": 1,
+        "smoke_to_fire_transitions": 1,
+        "prediction": "fire",
+        "confidence_level": 0.8018018018018018,
+        "has_fire": true,
+        "has_smoke": true
+      }
+    },
+    {
+      "video_name": "mivia_fire_fire30.avi",
+      "video_path": "datasets\\fire_videos_organized\\fire\\mivia_fire_fire30.avi",
+      "ground_truth": "fire",
+      "yolo": {
+        "method": "YOLO",
+        "total_frames": 1931,
+        "fps": 15.0,
+        "detections": {
+          "fire": 2,
+          "smoke": 6,
+          "none": 1923
+        },
+        "detection_ratios": {
+          "fire": 0.0010357327809425167,
+          "smoke": 0.0031071983428275505,
+          "none": 0.9958570688762299
+        },
+        "avg_confidence": 0.294790368527174,
+        "volatility": 0.004142931123770067,
+        "prediction": "normal",
+        "confidence_level": 0.9958570688762299,
+        "has_fire": true,
+        "has_smoke": true
+      },
+      "lstm": {
+        "method": "YOLO+LSTM",
+        "total_frames": 1931,
+        "fps": 15.0,
+        "yolo_detections": {
+          "fire": 2,
+          "smoke": 6,
+          "none": 1923
+        },
+        "lstm_predictions": {
+          "0": 1798,
+          "1": 0,
+          "2": 104
+        },
+        "lstm_ratios": {
+          "fire": 0.054679284963196635,
+          "smoke": 0.0,
+          "normal": 0.9453207150368034
+        },
+        "avg_confidence": 0.5023566359256469,
+        "volatility": 0.002103049421661409,
+        "max_continuous_fire": 62,
+        "max_continuous_smoke": 0,
+        "smoke_to_fire_transitions": 0,
+        "prediction": "fire",
+        "confidence_level": 0.054679284963196635,
+        "has_fire": true,
+        "has_smoke": false
+      }
+    },
+    {
+      "video_name": "mivia_fire_fire17.avi",
+      "video_path": "datasets\\fire_videos_organized\\fire\\mivia_fire_fire17.avi",
+      "ground_truth": "fire",
+      "yolo": {
+        "method": "YOLO",
+        "total_frames": 1726,
+        "fps": 25.0,
+        "detections": {
+          "fire": 0,
+          "smoke": 737,
+          "none": 1012
+        },
+        "detection_ratios": {
+          "fire": 0.0,
+          "smoke": 0.42699884125144844,
+          "none": 0.5863267670915412
+        },
+        "avg_confidence": 0.40443218094037703,
+        "volatility": 0.15874855156431056,
+        "prediction": "smoke",
+        "confidence_level": 0.42699884125144844,
+        "has_fire": false,
+        "has_smoke": true
+      },
+      "lstm": {
+        "method": "YOLO+LSTM",
+        "total_frames": 1726,
+        "fps": 25.0,
+        "yolo_detections": {
+          "fire": 0,
+          "smoke": 737,
+          "none": 1012
+        },
+        "lstm_predictions": {
+          "0": 457,
+          "1": 1,
+          "2": 1239
+        },
+        "lstm_ratios": {
+          "fire": 0.7301119622863878,
+          "smoke": 0.0005892751915144372,
+          "normal": 0.26929876252209783
+        },
+        "avg_confidence": 0.8425032572143557,
+        "volatility": 0.005303476723629935,
+        "max_continuous_fire": 701,
+        "max_continuous_smoke": 1,
+        "smoke_to_fire_transitions": 0,
+        "prediction": "fire",
+        "confidence_level": 0.7301119622863878,
+        "has_fire": true,
+        "has_smoke": true
+      }
+    },
+    {
+      "video_name": "bowfire_posVideo2.871.avi",
+      "video_path": "datasets\\fire_videos_organized\\fire\\bowfire_posVideo2.871.avi",
+      "ground_truth": "fire",
+      "yolo": {
+        "method": "YOLO",
+        "total_frames": 510,
+        "fps": 29.97002997002997,
+        "detections": {
+          "fire": 211,
+          "smoke": 94,
+          "none": 237
+        },
+        "detection_ratios": {
+          "fire": 0.4137254901960784,
+          "smoke": 0.1843137254901961,
+          "none": 0.4647058823529412
+        },
+        "avg_confidence": 0.45294799697203714,
+        "volatility": 0.2647058823529412,
+        "prediction": "fire",
+        "confidence_level": 0.4137254901960784,
+        "has_fire": true,
+        "has_smoke": true
+      },
+      "lstm": {
+        "method": "YOLO+LSTM",
+        "total_frames": 510,
+        "fps": 29.97002997002997,
+        "yolo_detections": {
+          "fire": 211,
+          "smoke": 94,
+          "none": 237
+        },
+        "lstm_predictions": {
+          "0": 12,
+          "1": 4,
+          "2": 465
+        },
+        "lstm_ratios": {
+          "fire": 0.9667359667359667,
+          "smoke": 0.008316008316008316,
+          "normal": 0.02494802494802495
+        },
+        "avg_confidence": 0.9474563874350764,
+        "volatility": 0.006237006237006237,
+        "max_continuous_fire": 328,
+        "max_continuous_smoke": 4,
+        "smoke_to_fire_transitions": 1,
+        "prediction": "fire",
+        "confidence_level": 0.9667359667359667,
+        "has_fire": true,
+        "has_smoke": true
+      }
+    },
+    {
+      "video_name": "mivia_fire_fire29.avi",
+      "video_path": "datasets\\fire_videos_organized\\fire\\mivia_fire_fire29.avi",
+      "ground_truth": "fire",
+      "yolo": {
+        "method": "YOLO",
+        "total_frames": 609,
+        "fps": 10.0,
+        "detections": {
+          "fire": 0,
+          "smoke": 364,
+          "none": 268
+        },
+        "detection_ratios": {
+          "fire": 0.0,
+          "smoke": 0.5977011494252874,
+          "none": 0.4400656814449918
+        },
+        "avg_confidence": 0.4259008892944881,
+        "volatility": 0.2742200328407225,
+        "prediction": "smoke",
+        "confidence_level": 0.5977011494252874,
+        "has_fire": false,
+        "has_smoke": true
+      },
+      "lstm": {
+        "method": "YOLO+LSTM",
+        "total_frames": 609,
+        "fps": 10.0,
+        "yolo_detections": {
+          "fire": 0,
+          "smoke": 364,
+          "none": 268
+        },
+        "lstm_predictions": {
+          "0": 0,
+          "1": 0,
+          "2": 580
+        },
+        "lstm_ratios": {
+          "fire": 1.0,
+          "smoke": 0.0,
+          "normal": 0.0
+        },
+        "avg_confidence": 0.9921778654230052,
+        "volatility": 0.0,
+        "max_continuous_fire": 580,
+        "max_continuous_smoke": 0,
+        "smoke_to_fire_transitions": 0,
+        "prediction": "fire",
+        "confidence_level": 1.0,
+        "has_fire": true,
+        "has_smoke": false
+      }
+    },
+    {
+      "video_name": "mivia_fire_fire10.avi",
+      "video_path": "datasets\\fire_videos_organized\\fire\\mivia_fire_fire10.avi",
+      "ground_truth": "fire",
+      "yolo": {
+        "method": "YOLO",
+        "total_frames": 219,
+        "fps": 15.0,
+        "detections": {
+          "fire": 943,
+          "smoke": 370,
+          "none": 0
+        },
+        "detection_ratios": {
+          "fire": 4.30593607305936,
+          "smoke": 1.6894977168949772,
+          "none": 0.0
+        },
+        "avg_confidence": 0.5021495440945041,
+        "volatility": 0.2648401826484018,
+        "prediction": "fire",
+        "confidence_level": 4.30593607305936,
+        "has_fire": true,
+        "has_smoke": true
+      },
+      "lstm": {
+        "method": "YOLO+LSTM",
+        "total_frames": 219,
+        "fps": 15.0,
+        "yolo_detections": {
+          "fire": 943,
+          "smoke": 370,
+          "none": 0
+        },
+        "lstm_predictions": {
+          "0": 0,
+          "1": 0,
+          "2": 190
+        },
+        "lstm_ratios": {
+          "fire": 1.0,
+          "smoke": 0.0,
+          "normal": 0.0
+        },
+        "avg_confidence": 0.9799209415912629,
+        "volatility": 0.0,
+        "max_continuous_fire": 190,
+        "max_continuous_smoke": 0,
+        "smoke_to_fire_transitions": 0,
+        "prediction": "fire",
+        "confidence_level": 1.0,
+        "has_fire": true,
+        "has_smoke": false
+      }
+    },
+    {
+      "video_name": "bowfire_posVideo8.877.avi",
+      "video_path": "datasets\\fire_videos_organized\\fire\\bowfire_posVideo8.877.avi",
+      "ground_truth": "fire",
+      "yolo": {
+        "method": "YOLO",
+        "total_frames": 513,
+        "fps": 29.97002997002997,
+        "detections": {
+          "fire": 1193,
+          "smoke": 0,
+          "none": 1
+        },
+        "detection_ratios": {
+          "fire": 2.3255360623781676,
+          "smoke": 0.0,
+          "none": 0.001949317738791423
+        },
+        "avg_confidence": 0.5039879670187094,
+        "volatility": 0.003898635477582846,
+        "prediction": "fire",
+        "confidence_level": 2.3255360623781676,
+        "has_fire": true,
+        "has_smoke": false
+      },
+      "lstm": {
+        "method": "YOLO+LSTM",
+        "total_frames": 513,
+        "fps": 29.97002997002997,
+        "yolo_detections": {
+          "fire": 1193,
+          "smoke": 0,
+          "none": 1
+        },
+        "lstm_predictions": {
+          "0": 0,
+          "1": 0,
+          "2": 484
+        },
+        "lstm_ratios": {
+          "fire": 1.0,
+          "smoke": 0.0,
+          "normal": 0.0
+        },
+        "avg_confidence": 0.9987238496541977,
+        "volatility": 0.0,
+        "max_continuous_fire": 484,
+        "max_continuous_smoke": 0,
+        "smoke_to_fire_transitions": 0,
+        "prediction": "fire",
+        "confidence_level": 1.0,
+        "has_fire": true,
+        "has_smoke": false
+      }
+    },
+    {
+      "video_name": "mivia_fire_fire24.avi",
+      "video_path": "datasets\\fire_videos_organized\\fire\\mivia_fire_fire24.avi",
+      "ground_truth": "fire",
+      "yolo": {
+        "method": "YOLO",
+        "total_frames": 342,
+        "fps": 14.285714285714286,
+        "detections": {
+          "fire": 0,
+          "smoke": 0,
+          "none": 342
+        },
+        "detection_ratios": {
+          "fire": 0.0,
+          "smoke": 0.0,
+          "none": 1.0
+        },
+        "avg_confidence": 0,
+        "volatility": 0.0,
+        "prediction": "normal",
+        "confidence_level": 1.0,
+        "has_fire": false,
+        "has_smoke": false
+      },
+      "lstm": {
+        "method": "YOLO+LSTM",
+        "total_frames": 342,
+        "fps": 14.285714285714286,
+        "yolo_detections": {
+          "fire": 0,
+          "smoke": 0,
+          "none": 342
+        },
+        "lstm_predictions": {
+          "0": 313,
+          "1": 0,
+          "2": 0
+        },
+        "lstm_ratios": {
+          "fire": 0.0,
+          "smoke": 0.0,
+          "normal": 1.0
+        },
+        "avg_confidence": 0.48361402683364696,
+        "volatility": 0.0,
+        "max_continuous_fire": 0,
+        "max_continuous_smoke": 0,
+        "smoke_to_fire_transitions": 0,
+        "prediction": "normal",
+        "confidence_level": 1.0,
+        "has_fire": false,
+        "has_smoke": false
+      }
+    },
+    {
+      "video_name": "mivia_fire_fire25.avi",
+      "video_path": "datasets\\fire_videos_organized\\fire\\mivia_fire_fire25.avi",
+      "ground_truth": "fire",
+      "yolo": {
+        "method": "YOLO",
+        "total_frames": 141,
+        "fps": 10.0,
+        "detections": {
+          "fire": 0,
+          "smoke": 140,
+          "none": 1
+        },
+        "detection_ratios": {
+          "fire": 0.0,
+          "smoke": 0.9929078014184397,
+          "none": 0.0070921985815602835
+        },
+        "avg_confidence": 0.4856467257652964,
+        "volatility": 0.014184397163120567,
+        "prediction": "smoke",
+        "confidence_level": 0.9929078014184397,
+        "has_fire": false,
+        "has_smoke": true
+      },
+      "lstm": {
+        "method": "YOLO+LSTM",
+        "total_frames": 141,
+        "fps": 10.0,
+        "yolo_detections": {
+          "fire": 0,
+          "smoke": 140,
+          "none": 1
+        },
+        "lstm_predictions": {
+          "0": 0,
+          "1": 0,
+          "2": 112
+        },
+        "lstm_ratios": {
+          "fire": 1.0,
+          "smoke": 0.0,
+          "normal": 0.0
+        },
+        "avg_confidence": 0.9981241753058774,
+        "volatility": 0.0,
+        "max_continuous_fire": 112,
+        "max_continuous_smoke": 0,
+        "smoke_to_fire_transitions": 0,
+        "prediction": "fire",
+        "confidence_level": 1.0,
+        "has_fire": true,
+        "has_smoke": false
+      }
+    },
+    {
+      "video_name": "mivia_fire_fire9.avi",
+      "video_path": "datasets\\fire_videos_organized\\fire\\mivia_fire_fire9.avi",
+      "ground_truth": "fire",
+      "yolo": {
+        "method": "YOLO",
+        "total_frames": 255,
+        "fps": 15.0,
+        "detections": {
+          "fire": 138,
+          "smoke": 247,
+          "none": 1
+        },
+        "detection_ratios": {
+          "fire": 0.5411764705882353,
+          "smoke": 0.9686274509803922,
+          "none": 0.00392156862745098
+        },
+        "avg_confidence": 0.6098203655961272,
+        "volatility": 0.1843137254901961,
+        "prediction": "fire",
+        "confidence_level": 0.5411764705882353,
+        "has_fire": true,
+        "has_smoke": true
+      },
+      "lstm": {
+        "method": "YOLO+LSTM",
+        "total_frames": 255,
+        "fps": 15.0,
+        "yolo_detections": {
+          "fire": 138,
+          "smoke": 247,
+          "none": 1
+        },
+        "lstm_predictions": {
+          "0": 0,
+          "1": 0,
+          "2": 226
+        },
+        "lstm_ratios": {
+          "fire": 1.0,
+          "smoke": 0.0,
+          "normal": 0.0
+        },
+        "avg_confidence": 0.9981471133970581,
+        "volatility": 0.0,
+        "max_continuous_fire": 226,
+        "max_continuous_smoke": 0,
+        "smoke_to_fire_transitions": 0,
+        "prediction": "fire",
+        "confidence_level": 1.0,
+        "has_fire": true,
+        "has_smoke": false
+      }
+    },
+    {
+      "video_name": "mivia_smoke_3_2012-07-19_12-58-03.avi",
+      "video_path": "datasets\\fire_videos_organized\\smoke\\mivia_smoke_3_2012-07-19_12-58-03.avi",
+      "ground_truth": "smoke",
+      "yolo": {
+        "method": "YOLO",
+        "total_frames": 7501,
+        "fps": 8.333333333333334,
+        "detections": {
+          "fire": 64,
+          "smoke": 5402,
+          "none": 2412
+        },
+        "detection_ratios": {
+          "fire": 0.008532195707239034,
+          "smoke": 0.7201706439141448,
+          "none": 0.32155712571657113
+        },
+        "avg_confidence": 0.49393858807212565,
+        "volatility": 0.06012531662445007,
+        "prediction": "smoke",
+        "confidence_level": 0.7201706439141448,
+        "has_fire": true,
+        "has_smoke": true
+      },
+      "lstm": {
+        "method": "YOLO+LSTM",
+        "total_frames": 7501,
+        "fps": 8.333333333333334,
+        "yolo_detections": {
+          "fire": 64,
+          "smoke": 5402,
+          "none": 2412
+        },
+        "lstm_predictions": {
+          "0": 761,
+          "1": 6706,
+          "2": 5
+        },
+        "lstm_ratios": {
+          "fire": 0.0006691648822269807,
+          "smoke": 0.8974839400428265,
+          "normal": 0.10184689507494647
+        },
+        "avg_confidence": 0.9126168506247903,
+        "volatility": 0.005085653104925054,
+        "max_continuous_fire": 5,
+        "max_continuous_smoke": 2497,
+        "smoke_to_fire_transitions": 1,
+        "prediction": "smoke",
+        "confidence_level": 0.8974839400428265,
+        "has_fire": true,
+        "has_smoke": true
+      }
+    },
+    {
+      "video_name": "mivia_smoke_3_2012-07-18_18-41-07.avi",
+      "video_path": "datasets\\fire_videos_organized\\smoke\\mivia_smoke_3_2012-07-18_18-41-07.avi",
+      "ground_truth": "smoke",
+      "yolo": {
+        "method": "YOLO",
+        "total_frames": 7501,
+        "fps": 8.333333333333334,
+        "detections": {
+          "fire": 2436,
+          "smoke": 2542,
+          "none": 3358
+        },
+        "detection_ratios": {
+          "fire": 0.3247566991067858,
+          "smoke": 0.3388881482469004,
+          "none": 0.4476736435141981
+        },
+        "avg_confidence": 0.41644266719509676,
+        "volatility": 0.08918810825223304,
+        "prediction": "fire",
+        "confidence_level": 0.3247566991067858,
+        "has_fire": true,
+        "has_smoke": true
+      },
+      "lstm": {
+        "method": "YOLO+LSTM",
+        "total_frames": 7501,
+        "fps": 8.333333333333334,
+        "yolo_detections": {
+          "fire": 2436,
+          "smoke": 2542,
+          "none": 3358
+        },
+        "lstm_predictions": {
+          "0": 1734,
+          "1": 5736,
+          "2": 2
+        },
+        "lstm_ratios": {
+          "fire": 0.0002676659528907923,
+          "smoke": 0.7676659528907923,
+          "normal": 0.23206638115631692
+        },
+        "avg_confidence": 0.8611925416117499,
+        "volatility": 0.004416488222698073,
+        "max_continuous_fire": 2,
+        "max_continuous_smoke": 3079,
+        "smoke_to_fire_transitions": 0,
+        "prediction": "smoke",
+        "confidence_level": 0.7676659528907923,
+        "has_fire": true,
+        "has_smoke": true
+      }
+    },
+    {
+      "video_name": "mivia_smoke_3_2012-07-19_14-43-15.avi",
+      "video_path": "datasets\\fire_videos_organized\\smoke\\mivia_smoke_3_2012-07-19_14-43-15.avi",
+      "ground_truth": "smoke",
+      "yolo": {
+        "method": "YOLO",
+        "total_frames": 7501,
+        "fps": 8.333333333333334,
+        "detections": {
+          "fire": 0,
+          "smoke": 2656,
+          "none": 4947
+        },
+        "detection_ratios": {
+          "fire": 0.0,
+          "smoke": 0.35408612185041993,
+          "none": 0.6595120650579923
+        },
+        "avg_confidence": 0.39402957425553753,
+        "volatility": 0.03906145847220371,
+        "prediction": "smoke",
+        "confidence_level": 0.35408612185041993,
+        "has_fire": false,
+        "has_smoke": true
+      },
+      "lstm": {
+        "method": "YOLO+LSTM",
+        "total_frames": 7501,
+        "fps": 8.333333333333334,
+        "yolo_detections": {
+          "fire": 0,
+          "smoke": 2656,
+          "none": 4947
+        },
+        "lstm_predictions": {
+          "0": 3817,
+          "1": 3655,
+          "2": 0
+        },
+        "lstm_ratios": {
+          "fire": 0.0,
+          "smoke": 0.4891595289079229,
+          "normal": 0.5108404710920771
+        },
+        "avg_confidence": 0.7228246643876046,
+        "volatility": 0.004148822269807281,
+        "max_continuous_fire": 0,
+        "max_continuous_smoke": 555,
+        "smoke_to_fire_transitions": 0,
+        "prediction": "smoke",
+        "confidence_level": 0.4891595289079229,
+        "has_fire": false,
+        "has_smoke": true
+      }
+    },
+    {
+      "video_name": "mivia_smoke_3_2012-07-20_15-02-07.avi",
+      "video_path": "datasets\\fire_videos_organized\\smoke\\mivia_smoke_3_2012-07-20_15-02-07.avi",
+      "ground_truth": "smoke",
+      "yolo": {
+        "method": "YOLO",
+        "total_frames": 7509,
+        "fps": 8.333333333333334,
+        "detections": {
+          "fire": 23,
+          "smoke": 0,
+          "none": 7486
+        },
+        "detection_ratios": {
+          "fire": 0.003062991077373818,
+          "smoke": 0.0,
+          "none": 0.9969370089226262
+        },
+        "avg_confidence": 0.2661767770414767,
+        "volatility": 0.0029298175522706085,
+        "prediction": "normal",
+        "confidence_level": 0.9969370089226262,
+        "has_fire": true,
+        "has_smoke": false
+      },
+      "lstm": {
+        "method": "YOLO+LSTM",
+        "total_frames": 7509,
+        "fps": 8.333333333333334,
+        "yolo_detections": {
+          "fire": 23,
+          "smoke": 0,
+          "none": 7486
+        },
+        "lstm_predictions": {
+          "0": 7465,
+          "1": 15,
+          "2": 0
+        },
+        "lstm_ratios": {
+          "fire": 0.0,
+          "smoke": 0.002005347593582888,
+          "normal": 0.9979946524064172
+        },
+        "avg_confidence": 0.4888114614481913,
+        "volatility": 0.00026737967914438503,
+        "max_continuous_fire": 0,
+        "max_continuous_smoke": 15,
+        "smoke_to_fire_transitions": 0,
+        "prediction": "normal",
+        "confidence_level": 0.9979946524064172,
+        "has_fire": false,
+        "has_smoke": true
+      }
+    },
+    {
+      "video_name": "mivia_smoke_3_2012-07-19_07-42-29.avi",
+      "video_path": "datasets\\fire_videos_organized\\smoke\\mivia_smoke_3_2012-07-19_07-42-29.avi",
+      "ground_truth": "smoke",
+      "yolo": {
+        "method": "YOLO",
+        "total_frames": 7501,
+        "fps": 8.333333333333334,
+        "detections": {
+          "fire": 5678,
+          "smoke": 2,
+          "none": 1831
+        },
+        "detection_ratios": {
+          "fire": 0.7569657379016131,
+          "smoke": 0.0002666311158512198,
+          "none": 0.24410078656179177
+        },
+        "avg_confidence": 0.3988332831733663,
+        "volatility": 0.09025463271563791,
+        "prediction": "fire",
+        "confidence_level": 0.7569657379016131,
+        "has_fire": true,
+        "has_smoke": true
+      },
+      "lstm": {
+        "method": "YOLO+LSTM",
+        "total_frames": 7501,
+        "fps": 8.333333333333334,
+        "yolo_detections": {
+          "fire": 5678,
+          "smoke": 2,
+          "none": 1831
+        },
+        "lstm_predictions": {
+          "0": 251,
+          "1": 7221,
+          "2": 0
+        },
+        "lstm_ratios": {
+          "fire": 0.0,
+          "smoke": 0.9664079229122056,
+          "normal": 0.03359207708779443
+        },
+        "avg_confidence": 0.9365109219644577,
+        "volatility": 0.0016059957173447537,
+        "max_continuous_fire": 0,
+        "max_continuous_smoke": 1948,
+        "smoke_to_fire_transitions": 0,
+        "prediction": "smoke",
+        "confidence_level": 0.9664079229122056,
+        "has_fire": false,
+        "has_smoke": true
+      }
+    },
+    {
+      "video_name": "mivia_smoke_3_2012-07-17_19-16-10.avi",
+      "video_path": "datasets\\fire_videos_organized\\smoke\\mivia_smoke_3_2012-07-17_19-16-10.avi",
+      "ground_truth": "smoke",
+      "yolo": {
+        "method": "YOLO",
+        "total_frames": 7734,
+        "fps": 8.583333333333334,
+        "detections": {
+          "fire": 0,
+          "smoke": 38,
+          "none": 7696
+        },
+        "detection_ratios": {
+          "fire": 0.0,
+          "smoke": 0.00491336953710887,
+          "none": 0.9950866304628911
+        },
+        "avg_confidence": 0.2835035049601605,
+        "volatility": 0.004137574347039048,
+        "prediction": "normal",
+        "confidence_level": 0.9950866304628911,
+        "has_fire": false,
+        "has_smoke": true
+      },
+      "lstm": {
+        "method": "YOLO+LSTM",
+        "total_frames": 7734,
+        "fps": 8.583333333333334,
+        "yolo_detections": {
+          "fire": 0,
+          "smoke": 38,
+          "none": 7696
+        },
+        "lstm_predictions": {
+          "0": 7354,
+          "1": 351,
+          "2": 0
+        },
+        "lstm_ratios": {
+          "fire": 0.0,
+          "smoke": 0.04555483452303699,
+          "normal": 0.954445165476963
+        },
+        "avg_confidence": 0.5004375003824599,
+        "volatility": 0.0018170019467878002,
+        "max_continuous_fire": 0,
+        "max_continuous_smoke": 89,
+        "smoke_to_fire_transitions": 0,
+        "prediction": "smoke",
+        "confidence_level": 0.04555483452303699,
+        "has_fire": false,
+        "has_smoke": true
+      }
+    },
+    {
+      "video_name": "mivia_smoke_3_2012-07-18_17-25-58.avi",
+      "video_path": "datasets\\fire_videos_organized\\smoke\\mivia_smoke_3_2012-07-18_17-25-58.avi",
+      "ground_truth": "smoke",
+      "yolo": {
+        "method": "YOLO",
+        "total_frames": 7509,
+        "fps": 8.333333333333334,
+        "detections": {
+          "fire": 0,
+          "smoke": 8399,
+          "none": 395
+        },
+        "detection_ratios": {
+          "fire": 0.0,
+          "smoke": 1.1185244373418564,
+          "none": 0.05260354241576774
+        },
+        "avg_confidence": 0.45376077132901205,
+        "volatility": 0.021973631642029565,
+        "prediction": "smoke",
+        "confidence_level": 1.1185244373418564,
+        "has_fire": false,
+        "has_smoke": true
+      },
+      "lstm": {
+        "method": "YOLO+LSTM",
+        "total_frames": 7509,
+        "fps": 8.333333333333334,
+        "yolo_detections": {
+          "fire": 0,
+          "smoke": 8399,
+          "none": 395
+        },
+        "lstm_predictions": {
+          "0": 14,
+          "1": 7466,
+          "2": 0
+        },
+        "lstm_ratios": {
+          "fire": 0.0,
+          "smoke": 0.9981283422459893,
+          "normal": 0.0018716577540106951
+        },
+        "avg_confidence": 0.9956692693864598,
+        "volatility": 0.0005347593582887701,
+        "max_continuous_fire": 0,
+        "max_continuous_smoke": 6651,
+        "smoke_to_fire_transitions": 0,
+        "prediction": "smoke",
+        "confidence_level": 0.9981283422459893,
+        "has_fire": false,
+        "has_smoke": true
+      }
+    },
+    {
+      "video_name": "mivia_smoke_3_2012-07-18_17-56-02.avi",
+      "video_path": "datasets\\fire_videos_organized\\smoke\\mivia_smoke_3_2012-07-18_17-56-02.avi",
+      "ground_truth": "smoke",
+      "yolo": {
+        "method": "YOLO",
+        "total_frames": 7509,
+        "fps": 8.333333333333334,
+        "detections": {
+          "fire": 4,
+          "smoke": 6585,
+          "none": 1716
+        },
+        "detection_ratios": {
+          "fire": 0.0005326941004128379,
+          "smoke": 0.8769476628046344,
+          "none": 0.22852576907710748
+        },
+        "avg_confidence": 0.379623734443534,
+        "volatility": 0.05633240111865761,
+        "prediction": "smoke",
+        "confidence_level": 0.8769476628046344,
+        "has_fire": true,
+        "has_smoke": true
+      },
+      "lstm": {
+        "method": "YOLO+LSTM",
+        "total_frames": 7509,
+        "fps": 8.333333333333334,
+        "yolo_detections": {
+          "fire": 4,
+          "smoke": 6585,
+          "none": 1716
+        },
+        "lstm_predictions": {
+          "0": 487,
+          "1": 6993,
+          "2": 0
+        },
+        "lstm_ratios": {
+          "fire": 0.0,
+          "smoke": 0.9348930481283423,
+          "normal": 0.06510695187165776
+        },
+        "avg_confidence": 0.9563622969118032,
+        "volatility": 0.0029411764705882353,
+        "max_continuous_fire": 0,
+        "max_continuous_smoke": 4250,
+        "smoke_to_fire_transitions": 0,
+        "prediction": "smoke",
+        "confidence_level": 0.9348930481283423,
+        "has_fire": false,
+        "has_smoke": true
+      }
+    },
+    {
+      "video_name": "mivia_smoke_3_2012-07-18_16-55-55.avi",
+      "video_path": "datasets\\fire_videos_organized\\smoke\\mivia_smoke_3_2012-07-18_16-55-55.avi",
+      "ground_truth": "smoke",
+      "yolo": {
+        "method": "YOLO",
+        "total_frames": 7509,
+        "fps": 8.333333333333334,
+        "detections": {
+          "fire": 0,
+          "smoke": 8786,
+          "none": 91
+        },
+        "detection_ratios": {
+          "fire": 0.0,
+          "smoke": 1.1700625915567986,
+          "none": 0.012118790784392063
+        },
+        "avg_confidence": 0.46239295064548197,
+        "volatility": 0.008389932081502197,
+        "prediction": "smoke",
+        "confidence_level": 1.1700625915567986,
+        "has_fire": false,
+        "has_smoke": true
+      },
+      "lstm": {
+        "method": "YOLO+LSTM",
+        "total_frames": 7509,
+        "fps": 8.333333333333334,
+        "yolo_detections": {
+          "fire": 0,
+          "smoke": 8786,
+          "none": 91
+        },
+        "lstm_predictions": {
+          "0": 0,
+          "1": 7480,
+          "2": 0
+        },
+        "lstm_ratios": {
+          "fire": 0.0,
+          "smoke": 1.0,
+          "normal": 0.0
+        },
+        "avg_confidence": 0.9994949761319926,
+        "volatility": 0.0,
+        "max_continuous_fire": 0,
+        "max_continuous_smoke": 7480,
+        "smoke_to_fire_transitions": 0,
+        "prediction": "smoke",
+        "confidence_level": 1.0,
+        "has_fire": false,
+        "has_smoke": true
+      }
+    },
+    {
+      "video_name": "mivia_smoke_3_2012-07-19_16-58-29.avi",
+      "video_path": "datasets\\fire_videos_organized\\smoke\\mivia_smoke_3_2012-07-19_16-58-29.avi",
+      "ground_truth": "smoke",
+      "yolo": {
+        "method": "YOLO",
+        "total_frames": 7509,
+        "fps": 8.333333333333334,
+        "detections": {
+          "fire": 0,
+          "smoke": 0,
+          "none": 7509
+        },
+        "detection_ratios": {
+          "fire": 0.0,
+          "smoke": 0.0,
+          "none": 1.0
+        },
+        "avg_confidence": 0,
+        "volatility": 0.0,
+        "prediction": "normal",
+        "confidence_level": 1.0,
+        "has_fire": false,
+        "has_smoke": false
+      },
+      "lstm": {
+        "method": "YOLO+LSTM",
+        "total_frames": 7509,
+        "fps": 8.333333333333334,
+        "yolo_detections": {
+          "fire": 0,
+          "smoke": 0,
+          "none": 7509
+        },
+        "lstm_predictions": {
+          "0": 7480,
+          "1": 0,
+          "2": 0
+        },
+        "lstm_ratios": {
+          "fire": 0.0,
+          "smoke": 0.0,
+          "normal": 1.0
+        },
+        "avg_confidence": 0.48361402747226273,
+        "volatility": 0.0,
+        "max_continuous_fire": 0,
+        "max_continuous_smoke": 0,
+        "smoke_to_fire_transitions": 0,
+        "prediction": "normal",
+        "confidence_level": 1.0,
+        "has_fire": false,
+        "has_smoke": false
+      }
+    },
+    {
+      "video_name": "mivia_normal_3_2012-07-24_16-46-47.avi",
+      "video_path": "datasets\\fire_videos_organized\\normal\\mivia_normal_3_2012-07-24_16-46-47.avi",
+      "ground_truth": "normal",
+      "yolo": {
+        "method": "YOLO",
+        "total_frames": 7501,
+        "fps": 8.333333333333334,
+        "detections": {
+          "fire": 0,
+          "smoke": 1465,
+          "none": 6185
+        },
+        "detection_ratios": {
+          "fire": 0.0,
+          "smoke": 0.19530729236101854,
+          "none": 0.8245567257698974
+        },
+        "avg_confidence": 0.3133567035808498,
+        "volatility": 0.058392214371417145,
+        "prediction": "smoke",
+        "confidence_level": 0.19530729236101854,
+        "has_fire": false,
+        "has_smoke": true
+      },
+      "lstm": {
+        "method": "YOLO+LSTM",
+        "total_frames": 7501,
+        "fps": 8.333333333333334,
+        "yolo_detections": {
+          "fire": 0,
+          "smoke": 1465,
+          "none": 6185
+        },
+        "lstm_predictions": {
+          "0": 7472,
+          "1": 0,
+          "2": 0
+        },
+        "lstm_ratios": {
+          "fire": 0.0,
+          "smoke": 0.0,
+          "normal": 1.0
+        },
+        "avg_confidence": 0.6693991034010494,
+        "volatility": 0.0,
+        "max_continuous_fire": 0,
+        "max_continuous_smoke": 0,
+        "smoke_to_fire_transitions": 0,
+        "prediction": "normal",
+        "confidence_level": 1.0,
+        "has_fire": false,
+        "has_smoke": false
+      }
+    },
+    {
+      "video_name": "mivia_normal_3_2012-07-20_13-16-57.avi",
+      "video_path": "datasets\\fire_videos_organized\\normal\\mivia_normal_3_2012-07-20_13-16-57.avi",
+      "ground_truth": "normal",
+      "yolo": {
+        "method": "YOLO",
+        "total_frames": 7501,
+        "fps": 8.333333333333334,
+        "detections": {
+          "fire": 2212,
+          "smoke": 0,
+          "none": 5380
+        },
+        "detection_ratios": {
+          "fire": 0.29489401413144917,
+          "smoke": 0.0,
+          "none": 0.7172377016397814
+        },
+        "avg_confidence": 0.2971316231903073,
+        "volatility": 0.13224903346220504,
+        "prediction": "fire",
+        "confidence_level": 0.29489401413144917,
+        "has_fire": true,
+        "has_smoke": false
+      },
+      "lstm": {
+        "method": "YOLO+LSTM",
+        "total_frames": 7501,
+        "fps": 8.333333333333334,
+        "yolo_detections": {
+          "fire": 2212,
+          "smoke": 0,
+          "none": 5380
+        },
+        "lstm_predictions": {
+          "0": 7472,
+          "1": 0,
+          "2": 0
+        },
+        "lstm_ratios": {
+          "fire": 0.0,
+          "smoke": 0.0,
+          "normal": 1.0
+        },
+        "avg_confidence": 0.8207500943878159,
+        "volatility": 0.0,
+        "max_continuous_fire": 0,
+        "max_continuous_smoke": 0,
+        "smoke_to_fire_transitions": 0,
+        "prediction": "normal",
+        "confidence_level": 1.0,
+        "has_fire": false,
+        "has_smoke": false
+      }
+    },
+    {
+      "video_name": "mivia_normal_3_2012-07-20_13-01-56.avi",
+      "video_path": "datasets\\fire_videos_organized\\normal\\mivia_normal_3_2012-07-20_13-01-56.avi",
+      "ground_truth": "normal",
+      "yolo": {
+        "method": "YOLO",
+        "total_frames": 7501,
+        "fps": 8.333333333333334,
+        "detections": {
+          "fire": 2779,
+          "smoke": 0,
+          "none": 4765
+        },
+        "detection_ratios": {
+          "fire": 0.37048393547527,
+          "smoke": 0.0,
+          "none": 0.6352486335155313
+        },
+        "avg_confidence": 0.3020805846169167,
+        "volatility": 0.15917877616317824,
+        "prediction": "fire",
+        "confidence_level": 0.37048393547527,
+        "has_fire": true,
+        "has_smoke": false
+      },
+      "lstm": {
+        "method": "YOLO+LSTM",
+        "total_frames": 7501,
+        "fps": 8.333333333333334,
+        "yolo_detections": {
+          "fire": 2779,
+          "smoke": 0,
+          "none": 4765
+        },
+        "lstm_predictions": {
+          "0": 7472,
+          "1": 0,
+          "2": 0
+        },
+        "lstm_ratios": {
+          "fire": 0.0,
+          "smoke": 0.0,
+          "normal": 1.0
+        },
+        "avg_confidence": 0.8617174774089258,
+        "volatility": 0.0,
+        "max_continuous_fire": 0,
+        "max_continuous_smoke": 0,
+        "smoke_to_fire_transitions": 0,
+        "prediction": "normal",
+        "confidence_level": 1.0,
+        "has_fire": false,
+        "has_smoke": false
+      }
+    },
+    {
+      "video_name": "mivia_normal_3_2012-07-17_19-46-13.avi",
+      "video_path": "datasets\\fire_videos_organized\\normal\\mivia_normal_3_2012-07-17_19-46-13.avi",
+      "ground_truth": "normal",
+      "yolo": {
+        "method": "YOLO",
+        "total_frames": 7726,
+        "fps": 8.583333333333334,
+        "detections": {
+          "fire": 14,
+          "smoke": 412,
+          "none": 7301
+        },
+        "detection_ratios": {
+          "fire": 0.0018120631633445508,
+          "smoke": 0.05332643023556821,
+          "none": 0.9449909396841832
+        },
+        "avg_confidence": 0.3027784531245209,
+        "volatility": 0.021615324877038572,
+        "prediction": "smoke",
+        "confidence_level": 0.05332643023556821,
+        "has_fire": true,
+        "has_smoke": true
+      },
+      "lstm": {
+        "method": "YOLO+LSTM",
+        "total_frames": 7726,
+        "fps": 8.583333333333334,
+        "yolo_detections": {
+          "fire": 14,
+          "smoke": 412,
+          "none": 7301
+        },
+        "lstm_predictions": {
+          "0": 7697,
+          "1": 0,
+          "2": 0
+        },
+        "lstm_ratios": {
+          "fire": 0.0,
+          "smoke": 0.0,
+          "normal": 1.0
+        },
+        "avg_confidence": 0.5476675760564795,
+        "volatility": 0.0,
+        "max_continuous_fire": 0,
+        "max_continuous_smoke": 0,
+        "smoke_to_fire_transitions": 0,
+        "prediction": "normal",
+        "confidence_level": 1.0,
+        "has_fire": false,
+        "has_smoke": false
+      }
+    },
+    {
+      "video_name": "mivia_normal_3_2012-07-18_09-17-46.avi",
+      "video_path": "datasets\\fire_videos_organized\\normal\\mivia_normal_3_2012-07-18_09-17-46.avi",
+      "ground_truth": "normal",
+      "yolo": {
+        "method": "YOLO",
+        "total_frames": 7705,
+        "fps": 17.083333333333332,
+        "detections": {
+          "fire": 0,
+          "smoke": 0,
+          "none": 7705
+        },
+        "detection_ratios": {
+          "fire": 0.0,
+          "smoke": 0.0,
+          "none": 1.0
+        },
+        "avg_confidence": 0,
+        "volatility": 0.0,
+        "prediction": "normal",
+        "confidence_level": 1.0,
+        "has_fire": false,
+        "has_smoke": false
+      },
+      "lstm": {
+        "method": "YOLO+LSTM",
+        "total_frames": 7705,
+        "fps": 17.083333333333332,
+        "yolo_detections": {
+          "fire": 0,
+          "smoke": 0,
+          "none": 7705
+        },
+        "lstm_predictions": {
+          "0": 7676,
+          "1": 0,
+          "2": 0
+        },
+        "lstm_ratios": {
+          "fire": 0.0,
+          "smoke": 0.0,
+          "normal": 1.0
+        },
+        "avg_confidence": 0.4836140274729749,
+        "volatility": 0.0,
+        "max_continuous_fire": 0,
+        "max_continuous_smoke": 0,
+        "smoke_to_fire_transitions": 0,
+        "prediction": "normal",
+        "confidence_level": 1.0,
+        "has_fire": false,
+        "has_smoke": false
+      }
+    },
+    {
+      "video_name": "mivia_normal_3_2012-07-20_10-16-38.avi",
+      "video_path": "datasets\\fire_videos_organized\\normal\\mivia_normal_3_2012-07-20_10-16-38.avi",
+      "ground_truth": "normal",
+      "yolo": {
+        "method": "YOLO",
+        "total_frames": 7509,
+        "fps": 8.333333333333334,
+        "detections": {
+          "fire": 6676,
+          "smoke": 5,
+          "none": 831
+        },
+        "detection_ratios": {
+          "fire": 0.8890664535890265,
+          "smoke": 0.0006658676255160474,
+          "none": 0.11066719936076708
+        },
+        "avg_confidence": 0.4335087892841818,
+        "volatility": 0.06165934212278599,
+        "prediction": "fire",
+        "confidence_level": 0.8890664535890265,
+        "has_fire": true,
+        "has_smoke": true
+      },
+      "lstm": {
+        "method": "YOLO+LSTM",
+        "total_frames": 7509,
+        "fps": 8.333333333333334,
+        "yolo_detections": {
+          "fire": 6676,
+          "smoke": 5,
+          "none": 831
+        },
+        "lstm_predictions": {
+          "0": 7478,
+          "1": 2,
+          "2": 0
+        },
+        "lstm_ratios": {
+          "fire": 0.0,
+          "smoke": 0.00026737967914438503,
+          "normal": 0.9997326203208556
+        },
+        "avg_confidence": 0.9607870630003552,
+        "volatility": 0.00026737967914438503,
+        "max_continuous_fire": 0,
+        "max_continuous_smoke": 2,
+        "smoke_to_fire_transitions": 0,
+        "prediction": "normal",
+        "confidence_level": 0.9997326203208556,
+        "has_fire": false,
+        "has_smoke": true
+      }
+    },
+    {
+      "video_name": "mivia_normal_3_2012-07-24_17-01-49.avi",
+      "video_path": "datasets\\fire_videos_organized\\normal\\mivia_normal_3_2012-07-24_17-01-49.avi",
+      "ground_truth": "normal",
+      "yolo": {
+        "method": "YOLO",
+        "total_frames": 7509,
+        "fps": 8.333333333333334,
+        "detections": {
+          "fire": 0,
+          "smoke": 250,
+          "none": 7259
+        },
+        "detection_ratios": {
+          "fire": 0.0,
+          "smoke": 0.03329338127580237,
+          "none": 0.9667066187241976
+        },
+        "avg_confidence": 0.2932652131319046,
+        "volatility": 0.0154481289119723,
+        "prediction": "normal",
+        "confidence_level": 0.9667066187241976,
+        "has_fire": false,
+        "has_smoke": true
+      },
+      "lstm": {
+        "method": "YOLO+LSTM",
+        "total_frames": 7509,
+        "fps": 8.333333333333334,
+        "yolo_detections": {
+          "fire": 0,
+          "smoke": 250,
+          "none": 7259
+        },
+        "lstm_predictions": {
+          "0": 7469,
+          "1": 11,
+          "2": 0
+        },
+        "lstm_ratios": {
+          "fire": 0.0,
+          "smoke": 0.0014705882352941176,
+          "normal": 0.9985294117647059
+        },
+        "avg_confidence": 0.5231537667028406,
+        "volatility": 0.00026737967914438503,
+        "max_continuous_fire": 0,
+        "max_continuous_smoke": 11,
+        "smoke_to_fire_transitions": 0,
+        "prediction": "normal",
+        "confidence_level": 0.9985294117647059,
+        "has_fire": false,
+        "has_smoke": true
+      }
+    },
+    {
+      "video_name": "mivia_normal_3_2012-07-24_14-01-28.avi",
+      "video_path": "datasets\\fire_videos_organized\\normal\\mivia_normal_3_2012-07-24_14-01-28.avi",
+      "ground_truth": "normal",
+      "yolo": {
+        "method": "YOLO",
+        "total_frames": 7509,
+        "fps": 8.333333333333334,
+        "detections": {
+          "fire": 0,
+          "smoke": 0,
+          "none": 7509
+        },
+        "detection_ratios": {
+          "fire": 0.0,
+          "smoke": 0.0,
+          "none": 1.0
+        },
+        "avg_confidence": 0,
+        "volatility": 0.0,
+        "prediction": "normal",
+        "confidence_level": 1.0,
+        "has_fire": false,
+        "has_smoke": false
+      },
+      "lstm": {
+        "method": "YOLO+LSTM",
+        "total_frames": 7509,
+        "fps": 8.333333333333334,
+        "yolo_detections": {
+          "fire": 0,
+          "smoke": 0,
+          "none": 7509
+        },
+        "lstm_predictions": {
+          "0": 7480,
+          "1": 0,
+          "2": 0
+        },
+        "lstm_ratios": {
+          "fire": 0.0,
+          "smoke": 0.0,
+          "normal": 1.0
+        },
+        "avg_confidence": 0.48361402747226273,
+        "volatility": 0.0,
+        "max_continuous_fire": 0,
+        "max_continuous_smoke": 0,
+        "smoke_to_fire_transitions": 0,
+        "prediction": "normal",
+        "confidence_level": 1.0,
+        "has_fire": false,
+        "has_smoke": false
+      }
+    },
+    {
+      "video_name": "mivia_normal_3_2012-07-24_16-01-42.avi",
+      "video_path": "datasets\\fire_videos_organized\\normal\\mivia_normal_3_2012-07-24_16-01-42.avi",
+      "ground_truth": "normal",
+      "yolo": {
+        "method": "YOLO",
+        "total_frames": 7509,
+        "fps": 8.333333333333334,
+        "detections": {
+          "fire": 0,
+          "smoke": 4620,
+          "none": 2905
+        },
+        "detection_ratios": {
+          "fire": 0.0,
+          "smoke": 0.6152616859768278,
+          "none": 0.38686909042482354
+        },
+        "avg_confidence": 0.5006365376504469,
+        "volatility": 0.03023039019842855,
+        "prediction": "smoke",
+        "confidence_level": 0.6152616859768278,
+        "has_fire": false,
+        "has_smoke": true
+      },
+      "lstm": {
+        "method": "YOLO+LSTM",
+        "total_frames": 7509,
+        "fps": 8.333333333333334,
+        "yolo_detections": {
+          "fire": 0,
+          "smoke": 4620,
+          "none": 2905
+        },
+        "lstm_predictions": {
+          "0": 7480,
+          "1": 0,
+          "2": 0
+        },
+        "lstm_ratios": {
+          "fire": 0.0,
+          "smoke": 0.0,
+          "normal": 1.0
+        },
+        "avg_confidence": 0.8550161454966043,
+        "volatility": 0.0,
+        "max_continuous_fire": 0,
+        "max_continuous_smoke": 0,
+        "smoke_to_fire_transitions": 0,
+        "prediction": "normal",
+        "confidence_level": 1.0,
+        "has_fire": false,
+        "has_smoke": false
+      }
+    },
+    {
+      "video_name": "bowfire_nofire_negsVideo16.1077.avi",
+      "video_path": "datasets\\fire_videos_organized\\normal\\bowfire_nofire_negsVideo16.1077.avi",
+      "ground_truth": "normal",
+      "yolo": {
+        "method": "YOLO",
+        "total_frames": 196,
+        "fps": 18.508236165093468,
+        "detections": {
+          "fire": 0,
+          "smoke": 4,
+          "none": 192
+        },
+        "detection_ratios": {
+          "fire": 0.0,
+          "smoke": 0.02040816326530612,
+          "none": 0.9795918367346939
+        },
+        "avg_confidence": 0.37287628650665283,
+        "volatility": 0.02040816326530612,
+        "prediction": "normal",
+        "confidence_level": 0.9795918367346939,
+        "has_fire": false,
+        "has_smoke": true
+      },
+      "lstm": {
+        "method": "YOLO+LSTM",
+        "total_frames": 196,
+        "fps": 18.508236165093468,
+        "yolo_detections": {
+          "fire": 0,
+          "smoke": 4,
+          "none": 192
+        },
+        "lstm_predictions": {
+          "0": 161,
+          "1": 6,
+          "2": 0
+        },
+        "lstm_ratios": {
+          "fire": 0.0,
+          "smoke": 0.03592814371257485,
+          "normal": 0.9640718562874252
+        },
+        "avg_confidence": 0.5401527810239506,
+        "volatility": 0.011976047904191617,
+        "max_continuous_fire": 0,
+        "max_continuous_smoke": 6,
+        "smoke_to_fire_transitions": 0,
+        "prediction": "normal",
+        "confidence_level": 0.9640718562874252,
+        "has_fire": false,
+        "has_smoke": true
+      }
+    },
+    {
+      "video_name": "archive_fire and smoke.mp4",
+      "video_path": "datasets\\fire_videos_organized\\mixed\\archive_fire and smoke.mp4",
+      "ground_truth": "mixed",
+      "yolo": {
+        "method": "YOLO",
+        "total_frames": 1474,
+        "fps": 25.0,
+        "detections": {
+          "fire": 979,
+          "smoke": 155,
+          "none": 610
+        },
+        "detection_ratios": {
+          "fire": 0.664179104477612,
+          "smoke": 0.10515603799185888,
+          "none": 0.41383989145183175
+        },
+        "avg_confidence": 0.5721384691340583,
+        "volatility": 0.08955223880597014,
+        "prediction": "fire",
+        "confidence_level": 0.664179104477612,
+        "has_fire": true,
+        "has_smoke": true
+      },
+      "lstm": {
+        "method": "YOLO+LSTM",
+        "total_frames": 1474,
+        "fps": 25.0,
+        "yolo_detections": {
+          "fire": 979,
+          "smoke": 155,
+          "none": 610
+        },
+        "lstm_predictions": {
+          "0": 665,
+          "1": 162,
+          "2": 618
+        },
+        "lstm_ratios": {
+          "fire": 0.427681660899654,
+          "smoke": 0.11211072664359861,
+          "normal": 0.4602076124567474
+        },
+        "avg_confidence": 0.8214218621229218,
+        "volatility": 0.01660899653979239,
+        "max_continuous_fire": 161,
+        "max_continuous_smoke": 95,
+        "smoke_to_fire_transitions": 3,
+        "prediction": "fire",
+        "confidence_level": 0.427681660899654,
+        "has_fire": true,
+        "has_smoke": true
+      }
+    },
+    {
+      "video_name": "archive_test_test1.mp4",
+      "video_path": "datasets\\fire_videos_organized\\mixed\\archive_test_test1.mp4",
+      "ground_truth": "mixed",
+      "yolo": {
+        "method": "YOLO",
+        "total_frames": 1166,
+        "fps": 25.0,
+        "detections": {
+          "fire": 549,
+          "smoke": 166,
+          "none": 720
+        },
+        "detection_ratios": {
+          "fire": 0.47084048027444253,
+          "smoke": 0.1423670668953688,
+          "none": 0.6174957118353345
+        },
+        "avg_confidence": 0.48827400378413965,
+        "volatility": 0.07032590051457976,
+        "prediction": "fire",
+        "confidence_level": 0.47084048027444253,
+        "has_fire": true,
+        "has_smoke": true
+      },
+      "lstm": {
+        "method": "YOLO+LSTM",
+        "total_frames": 1166,
+        "fps": 25.0,
+        "yolo_detections": {
+          "fire": 549,
+          "smoke": 166,
+          "none": 720
+        },
+        "lstm_predictions": {
+          "0": 474,
+          "1": 481,
+          "2": 182
+        },
+        "lstm_ratios": {
+          "fire": 0.1600703605980651,
+          "smoke": 0.4230430958663149,
+          "normal": 0.41688654353562005
+        },
+        "avg_confidence": 0.695748223294893,
+        "volatility": 0.021108179419525065,
+        "max_continuous_fire": 48,
+        "max_continuous_smoke": 134,
+        "smoke_to_fire_transitions": 7,
+        "prediction": "fire",
+        "confidence_level": 0.1600703605980651,
+        "has_fire": true,
+        "has_smoke": true
+      }
+    },
+    {
+      "video_name": "archive_test_test2.mp4",
+      "video_path": "datasets\\fire_videos_organized\\mixed\\archive_test_test2.mp4",
+      "ground_truth": "mixed",
+      "yolo": {
+        "method": "YOLO",
+        "total_frames": 1865,
+        "fps": 29.97002997002997,
+        "detections": {
+          "fire": 131,
+          "smoke": 268,
+          "none": 1521
+        },
+        "detection_ratios": {
+          "fire": 0.07024128686327077,
+          "smoke": 0.14369973190348526,
+          "none": 0.8155495978552278
+        },
+        "avg_confidence": 0.4951922653761125,
+        "volatility": 0.07399463806970509,
+        "prediction": "fire",
+        "confidence_level": 0.07024128686327077,
+        "has_fire": true,
+        "has_smoke": true
+      },
+      "lstm": {
+        "method": "YOLO+LSTM",
+        "total_frames": 1865,
+        "fps": 29.97002997002997,
+        "yolo_detections": {
+          "fire": 131,
+          "smoke": 268,
+          "none": 1521
+        },
+        "lstm_predictions": {
+          "0": 1137,
+          "1": 263,
+          "2": 436
+        },
+        "lstm_ratios": {
+          "fire": 0.2374727668845316,
+          "smoke": 0.14324618736383443,
+          "normal": 0.619281045751634
+        },
+        "avg_confidence": 0.649295730073987,
+        "volatility": 0.021241830065359478,
+        "max_continuous_fire": 160,
+        "max_continuous_smoke": 77,
+        "smoke_to_fire_transitions": 7,
+        "prediction": "fire",
+        "confidence_level": 0.2374727668845316,
+        "has_fire": true,
+        "has_smoke": true
+      }
+    },
+    {
+      "video_name": "archive_test_test3.mp4",
+      "video_path": "datasets\\fire_videos_organized\\mixed\\archive_test_test3.mp4",
+      "ground_truth": "mixed",
+      "yolo": {
+        "method": "YOLO",
+        "total_frames": 1568,
+        "fps": 25.0,
+        "detections": {
+          "fire": 36,
+          "smoke": 346,
+          "none": 1212
+        },
+        "detection_ratios": {
+          "fire": 0.02295918367346939,
+          "smoke": 0.22066326530612246,
+          "none": 0.7729591836734694
+        },
+        "avg_confidence": 0.4703327520355504,
+        "volatility": 0.039540816326530615,
+        "prediction": "smoke",
+        "confidence_level": 0.22066326530612246,
+        "has_fire": true,
+        "has_smoke": true
+      },
+      "lstm": {
+        "method": "YOLO+LSTM",
+        "total_frames": 1568,
+        "fps": 25.0,
+        "yolo_detections": {
+          "fire": 36,
+          "smoke": 346,
+          "none": 1212
+        },
+        "lstm_predictions": {
+          "0": 905,
+          "1": 465,
+          "2": 169
+        },
+        "lstm_ratios": {
+          "fire": 0.10981156595191682,
+          "smoke": 0.30214424951267055,
+          "normal": 0.5880441845354126
+        },
+        "avg_confidence": 0.637846596950521,
+        "volatility": 0.02014294996751137,
+        "max_continuous_fire": 59,
+        "max_continuous_smoke": 76,
+        "smoke_to_fire_transitions": 7,
+        "prediction": "fire",
+        "confidence_level": 0.10981156595191682,
+        "has_fire": true,
+        "has_smoke": true
+      }
+    }
+  ]
+}

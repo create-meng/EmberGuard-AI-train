@@ -61,7 +61,7 @@ def quick_test():
             for box in results[0].boxes:
                 conf = float(box.conf[0])
                 cls = int(box.cls[0])
-                cls_name = 'fire' if cls == 0 else 'smoke'
+                cls_name = 'smoke' if cls == 0 else 'fire'  # 0=smoke, 1=fire
                 print(f"  检测到: {cls_name}, 置信度: {conf:.3f}")
         else:
             print(f"  未检测到火/烟")
