@@ -1,0 +1,119 @@
+
+【问题】数字孪生大屏：摄像头弹窗长期黑屏/无数据，提示“视频首帧加载超时”
+
+【现象】
+1) 后端日志显示摄像头“启动中/已连接”，demo 视频源可打开
+2) 前端弹窗画面区域黑屏（无 img），右侧状态常显示“无数据/0%”
+3) 前端 3 秒后提示：未收到视频帧推送（thumbnail 为空）
+
+【排查与尝试（按时间顺序）】
+1) Socket.IO 视频订阅机制
+   - 后端实现 start_video/stop_video 的 join_room/leave_room
+   - 后端改为 video_frame 只推送到 room=camera:{camera_id}
+   - 前端弹窗 openVideoModal 发送 start_video，收到 video_frame 更新 camera.thumbnail / camera.last_detection
+
+2) 前端性能与一致性修复
+   - VideoModal 去掉 200ms 轮询，改 watch(camera) 同步数据
+   - 离线状态优先：offline 时清空 last_detection/thumbnail，避免离线显示“正常”
+
+3) 后端推送兜底
+   - start_video 订阅成功后立即 emit 一次当前缓存帧（video_frame），避免用户等待下一次循环推送
+
+4) 多摄像头 LSTM 串台修复
+   - 发现 FireDetectionPipeline 可能包含 LSTM buffer
+   - 改为每个 camera_id 独立一个 pipeline（camera_pipelines），防止多摄像头共享缓冲导致结果串台
+
+5) 取消“demo 随机推理”模式
+   - 用户要求 demo/非 demo 都必须真实 YOLO+LSTM 推理
+   - 因此移除随机检测回退，推理失败返回 None（并加 None 保护避免线程异常）
+
+6) camera_id 类型不一致修复（数字 vs 字符串）
+   - 前端 find(c.id===data.camera_id) 可能匹配失败
+   - 改为前后端 camera_id 全部 String 化进行比较和推送
+
+7) 推理阻塞导致黑屏（推理慢时 thumbnail 不输出）
+   - 将摄像头 loop 改为：先生成 thumbnail，再节流推理（infer_interval=0.5s）
+   - 目的：即使推理慢，也能保证画面持续刷新
+
+8) 跳帧 continue 导致 thumbnail/emit 被跳过
+   - 修复：不再 continue 跳过整个循环
+   - 改为 should_process 控制仅节流推理，但每次循环都更新 thumbnail 并允许推送
+
+【新增诊断（用于最终定位）】
+1) 后端 detection_engine.py
+   - 只打印一次：是否生成首帧 thumbnail
+   - 只打印一次：emit video_frame 时 thumbnail 是否为空
+   - 只打印一次：frame=None 或 resize 失败
+2) 后端 app.py
+   - start_video 订阅时打印 status 与 has_thumbnail
+3) 前端 app.js
+   - 收到 video_frame 时打印：camera_id 和是否有 thumbnail（不打印 base64 内容）
+
+【下一步判断依据】
+1) 如果前端 console 从未出现 video_frame：优先查 join_room/emit/网络连接
+2) 如果出现 video_frame 但 !!thumbnail=false：后端 thumbnail 未生成/未写入缓存
+3) 如果出现 video_frame 且 !!thumbnail=true 仍黑屏：查前端渲染/CSS/图片格式
+
+【最新进展（2026-02-14）】
+1) 后端确认：所有 demo_cam 均打印“已生成首帧thumbnail”
+2) 后端确认：start_video订阅时 has_thumbnail=True（例如 demo_cam_002）
+3) 但前端仍黑屏并提示首帧超时 => 高概率为 video_frame 事件未送达浏览器/未被前端监听到
+
+【对应修复（强制定向投递与 namespace 一致）】
+1) backend/app.py：start_video 内 emit(video_started/video_frame) 显式使用 to=request.sid + namespace='/'
+2) backend/detection_engine.py：后台线程 emit(camera_update/video_frame) 显式指定 namespace='/'
+
+【深度排查（2026-02-14）- 针对“前端完全无 video_frame 事件”】
+1) 现象：后端 status=online 且 has_thumbnail=True，但前端 console 没打印任何 video_frame
+2) 怀疑点：
+   - 房间订阅(Room)机制在 Windows/某些环境下失效
+   - base64 数据过大（默认 1MB 限制）导致 Socket.IO 丢包
+   - 命名空间(Namespace)默认不匹配
+3) 尝试动作：
+   - 调大 Socket.IO payload 限制至 10MB (max_decode_packets_size=10**7)
+   - 【当前】临时移除 Room 限制，所有 video_frame 改为全局广播测试
+   - 【当前】start_video 内首帧回推改用全局 socketio.emit
+   - 【当前】增加首帧回推异常捕获日志
+
+【进一步压缩与稳定性增强（2026-02-14）】
+1) 现象：调大 payload 限制并移除 Room 后，前端依然无 video_frame 事件。
+2) 怀疑点：尽管 WebSocket 连接成功，但 Windows 下的大数据包投递可能因超时或缓存被静默截断。
+3) 动作：
+   - 将缩略图尺寸从 640x480 降至 320x240，JPEG 质量降至 50（体积约 10KB）。
+   - 增加 ping_timeout=60/ping_interval=25 防止 Socket.IO 频繁断连重连。
+   - 后端打印推送长度，确认 `socketio.emit` 确实在执行。
+   - 新增 `/test_thumb/<camera_id>` 网页接口，绕过 Socket.IO 验证后端图像生成是否正常。
+   - 前端 app.js 强制指定 `transports: ['websocket', 'polling']` 优先使用 WebSocket。
+
+【重大进展（2026-02-14）】
+1) 现象：前端 Console 出现了黄色的 `[SOCKET] 收到 video_frame` 日志，弹窗内出现了压缩后的监控画面。
+2) 结论：Socket.IO 通道已彻底打通！之前的“无画面”确实是投递策略/Payload限制导致。
+
+【当前优化点】
+1) 画面质量恢复：
+   - 之前为了排查而极度压缩了画面（320x240, 50%质量），导致画面模糊。
+   - 【已修复】恢复至 640x480, 85% 质量，以保证清晰度。
+2) 通讯负载优化：
+   - 之前为了排查移除了 Room 订阅。
+   - 【已修复】恢复 Room 订阅机制，避免全局广播浪费流量。
+3) 状态异常修复：
+   - 用户反馈“点开后状态变离线”。
+   - 【已修复】app.js 增加保护，防止非状态变化类的更新覆盖当前状态。
+
+【传感器与视频稳定性紧急修复（2026-02-14）】
+1) 传感器数据全为 0：
+   - 原因：在 `app.py` 中 `SensorManager` 初始化时传了 `socketio=None`，导致模拟数据无法推送至前端。
+   - 【已修复】正确关联 `socketio` 实例。
+2) 视频画面再次“不行了”：
+   - 原因：检测到 `NameError: frame_count is not defined`。由于之前的诊断代码残留了未定义的 `frame_count` 变量，导致所有摄像头的线程循环全部报错退出（status 变为 error）。
+   - 【已修复】移除报错代码，恢复检测循环。
+
+【传感器深度修复（2026-02-14）】
+1) 现象：传感器数值依然为 0。
+2) 怀疑点：
+   - `stop-all` 后模拟器未正确重启。
+   - `socketio` 实例在 `SensorManager` 内部未生效。
+3) 动作：
+   - 在 `app.py` 初始化时强制关联 `socketio`。
+   - 在 `/api/buildings/switch` 接口中显式调用 `sensor_manager.start_simulation()`。
+

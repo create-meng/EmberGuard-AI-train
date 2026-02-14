@@ -1,0 +1,16 @@
+{
+  "models": {
+    "yolo": "../../runs/detect/train2/weights/best.pt",
+    "lstm": "../../models/lstm/best.pt"
+  },
+  "detection": {
+    "normal_fps": 5,
+    "alert_fps": 15,
+    "alert_cooldown": 5,
+    "conf_threshold": 0.25
+  },
+  "system": {
+    "alert_enabled": false,
+    "video_recording_enabled": false
+  }
+}

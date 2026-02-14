@@ -1,0 +1,50 @@
+{
+  "description": "硬件设备配置文件 - 在这里配置所有真实硬件设备的连接信息",
+  
+  "cameras": {},
+  
+  "sensors": {
+    "serial_port": {
+      "port": "",
+      "baudrate": 9600,
+      "timeout": 1,
+      "enabled": false
+    },
+    "temperature_sensors": {},
+    "humidity_sensors": {},
+    "smoke_detectors": {}
+  },
+  
+  "actuators": {
+    "sprinklers": {},
+    "alarms": {}
+  },
+  
+  "mqtt": {
+    "enabled": false,
+    "broker_host": "",
+    "broker_port": 1883,
+    "username": "",
+    "password": "",
+    "topics": {
+      "temperature": "sensors/temperature/{sensor_id}",
+      "humidity": "sensors/humidity/{sensor_id}",
+      "smoke": "sensors/smoke/{sensor_id}",
+      "sprinkler": "actuators/sprinkler/{actuator_id}",
+      "alarm": "actuators/alarm/{actuator_id}"
+    }
+  },
+  
+  "tcp_devices": {
+    "enabled": false,
+    "devices": {}
+  },
+  
+  "notes": {
+    "摄像头类型": "支持 usb, rtsp, http 三种类型",
+    "串口配置": "Windows使用COM3, Linux使用/dev/ttyUSB0",
+    "协议说明": "command字段是发送给硬件的命令，根据你的硬件协议修改",
+    "MQTT": "如果使用物联网设备，启用MQTT并配置broker地址",
+    "TCP": "如果使用网络设备，启用TCP并配置设备地址"
+  }
+}

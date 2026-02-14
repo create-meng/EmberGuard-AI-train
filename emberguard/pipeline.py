@@ -1,6 +1,7 @@
 """
 火灾检测管道 - 集成YOLO和LSTM
 """
+import os
 import torch
 import numpy as np
 from collections import deque
@@ -33,7 +34,8 @@ class FireDetectionPipeline:
             self.device = device
         
         # 加载YOLO模型
-        print(f"加载YOLO模型: {yolo_model_path}")
+        if not os.environ.get('SILENT_MODE'):
+            print(f"加载YOLO模型: {yolo_model_path}")
         self.yolo_model = YOLO(yolo_model_path)
         
         # 特征提取器
@@ -47,7 +49,8 @@ class FireDetectionPipeline:
                 from .lstm_model import LSTMTrainer
                 self.lstm_model = LSTMTrainer.load_model(lstm_model_path, self.device)
                 self.use_lstm = True
-                print(f"LSTM模型已加载")
+                if not os.environ.get('SILENT_MODE'):
+                    print(f"LSTM模型已加载")
             except Exception as e:
                 print(f"LSTM模型加载失败: {e}")
                 print("将仅使用YOLO检测")

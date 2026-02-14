@@ -1,0 +1,245 @@
+{
+  "id": "demo",
+  "name": "演示建筑",
+  "description": "用于演示的示例建筑配置",
+  "floors": [
+    {
+      "id": "floor_1",
+      "name": "一层",
+      "floor_plan": {
+        "image": "/buildings/demo/demo_plan1.png",
+        "width": 1530,
+        "height": 680
+      },
+      "facilities": [
+        {
+          "id": "demo_cam_001",
+          "type": "camera",
+          "name": "附房摄像头",
+          "position": { "x": 50, "y": 40 },
+          "source": 0,
+          "demo_video": "../../datasets/fire_videos_organized/normal/mivia_normal_3_2012-07-17_19-31-11.avi",
+          "enabled": true
+        },
+        {
+          "id": "demo_cam_002",
+          "type": "camera",
+          "name": "左房间摄像头",
+          "position": { "x": 350, "y": 310 },
+          "source": 0,
+          "demo_video": "../../datasets/fire_videos_organized/fire/archive_fire1.mp4",
+          "enabled": true
+        },
+        {
+          "id": "demo_cam_003",
+          "type": "camera",
+          "name": "右房间摄像头",
+          "position": { "x": 1340, "y": 310 },
+          "source": 0,
+          "demo_video": "../../datasets/fire_videos_organized/normal/mivia_normal_3_2012-07-17_19-46-13.avi",
+          "enabled": true
+        },
+        {
+          "id": "demo_cam_004",
+          "type": "camera",
+          "name": "天井摄像头",
+          "position": { "x": 650, "y": 540 },
+          "source": 0,
+          "demo_video": "../../datasets/fire_videos_organized/mixed/archive_fire and smoke.mp4",
+          "enabled": true
+        },
+        {
+          "id": "demo_temp_001",
+          "type": "temperature_sensor",
+          "name": "附房温度传感器",
+          "position": { "x": 50, "y": 300 },
+          "threshold": 60,
+          "unit": "°C",
+          "enabled": true
+        },
+        {
+          "id": "demo_temp_002",
+          "type": "temperature_sensor",
+          "name": "左房间温度传感器",
+          "position": { "x": 350, "y": 170 },
+          "threshold": 60,
+          "unit": "°C",
+          "enabled": true
+        },
+        {
+          "id": "demo_temp_003",
+          "type": "temperature_sensor",
+          "name": "右房间温度传感器",
+          "position": { "x": 1110, "y": 200 },
+          "threshold": 60,
+          "unit": "°C",
+          "enabled": true
+        },
+        {
+          "id": "demo_temp_004",
+          "type": "temperature_sensor",
+          "name": "天井温度传感器",
+          "position": { "x": 830, "y": 420 },
+          "threshold": 60,
+          "unit": "°C",
+          "enabled": true
+        },
+        {
+          "id": "demo_smoke_001",
+          "type": "smoke_detector",
+          "name": "附房烟雾探测器",
+          "position": { "x": 50, "y": 370 },
+          "threshold": 50,
+          "unit": "ppm",
+          "enabled": true
+        },
+        {
+          "id": "demo_smoke_002",
+          "type": "smoke_detector",
+          "name": "左房间烟雾探测器",
+          "position": { "x": 350, "y": 230 },
+          "threshold": 50,
+          "unit": "ppm",
+          "enabled": true
+        },
+        {
+          "id": "demo_smoke_003",
+          "type": "smoke_detector",
+          "name": "右房间烟雾探测器",
+          "position": { "x": 1110, "y": 130 },
+          "threshold": 50,
+          "unit": "ppm",
+          "enabled": true
+        },
+        {
+          "id": "demo_smoke_004",
+          "type": "smoke_detector",
+          "name": "楼梯烟雾探测器",
+          "position": { "x": 350, "y": 480 },
+          "threshold": 50,
+          "unit": "ppm",
+          "enabled": true
+        }
+      ]
+    },
+    {
+      "id": "floor_2",
+      "name": "二层",
+      "floor_plan": {
+        "image": "/buildings/demo/demo_plan2.png",
+        "width": 1530,
+        "height": 680
+      },
+      "facilities": [
+        {
+          "id": "demo_cam_201",
+          "type": "camera",
+          "name": "附房摄像头",
+          "position": { "x": 50, "y": 40 },
+          "source": 0,
+          "demo_video": "../../datasets/fire_videos_organized/fire/archive_fire2.mp4",
+          "enabled": true
+        },
+        {
+          "id": "demo_cam_202",
+          "type": "camera",
+          "name": "左房间摄像头",
+          "position": { "x": 350, "y": 310 },
+          "source": 0,
+          "demo_video": "../../datasets/fire_videos_organized/fire/archive_fire3.mp4",
+          "enabled": true
+        },
+        {
+          "id": "demo_cam_203",
+          "type": "camera",
+          "name": "右房间摄像头",
+          "position": { "x": 1340, "y": 310 },
+          "source": 0,
+          "demo_video": "../../datasets/fire_videos_organized/fire/archive_fire4.mp4",
+          "enabled": true
+        },
+        {
+          "id": "demo_cam_204",
+          "type": "camera",
+          "name": "天井摄像头",
+          "position": { "x": 650, "y": 540 },
+          "source": 0,
+          "demo_video": "../../datasets/fire_videos_organized/mixed/archive_test_test1.mp4",
+          "enabled": true
+        },
+        {
+          "id": "demo_temp_201",
+          "type": "temperature_sensor",
+          "name": "附房温度传感器",
+          "position": { "x": 50, "y": 300 },
+          "threshold": 60,
+          "unit": "°C",
+          "enabled": true
+        },
+        {
+          "id": "demo_temp_202",
+          "type": "temperature_sensor",
+          "name": "左房间温度传感器",
+          "position": { "x": 350, "y": 170 },
+          "threshold": 60,
+          "unit": "°C",
+          "enabled": true
+        },
+        {
+          "id": "demo_temp_203",
+          "type": "temperature_sensor",
+          "name": "右房间温度传感器",
+          "position": { "x": 1110, "y": 200 },
+          "threshold": 60,
+          "unit": "°C",
+          "enabled": true
+        },
+        {
+          "id": "demo_temp_204",
+          "type": "temperature_sensor",
+          "name": "天井温度传感器",
+          "position": { "x": 830, "y": 420 },
+          "threshold": 60,
+          "unit": "°C",
+          "enabled": true
+        },
+        {
+          "id": "demo_smoke_201",
+          "type": "smoke_detector",
+          "name": "附房烟雾探测器",
+          "position": { "x": 50, "y": 370 },
+          "threshold": 50,
+          "unit": "ppm",
+          "enabled": true
+        },
+        {
+          "id": "demo_smoke_202",
+          "type": "smoke_detector",
+          "name": "左房间烟雾探测器",
+          "position": { "x": 350, "y": 230 },
+          "threshold": 50,
+          "unit": "ppm",
+          "enabled": true
+        },
+        {
+          "id": "demo_smoke_203",
+          "type": "smoke_detector",
+          "name": "右房间烟雾探测器",
+          "position": { "x": 1110, "y": 130 },
+          "threshold": 50,
+          "unit": "ppm",
+          "enabled": true
+        },
+        {
+          "id": "demo_smoke_204",
+          "type": "smoke_detector",
+          "name": "楼梯烟雾探测器",
+          "position": { "x": 350, "y": 480 },
+          "threshold": 50,
+          "unit": "ppm",
+          "enabled": true
+        }
+      ]
+    }
+  ]
+}

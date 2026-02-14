@@ -1,0 +1,17 @@
+{
+  "id": "",
+  "name": "",
+  "description": "",
+  "floors": [
+    {
+      "id": "floor_1",
+      "name": "一层",
+      "floor_plan": {
+        "image": "floor_plans/floor_1.png",
+        "width": 1200,
+        "height": 800
+      },
+      "facilities": []
+    }
+  ]
+}

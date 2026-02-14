@@ -1,6 +1,7 @@
 """
 LSTM火灾分类器 - 基于时序特征的火灾识别
 """
+import os
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
@@ -369,7 +370,8 @@ class LSTMTrainer:
         model.to(device)
         model.eval()
         
-        print(f"模型已从 {path} 加载")
+        if not os.environ.get('SILENT_MODE'):
+            print(f"模型已从 {path} 加载")
         return model
 
 
