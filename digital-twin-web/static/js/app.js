@@ -324,6 +324,11 @@ const app = createApp({
         this.handleCameraUpdate(data);
       });
 
+      // 启动视频回执（返回 stream_url）
+      this.socket.on('video_started', (data) => {
+        this.handleVideoStarted(data);
+      });
+
       // 视频帧事件
       this.socket.on('video_frame', (data) => {
         console.warn(`[SOCKET] 收到 video_frame | camera: ${data?.camera_id} | thumbnail: ${!!data?.thumbnail} | size: ${data?.thumbnail ? data.thumbnail.length : 0}`);
@@ -398,6 +403,19 @@ const app = createApp({
       }
 
       this.normalizeCameraAlertStatus(camera, camera.last_detection);
+    },
+
+    // 处理 start_video 的回执：绑定 MJPEG 流地址
+    handleVideoStarted(data) {
+      if (!data || !data.success) return;
+      const cid = String(data.camera_id);
+      if (!this.showVideoModal) return;
+      if (String(this.selectedCameraId) !== cid) return;
+      const camera = this.cameras.find(c => String(c.id) === cid);
+      if (!camera) return;
+
+      // 后端返回的是相对路径 /stream/<camera_id>
+      camera.stream_url = data.stream_url || `/stream/${cid}`;
     },
     
     // 处理新告警
@@ -673,10 +691,19 @@ const app = createApp({
       
       this.selectedCameraId = cid;
       this.showVideoModal = true;
+
+      // 清空旧流地址，避免复用旧连接
+      // 直接绑定流地址，避免依赖 Socket 回执导致弹窗无画面
+      camera.stream_url = `/stream/${cid}`;
       
       // 请求视频流
       if (this.socket) {
-        this.socket.emit('start_video', { camera_id: cid });
+        this.socket.emit('start_video', { camera_id: cid }, (resp) => {
+          if (!resp || !resp.success) return;
+          if (!this.showVideoModal) return;
+          if (String(this.selectedCameraId) !== cid) return;
+          camera.stream_url = resp.stream_url || `/stream/${cid}`;
+        });
       }
 
       // 超时提示：订阅后长时间没收到首帧，帮助定位后端/网络问题
@@ -685,8 +712,8 @@ const app = createApp({
         if (String(this.selectedCameraId) !== cid) return;
         const latest = this.cameras.find(c => String(c.id) === cid);
         if (!latest) return;
-        if (!latest.thumbnail) {
-          this.showNotification('视频首帧加载超时：未收到视频帧推送，请检查后端推理/订阅推送', 'error');
+        if (!latest.stream_url && !latest.thumbnail) {
+          this.showNotification('视频首帧加载超时：未收到 stream_url 且无缩略图，请检查后端摄像头线程与 /stream 路由', 'error');
         }
       }, 3000);
     },
@@ -695,6 +722,13 @@ const app = createApp({
     closeVideoModal() {
       if (this.selectedCameraId && this.socket) {
         this.socket.emit('stop_video', { camera_id: String(this.selectedCameraId) });
+      }
+
+      // 清理流地址，避免 <img> 持续占用连接
+      const cid = this.selectedCameraId ? String(this.selectedCameraId) : null;
+      if (cid) {
+        const camera = this.cameras.find(c => String(c.id) === cid);
+        if (camera) camera.stream_url = null;
       }
       
       this.showVideoModal = false;

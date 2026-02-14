@@ -1,13 +1,16 @@
 """
 数字孪生古建筑火灾监控Web系统 - Flask后端主应用
 """
-from flask import Flask, render_template, jsonify, request, send_file
+from flask import Flask, render_template, jsonify, request, send_file, Response
 from flask_socketio import SocketIO, emit, join_room, leave_room
 from flask_cors import CORS
 import os
 import sys
 from datetime import datetime
 import warnings
+import time
+import cv2
+import numpy as np
 
 # 静默警告
 warnings.filterwarnings('ignore', category=FutureWarning)
@@ -134,32 +137,61 @@ if current_building_id:
     if camera_configs:
         detection_engine.start_all_cameras(camera_configs, use_demo)
     
-    # 如果有传感器且使用演示模式，启动传感器模拟
-    if len(sensor_manager.sensors) > 0 and use_demo:
-        sensor_manager.start_simulation()
+    # 传感器：与“demo 建筑”解耦。只要未启用真实硬件接入，就启动模拟。
+    if len(sensor_manager.sensors) > 0:
+        if sensor_manager.should_simulate():
+            sensor_manager.start_simulation()
+        else:
+            sensor_manager.stop_simulation()
+
+
+@app.route('/stream/<camera_id>')
+def stream_camera(camera_id):
+    camera_id = str(camera_id)
+
+    # 立即输出的占位帧：保证浏览器能立刻拿到首字节，避免“无限转圈/超时”。
+    try:
+        _placeholder_img = np.zeros((1, 1, 3), dtype=np.uint8)
+        _ok, _buf = cv2.imencode('.jpg', _placeholder_img, [int(cv2.IMWRITE_JPEG_QUALITY), 60])
+        placeholder_jpeg = _buf.tobytes() if _ok else b''
+    except Exception:
+        placeholder_jpeg = b''
+
+    def _sleep(seconds: float):
+        try:
+            socketio.sleep(seconds)
+        except Exception:
+            time.sleep(seconds)
+
+    def gen():
+        # 先推一次占位帧，确保响应立即开始
+        if placeholder_jpeg:
+            yield (b'--frame\r\n'
+                   b'Content-Type: image/jpeg\r\n\r\n' + placeholder_jpeg + b'\r\n')
+
+        while True:
+            try:
+                jpeg = detection_engine.get_latest_jpeg(camera_id)
+                if jpeg:
+                    yield (b'--frame\r\n'
+                           b'Content-Type: image/jpeg\r\n\r\n' + jpeg + b'\r\n')
+                else:
+                    _sleep(0.05)
+            except GeneratorExit:
+                return
+            except Exception:
+                _sleep(0.1)
+
+    return Response(gen(), mimetype='multipart/x-mixed-replace; boundary=frame')
 
 # WebSocket事件处理
 @socketio.on('connect')
 def handle_connect():
     emit('connected', {'message': '连接成功'})
-    
-    # 仅在演示模式下自动启动传感器模拟
-    # 检查是否有摄像头配置了 demo_video
-    current_building_id = building_manager.get_current_building_id()
-    if current_building_id:
-        building_config = building_manager.load_building_config(current_building_id)
-        # 获取设施列表
-        facilities = []
-        if 'floors' in building_config:
-            for floor in building_config.get('floors', []):
-                facilities.extend(floor.get('facilities', []))
-        else:
-            facilities = building_config.get('facilities', [])
-        
-        use_demo = any(cam.get('demo_video') for cam in facilities if cam.get('type') == 'camera')
-        
-        if use_demo and not sensor_manager.simulation_running:
-            print("➤ 监测到客户端连接（演示模式），启动传感器模拟...")
+
+    # 传感器模拟与建筑类型无关：当未启用真实硬件接入时，自动确保模拟在运行。
+    if len(sensor_manager.sensors) > 0:
+        if sensor_manager.should_simulate() and not sensor_manager.simulation_running:
             sensor_manager.start_simulation()
 
     # 在第一个客户端连接时启动配置监听器
@@ -178,48 +210,35 @@ def handle_disconnect():
 def handle_start_video(data):
     camera_id = data.get('camera_id')
     if not camera_id:
-        emit('video_started', {'success': False, 'error': 'missing camera_id'})
-        return
+        payload = {'success': False, 'error': 'missing camera_id'}
+        emit('video_started', payload, to=request.sid, namespace='/')
+        return payload
 
     camera_id = str(camera_id)
-    room = f"camera:{camera_id}"
-    
-    # 明确指定 sid 和 namespace
-    join_room(room, sid=request.sid, namespace='/')
-    print(f"SID {request.sid} 加入房间: {room}")
-    
-    emit('video_started', {'success': True, 'camera_id': camera_id}, namespace='/')
+    print(f"[start_video] sid={request.sid} camera_id={camera_id}")
 
-    # 稍微延迟一下确保 join_room 在服务器底层生效后再推帧
-    def push_initial_frame():
-        with app.app_context():
-            try:
-                status = detection_engine.get_camera_status(camera_id)
-                if status:
-                    has_thumb = bool(status.get('thumbnail'))
-                    print(f"首帧回推确认: {camera_id} | has_thumbnail={has_thumb}")
-                    socketio.emit('video_frame', {
-                        'camera_id': camera_id,
-                        'status': status.get('status'),
-                        'thumbnail': status.get('thumbnail'),
-                        'last_detection': status.get('last_detection'),
-                        'timestamp': datetime.now().isoformat()
-                    }, room=room, namespace='/')
-            except Exception as e:
-                print(f"首帧异步回推异常: {e}")
+    payload = {
+        'success': True,
+        'camera_id': camera_id,
+        'stream_url': f"/stream/{camera_id}"
+    }
 
-    # 使用 eventlet 或线程异步推首帧，避免阻塞当前 handle
-    socketio.start_background_task(push_initial_frame)
+    emit('video_started', payload, to=request.sid, namespace='/')
+    print(f"[video_started] sid={request.sid} payload_ok={payload.get('success')} url={payload.get('stream_url')}")
+    return payload
 
 @socketio.on('stop_video')
 def handle_stop_video(data):
     camera_id = data.get('camera_id')
     if not camera_id:
-        emit('video_stopped', {'success': False, 'error': 'missing camera_id'})
-        return
+        payload = {'success': False, 'error': 'missing camera_id'}
+        emit('video_stopped', payload, to=request.sid, namespace='/')
+        return payload
 
     camera_id = str(camera_id)
-    emit('video_stopped', {'success': True, 'camera_id': camera_id}, namespace='/')
+    payload = {'success': True, 'camera_id': camera_id}
+    emit('video_stopped', payload, to=request.sid, namespace='/')
+    return payload
 
 if __name__ == '__main__':
     # 只在主进程输出（避免 debug 模式重复输出）

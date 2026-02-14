@@ -248,9 +248,12 @@ class APIRouter:
             if camera_configs:
                 self.detection_engine.start_all_cameras(camera_configs, has_demo_video)
             
-            # 如果有传感器且有演示视频，启动传感器模拟
-            if sensor_count > 0 and has_demo_video:
-                self.sensor_manager.start_simulation()
+            # 传感器：与“demo 建筑”解耦。只要未启用真实硬件接入，就启动模拟。
+            if sensor_count > 0:
+                if self.sensor_manager.should_simulate():
+                    self.sensor_manager.start_simulation()
+                else:
+                    self.sensor_manager.stop_simulation()
             
             return jsonify({
                 'success': True,

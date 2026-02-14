@@ -10,17 +10,23 @@ app.component('video-modal', {
     return {
       videoFrame: null,
       lstmResult: null,
-      updateInterval: null
+      updateInterval: null,
+      rafId: null
     };
   },
   
   mounted() {
     this.syncFromCamera();
+    this.startOverlayLoop();
   },
   
   beforeUnmount() {
     if (this.updateInterval) {
       clearInterval(this.updateInterval);
+    }
+    if (this.rafId) {
+      cancelAnimationFrame(this.rafId);
+      this.rafId = null;
     }
   },
 
@@ -87,12 +93,89 @@ app.component('video-modal', {
       }
 
       // 只有当有新画面或新检测结果时才更新
-      if (this.camera.thumbnail) {
+      if (this.camera.stream_url) {
+        this.videoFrame = this.camera.stream_url;
+      } else if (this.camera.thumbnail) {
         this.videoFrame = this.camera.thumbnail;
       }
 
       if (this.camera.last_detection) {
         this.lstmResult = this.camera.last_detection;
+      }
+
+      // 触发一次绘制
+      this.drawOverlay();
+    },
+
+    startOverlayLoop() {
+      const loop = () => {
+        this.drawOverlay();
+        this.rafId = requestAnimationFrame(loop);
+      };
+      this.rafId = requestAnimationFrame(loop);
+    },
+
+    drawOverlay() {
+      const canvas = this.$refs.overlay;
+      const img = this.$refs.videoImg;
+      if (!canvas || !img) return;
+
+      const rect = img.getBoundingClientRect();
+      const w = Math.max(1, Math.floor(rect.width));
+      const h = Math.max(1, Math.floor(rect.height));
+
+      if (canvas.width !== w) canvas.width = w;
+      if (canvas.height !== h) canvas.height = h;
+
+      const ctx = canvas.getContext('2d');
+      if (!ctx) return;
+
+      ctx.clearRect(0, 0, w, h);
+
+      const det = this.camera?.last_detection;
+      const boxes = det?.yolo_detections || [];
+      if (!Array.isArray(boxes) || boxes.length === 0) return;
+
+      // 后端推理输入固定 640x480（DetectionEngine frame_resized）
+      const srcW = 640;
+      const srcH = 480;
+      const sx = w / srcW;
+      const sy = h / srcH;
+
+      ctx.lineWidth = 2;
+      ctx.font = '12px sans-serif';
+      ctx.textBaseline = 'top';
+
+      for (const b of boxes) {
+        const bb = b?.bbox;
+        if (!bb || bb.length !== 4) continue;
+        const [x1, y1, x2, y2] = bb;
+        const x = x1 * sx;
+        const y = y1 * sy;
+        const bw = (x2 - x1) * sx;
+        const bh = (y2 - y1) * sy;
+
+        const cls = b?.class_name || '';
+        const conf = typeof b?.confidence === 'number' ? b.confidence : null;
+        const label = conf === null ? cls : `${cls} ${(conf * 100).toFixed(0)}%`;
+
+        const color = cls === 'fire' ? '#ff3b30' : '#ffcc00';
+        ctx.strokeStyle = color;
+        ctx.fillStyle = color;
+
+        ctx.strokeRect(x, y, bw, bh);
+
+        if (label) {
+          const pad = 3;
+          const metrics = ctx.measureText(label);
+          const th = 14;
+          const tw = Math.ceil(metrics.width) + pad * 2;
+          const tx = Math.max(0, Math.min(w - tw, x));
+          const ty = Math.max(0, y - th);
+          ctx.fillRect(tx, ty, tw, th);
+          ctx.fillStyle = '#000';
+          ctx.fillText(label, tx + pad, ty + 1);
+        }
       }
     },
     
@@ -120,7 +203,13 @@ app.component('video-modal', {
                 :src="videoFrame" 
                 alt="视频加载中..." 
                 class="video-frame-img"
+                ref="videoImg"
               >
+              <canvas
+                v-if="videoFrame"
+                ref="overlay"
+                style="position:absolute;left:0;top:0;width:100%;height:100%;pointer-events:none;"
+              ></canvas>
               <div v-else class="skeleton skeleton--frame" aria-label="视频加载中"></div>
             </div>
           </div>

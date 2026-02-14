@@ -6,6 +6,8 @@ from datetime import datetime
 import random
 import threading
 import time
+import json
+from pathlib import Path
 
 
 class SensorManager:
@@ -19,6 +21,7 @@ class SensorManager:
         self.app = app
         self.simulation_thread = None
         self.simulation_running = False
+        self._simulation_task = None
     
     def register_sensor(self, sensor_id, sensor_type, threshold=None, name=None, unit=None):
         """
@@ -165,14 +168,37 @@ class SensorManager:
                 value = self._base_values[sensor_id]
             
             self.update_sensor_data(sensor_id, round(value, 1))
+
+    def should_simulate(self):
+        """判断是否应启用传感器模拟。
+
+        规则：当系统未启用任何真实传感器数据通道（串口/MQTT/TCP）时，才启用模拟。
+        这样“demo 建筑”只是测试建筑的含义不影响系统架构：
+        - 真实系统：硬件上报 -> update_sensor_data -> 推送前端
+        - 无硬件接入：启动模拟 -> update_sensor_data -> 推送前端
+        """
+        try:
+            cfg_path = Path(__file__).parent.parent / 'config' / 'hardware_config.json'
+            if not cfg_path.exists():
+                return True
+
+            with open(cfg_path, 'r', encoding='utf-8') as f:
+                cfg = json.load(f) or {}
+
+            sensors_cfg = cfg.get('sensors', {}) or {}
+            serial_enabled = bool((sensors_cfg.get('serial_port') or {}).get('enabled'))
+            mqtt_enabled = bool((cfg.get('mqtt') or {}).get('enabled'))
+            tcp_enabled = bool((cfg.get('tcp_devices') or {}).get('enabled'))
+
+            return not (serial_enabled or mqtt_enabled or tcp_enabled)
+        except Exception:
+            return True
     
     def start_simulation(self):
         """启动传感器数据模拟（演示模式）"""
-        # 如果已经有后台任务在运行，不要重复启动
-        if hasattr(self, '_simulation_task') and self._simulation_task:
-            self.simulation_running = True # 确保开关开启
+        if self.simulation_running:
             return
-            
+
         self.simulation_running = True
         
         # 使用 socketio 的后台任务
@@ -190,13 +216,21 @@ class SensorManager:
         self.simulation_running = False
         if self.simulation_thread:
             self.simulation_thread.join(timeout=2.0)
+        self.simulation_thread = None
+        self._simulation_task = None
     
     def _simulation_loop(self):
         """传感器数据模拟循环"""
         while self.simulation_running:
             try:
                 self.simulate_sensor_data()
-                self.socketio.sleep(1)  # 每1秒更新一次
+                if self.socketio:
+                    self.socketio.sleep(1)  # 每1秒更新一次
+                else:
+                    time.sleep(1)
             except Exception as e:
                 print(f"✗ 传感器模拟异常: {e}")
-                self.socketio.sleep(1) if self.socketio else time.sleep(1)
+                if self.socketio:
+                    self.socketio.sleep(1)
+                else:
+                    time.sleep(1)

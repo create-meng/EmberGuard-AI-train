@@ -5,6 +5,7 @@ import threading
 import time
 import cv2
 import base64
+from typing import Optional
 import numpy as np
 from datetime import datetime
 from collections import deque
@@ -129,6 +130,8 @@ class DetectionEngine:
             'fps': 0,
             'last_detection': None,
             'thumbnail': None,
+            'latest_jpeg': None,
+            'latest_jpeg_ts': None,
             'config': config or {}
         }
 
@@ -258,6 +261,9 @@ class DetectionEngine:
                 # 先生成缩略图，确保前端画面不会被推理阻塞
                 thumbnail = self._generate_thumbnail(frame_resized, 640, 480)
 
+                # 同步缓存 MJPEG 使用的 JPEG 二进制（不做 base64）
+                latest_jpeg = self._encode_jpeg_bytes(frame_resized)
+
                 # 诊断：确认是否能生成首帧缩略图
                 if thumbnail and not camera_info.get('_logged_first_thumbnail'):
                     print(f"✓ 摄像头 {camera_id} 已生成首帧thumbnail")
@@ -286,6 +292,9 @@ class DetectionEngine:
                         camera_info['last_detection'] = detection_result
                     camera_info['fps'] = current_fps
                     camera_info['thumbnail'] = thumbnail
+                    if latest_jpeg is not None:
+                        camera_info['latest_jpeg'] = latest_jpeg
+                        camera_info['latest_jpeg_ts'] = datetime.now().isoformat()
                 
                 # 检查是否需要触发告警
                 if detection_result is not None:
@@ -296,10 +305,8 @@ class DetectionEngine:
                     self._push_camera_update(camera_id)
                     last_push_time = current_time
 
-                # 若有订阅者，则推送视频帧（包含缩略图+检测结果）
-                if current_time - last_video_push_time >= self.video_push_interval:
-                    self._push_video_frame(camera_id)
-                    last_video_push_time = current_time
+                # Socket.IO 视频帧推送已弃用：视频走 HTTP MJPEG 流。
+                # 这里不再做高频 emit，避免大包导致连接不稳定。
                 
                 # 智能帧率调整
                 if detection_result is not None:
@@ -338,11 +345,11 @@ class DetectionEngine:
         if pipeline is None:
             # 无模型不产生演示随机数据，直接返回空
             return None
-        
+
         try:
             # 使用YOLO+LSTM检测
             result = pipeline.detect_frame(frame, conf_threshold=0.25)
-            
+
             # 格式化结果
             return {
                 'timestamp': datetime.now().isoformat(),
@@ -357,6 +364,25 @@ class DetectionEngine:
         except Exception as e:
             print(f"检测异常: {e}")
             return None
+
+    def _encode_jpeg_bytes(self, frame, quality: int = 85) -> Optional[bytes]:
+        try:
+            encode_param = [int(cv2.IMWRITE_JPEG_QUALITY), int(quality)]
+            ok, buffer = cv2.imencode('.jpg', frame, encode_param)
+            if not ok:
+                return None
+            return buffer.tobytes()
+        except Exception:
+            return None
+
+    def get_latest_jpeg(self, camera_id) -> Optional[bytes]:
+        camera_id = str(camera_id)
+        if camera_id not in self.cameras:
+            return None
+        if camera_id not in self.camera_locks:
+            return None
+        with self.camera_locks[camera_id]:
+            return self.cameras[camera_id].get('latest_jpeg')
     
     def _generate_thumbnail(self, frame, width, height):
         """
@@ -488,46 +514,15 @@ class DetectionEngine:
                 'camera_name': camera_info.get('name'),
                 'status': camera_info.get('status'),
                 'fps': camera_info.get('fps'),
+                'last_detection': camera_info.get('last_detection'),
                 'timestamp': datetime.now().isoformat()
             }
         
         self.socketio.emit('camera_update', update_data, namespace='/')
 
-    def _generate_thumbnail(self, frame, width=640, height=480):
-        """生成缩略图 (Base64)"""
-        try:
-            # 恢复到 640x480 分辨率
-            thumb = cv2.resize(frame, (width, height))
-            # 恢复到 85 质量
-            encode_param = [int(cv2.IMWRITE_JPEG_QUALITY), 85]
-            _, buffer = cv2.imencode('.jpg', thumb, encode_param)
-            base64_str = base64.b64encode(buffer).decode('utf-8')
-            return f"data:image/jpeg;base64,{base64_str}"
-        except Exception as e:
-            print(f"生成缩略图失败: {e}")
-            return None
-
     def _push_video_frame(self, camera_id):
-        if not self.socketio:
-            return
-
-        camera_id = str(camera_id)
-        camera_info = self.cameras.get(camera_id)
-        if not camera_info:
-            return
-
-        with self.camera_locks[camera_id]:
-            frame_data = {
-                'camera_id': str(camera_id),
-                'status': camera_info.get('status'),
-                'thumbnail': camera_info.get('thumbnail'),
-                'last_detection': camera_info.get('last_detection'),
-                'timestamp': datetime.now().isoformat()
-            }
-
-        # 恢复 Room 订阅机制，仅发给订阅了该摄像头的房间
-        room = f"camera:{camera_id}"
-        self.socketio.emit('video_frame', frame_data, room=room, namespace='/')
+        # 已弃用：视频帧不再通过 Socket.IO 发送。
+        return
     
     def get_all_camera_status(self):
         """获取所有摄像头状态"""
