@@ -1067,7 +1067,15 @@ input:focus-visible {
   border-radius: var(--radius-md);
   position: relative;
   overflow: hidden;
+  box-shadow: var(--shadow-md);
   border: 1px solid rgba(255, 255, 255, 0.10);
+}
+
+.video-frame video, .video-frame img {
+  width: 100%;
+  height: auto;
+  display: block;
+  border-radius: 8px;
 }
 
 .video-frame.alert {
@@ -1076,6 +1084,13 @@ input:focus-visible {
 }
 
 .video-frame img {
+  width: 100%;
+  height: auto;
+  display: block;
+  border-radius: 8px;
+}
+
+.video-frame video {
   width: 100%;
   height: auto;
   display: block;

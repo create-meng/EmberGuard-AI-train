@@ -73,7 +73,10 @@ const app = createApp({
       lastSensorUpdateTs: 0,
       
       // WebSocket
-      socket: null
+      socket: null,
+
+      // Demo: SSE 结果流（低频）
+      demoEventSource: null
     };
   },
   
@@ -107,6 +110,74 @@ const app = createApp({
   },
   
   methods: {
+    stopDemoEventSource() {
+      if (this.demoEventSource) {
+        try {
+          this.demoEventSource.close();
+        } catch (e) {
+          // ignore
+        }
+        this.demoEventSource = null;
+      }
+    },
+
+    startDemoEventSource(cameraId) {
+      this.stopDemoEventSource();
+      const cid = String(cameraId);
+      const url = `/demo/events?camera_id=${encodeURIComponent(cid)}`;
+
+      try {
+        const es = new EventSource(url);
+        this.demoEventSource = es;
+
+        es.onmessage = (evt) => {
+          if (!evt?.data) return;
+          let payload;
+          try {
+            payload = JSON.parse(evt.data);
+          } catch (e) {
+            return;
+          }
+
+          // 摄像头检测结果（轻量）
+          const camPayload = payload?.camera;
+          if (camPayload?.camera_id) {
+            const pcid = String(camPayload.camera_id);
+            const camera = this.cameras.find(c => String(c.id) === pcid);
+            if (camera) {
+              this.lastCameraUpdateTs = Date.now();
+              this.cameraDataReady = true;
+              if (camPayload.status) camera.status = camPayload.status;
+              if (camPayload.last_detection) {
+                camera.last_detection = camPayload.last_detection;
+                this.normalizeCameraAlertStatus(camera, camera.last_detection);
+              }
+            }
+          }
+
+          // 传感器快照（低频合并更新）
+          const sensorsPayload = payload?.sensors;
+          if (Array.isArray(sensorsPayload)) {
+            this.lastSensorUpdateTs = Date.now();
+            this.sensorDataReady = true;
+            if (!Array.isArray(this.sensors) || this.sensors.length === 0) {
+              this.sensors = sensorsPayload;
+            } else {
+              for (const s of sensorsPayload) {
+                const existing = this.sensors.find(x => x.id === s.id);
+                if (existing) Object.assign(existing, s);
+              }
+            }
+          }
+        };
+
+        es.onerror = () => {
+          // SSE 失败时不弹窗刷屏，保持静默
+        };
+      } catch (e) {
+        // ignore
+      }
+    },
     startLoading(message) {
       this.loadingMessage = message || '加载中...';
       this.loading = true;
@@ -692,44 +763,19 @@ const app = createApp({
       this.selectedCameraId = cid;
       this.showVideoModal = true;
 
-      // 清空旧流地址，避免复用旧连接
-      // 直接绑定流地址，避免依赖 Socket 回执导致弹窗无画面
-      camera.stream_url = `/stream/${cid}`;
-      
-      // 请求视频流
-      if (this.socket) {
-        this.socket.emit('start_video', { camera_id: cid }, (resp) => {
-          if (!resp || !resp.success) return;
-          if (!this.showVideoModal) return;
-          if (String(this.selectedCameraId) !== cid) return;
-          camera.stream_url = resp.stream_url || `/stream/${cid}`;
-        });
-      }
+      // Demo: 使用稳定的视频文件播放通道
+      camera.demo_video_url = `/demo/video/${cid}`;
 
-      // 超时提示：订阅后长时间没收到首帧，帮助定位后端/网络问题
-      setTimeout(() => {
-        if (!this.showVideoModal) return;
-        if (String(this.selectedCameraId) !== cid) return;
-        const latest = this.cameras.find(c => String(c.id) === cid);
-        if (!latest) return;
-        if (!latest.stream_url && !latest.thumbnail) {
-          this.showNotification('视频首帧加载超时：未收到 stream_url 且无缩略图，请检查后端摄像头线程与 /stream 路由', 'error');
-        }
-      }, 3000);
+      // 兼容无法在浏览器中直接播放的格式（如 .avi）：提供 MJPEG 回退
+      camera.stream_url = `/stream/${cid}`;
+
+      // Demo: 订阅低频 SSE 结果流（检测框 + 传感器）
+      this.startDemoEventSource(cid);
     },
     
     // 关闭视频弹窗
     closeVideoModal() {
-      if (this.selectedCameraId && this.socket) {
-        this.socket.emit('stop_video', { camera_id: String(this.selectedCameraId) });
-      }
-
-      // 清理流地址，避免 <img> 持续占用连接
-      const cid = this.selectedCameraId ? String(this.selectedCameraId) : null;
-      if (cid) {
-        const camera = this.cameras.find(c => String(c.id) === cid);
-        if (camera) camera.stream_url = null;
-      }
+      this.stopDemoEventSource();
       
       this.showVideoModal = false;
       this.selectedCameraId = null;

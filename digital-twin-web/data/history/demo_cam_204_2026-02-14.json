@@ -1,0 +1,7210 @@
+[
+  {
+    "timestamp": "2026-02-14T20:37:38.870888",
+    "lstm_prediction": null,
+    "lstm_class_name": null,
+    "lstm_confidence": null,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:37:39.532903",
+    "lstm_prediction": null,
+    "lstm_class_name": null,
+    "lstm_confidence": null,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:37:39.795554",
+    "lstm_prediction": null,
+    "lstm_class_name": null,
+    "lstm_confidence": null,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:37:40.361768",
+    "lstm_prediction": null,
+    "lstm_class_name": null,
+    "lstm_confidence": null,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:37:41.253170",
+    "lstm_prediction": null,
+    "lstm_class_name": null,
+    "lstm_confidence": null,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:37:42.013377",
+    "lstm_prediction": null,
+    "lstm_class_name": null,
+    "lstm_confidence": null,
+    "yolo_detections_count": 2,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:37:42.744571",
+    "lstm_prediction": null,
+    "lstm_class_name": null,
+    "lstm_confidence": null,
+    "yolo_detections_count": 1,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:37:43.215175",
+    "lstm_prediction": null,
+    "lstm_class_name": null,
+    "lstm_confidence": null,
+    "yolo_detections_count": 2,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:37:50.915057",
+    "lstm_prediction": null,
+    "lstm_class_name": null,
+    "lstm_confidence": null,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:37:51.693751",
+    "lstm_prediction": null,
+    "lstm_class_name": null,
+    "lstm_confidence": null,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:37:52.366846",
+    "lstm_prediction": null,
+    "lstm_class_name": null,
+    "lstm_confidence": null,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:37:53.088036",
+    "lstm_prediction": null,
+    "lstm_class_name": null,
+    "lstm_confidence": null,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:37:53.804274",
+    "lstm_prediction": null,
+    "lstm_class_name": null,
+    "lstm_confidence": null,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:37:54.509603",
+    "lstm_prediction": null,
+    "lstm_class_name": null,
+    "lstm_confidence": null,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:37:55.297270",
+    "lstm_prediction": null,
+    "lstm_class_name": null,
+    "lstm_confidence": null,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:37:56.083219",
+    "lstm_prediction": null,
+    "lstm_class_name": null,
+    "lstm_confidence": null,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:37:56.884691",
+    "lstm_prediction": null,
+    "lstm_class_name": null,
+    "lstm_confidence": null,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:37:57.575424",
+    "lstm_prediction": null,
+    "lstm_class_name": null,
+    "lstm_confidence": null,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:37:58.294483",
+    "lstm_prediction": null,
+    "lstm_class_name": null,
+    "lstm_confidence": null,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:37:59.088166",
+    "lstm_prediction": null,
+    "lstm_class_name": null,
+    "lstm_confidence": null,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:37:59.843553",
+    "lstm_prediction": null,
+    "lstm_class_name": null,
+    "lstm_confidence": null,
+    "yolo_detections_count": 2,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:38:00.687449",
+    "lstm_prediction": null,
+    "lstm_class_name": null,
+    "lstm_confidence": null,
+    "yolo_detections_count": 1,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:38:01.709688",
+    "lstm_prediction": null,
+    "lstm_class_name": null,
+    "lstm_confidence": null,
+    "yolo_detections_count": 2,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:38:02.427810",
+    "lstm_prediction": null,
+    "lstm_class_name": null,
+    "lstm_confidence": null,
+    "yolo_detections_count": 2,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:38:03.136887",
+    "lstm_prediction": null,
+    "lstm_class_name": null,
+    "lstm_confidence": null,
+    "yolo_detections_count": 1,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:38:03.826377",
+    "lstm_prediction": null,
+    "lstm_class_name": null,
+    "lstm_confidence": null,
+    "yolo_detections_count": 2,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:38:04.597419",
+    "lstm_prediction": null,
+    "lstm_class_name": null,
+    "lstm_confidence": null,
+    "yolo_detections_count": 2,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:38:05.337803",
+    "lstm_prediction": null,
+    "lstm_class_name": null,
+    "lstm_confidence": null,
+    "yolo_detections_count": 1,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:38:06.115121",
+    "lstm_prediction": null,
+    "lstm_class_name": null,
+    "lstm_confidence": null,
+    "yolo_detections_count": 1,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:38:06.763120",
+    "lstm_prediction": null,
+    "lstm_class_name": null,
+    "lstm_confidence": null,
+    "yolo_detections_count": 2,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:38:07.473837",
+    "lstm_prediction": null,
+    "lstm_class_name": null,
+    "lstm_confidence": null,
+    "yolo_detections_count": 2,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:38:08.165761",
+    "lstm_prediction": null,
+    "lstm_class_name": null,
+    "lstm_confidence": null,
+    "yolo_detections_count": 2,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:38:08.962298",
+    "lstm_prediction": null,
+    "lstm_class_name": null,
+    "lstm_confidence": null,
+    "yolo_detections_count": 2,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:38:09.693864",
+    "lstm_prediction": null,
+    "lstm_class_name": null,
+    "lstm_confidence": null,
+    "yolo_detections_count": 1,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:38:10.331592",
+    "lstm_prediction": null,
+    "lstm_class_name": null,
+    "lstm_confidence": null,
+    "yolo_detections_count": 1,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:38:11.060654",
+    "lstm_prediction": null,
+    "lstm_class_name": null,
+    "lstm_confidence": null,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:38:11.781226",
+    "lstm_prediction": null,
+    "lstm_class_name": null,
+    "lstm_confidence": null,
+    "yolo_detections_count": 1,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:38:12.472575",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9951157569885254,
+    "yolo_detections_count": 1,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:38:13.067512",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9946850538253784,
+    "yolo_detections_count": 1,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:38:13.668919",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9948291778564453,
+    "yolo_detections_count": 1,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:38:14.311350",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9949344396591187,
+    "yolo_detections_count": 1,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:38:14.962210",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.995021641254425,
+    "yolo_detections_count": 1,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:38:15.535644",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9949886202812195,
+    "yolo_detections_count": 1,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:38:16.112844",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9948769807815552,
+    "yolo_detections_count": 1,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:38:16.682845",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9949363470077515,
+    "yolo_detections_count": 2,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:38:17.268652",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9951767325401306,
+    "yolo_detections_count": 2,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:38:17.826373",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9954850077629089,
+    "yolo_detections_count": 1,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:38:18.482958",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9958316683769226,
+    "yolo_detections_count": 1,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:38:19.059439",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9962045550346375,
+    "yolo_detections_count": 1,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:38:19.671291",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9965153932571411,
+    "yolo_detections_count": 1,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:38:20.265430",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9966440200805664,
+    "yolo_detections_count": 1,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:38:20.905344",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9967243075370789,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:38:21.545904",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9968043565750122,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:38:22.118070",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9967818260192871,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:38:22.764851",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9963915944099426,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:38:23.416726",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9949848055839539,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:38:24.036418",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9928829073905945,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:38:24.697374",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9909850358963013,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:38:25.304012",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9903445243835449,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:38:25.930516",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9889847636222839,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:38:26.545826",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9863519668579102,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:38:27.140764",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9850538372993469,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:38:27.691181",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9849506616592407,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:38:28.348108",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9850208163261414,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:38:28.933508",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9847365617752075,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:38:29.537019",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9856932759284973,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:38:30.192570",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9867596626281738,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:38:30.845827",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9880975484848022,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:38:31.433719",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9881472587585449,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:38:32.067193",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9881699681282043,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:38:32.708996",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9697343111038208,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:38:33.376541",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.8780316114425659,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:38:33.966720",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.7789862155914307,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:38:34.541010",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.6799007654190063,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:38:35.141948",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.5813692212104797,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:38:35.814976",
+    "lstm_prediction": 2,
+    "lstm_class_name": "火焰",
+    "lstm_confidence": 0.5135263204574585,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:38:36.417385",
+    "lstm_prediction": 2,
+    "lstm_class_name": "火焰",
+    "lstm_confidence": 0.6103638410568237,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:38:37.053085",
+    "lstm_prediction": 2,
+    "lstm_class_name": "火焰",
+    "lstm_confidence": 0.6802477240562439,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:38:37.647854",
+    "lstm_prediction": 2,
+    "lstm_class_name": "火焰",
+    "lstm_confidence": 0.7143267393112183,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:38:38.305862",
+    "lstm_prediction": 2,
+    "lstm_class_name": "火焰",
+    "lstm_confidence": 0.7438963651657104,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:38:38.890389",
+    "lstm_prediction": 2,
+    "lstm_class_name": "火焰",
+    "lstm_confidence": 0.7450850009918213,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:38:39.516789",
+    "lstm_prediction": 2,
+    "lstm_class_name": "火焰",
+    "lstm_confidence": 0.6744523048400879,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:38:40.139809",
+    "lstm_prediction": 2,
+    "lstm_class_name": "火焰",
+    "lstm_confidence": 0.5974113345146179,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:38:40.776384",
+    "lstm_prediction": 2,
+    "lstm_class_name": "火焰",
+    "lstm_confidence": 0.5203522443771362,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:38:41.385636",
+    "lstm_prediction": 2,
+    "lstm_class_name": "火焰",
+    "lstm_confidence": 0.44323402643203735,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:38:42.060412",
+    "lstm_prediction": 2,
+    "lstm_class_name": "火焰",
+    "lstm_confidence": 0.3662758469581604,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:38:42.721763",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.36878523230552673,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:38:43.871376",
+    "lstm_prediction": 0,
+    "lstm_class_name": "无火",
+    "lstm_confidence": 0.388249009847641,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:38:45.148923",
+    "lstm_prediction": 0,
+    "lstm_class_name": "无火",
+    "lstm_confidence": 0.4360540509223938,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:38:46.286873",
+    "lstm_prediction": 0,
+    "lstm_class_name": "无火",
+    "lstm_confidence": 0.4836140275001526,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:38:46.953397",
+    "lstm_prediction": 0,
+    "lstm_class_name": "无火",
+    "lstm_confidence": 0.45055335760116577,
+    "yolo_detections_count": 1,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:38:47.743120",
+    "lstm_prediction": 0,
+    "lstm_class_name": "无火",
+    "lstm_confidence": 0.41377630829811096,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:38:48.849983",
+    "lstm_prediction": 0,
+    "lstm_class_name": "无火",
+    "lstm_confidence": 0.3800819516181946,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:38:49.890156",
+    "lstm_prediction": 0,
+    "lstm_class_name": "无火",
+    "lstm_confidence": 0.349556565284729,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:38:51.418124",
+    "lstm_prediction": 2,
+    "lstm_class_name": "火焰",
+    "lstm_confidence": 0.362693190574646,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:38:52.120034",
+    "lstm_prediction": 2,
+    "lstm_class_name": "火焰",
+    "lstm_confidence": 0.38382548093795776,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:38:52.898440",
+    "lstm_prediction": 2,
+    "lstm_class_name": "火焰",
+    "lstm_confidence": 0.39383476972579956,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:38:53.980486",
+    "lstm_prediction": 2,
+    "lstm_class_name": "火焰",
+    "lstm_confidence": 0.39141663908958435,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:38:54.851482",
+    "lstm_prediction": 2,
+    "lstm_class_name": "火焰",
+    "lstm_confidence": 0.38179919123649597,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:38:55.434693",
+    "lstm_prediction": 2,
+    "lstm_class_name": "火焰",
+    "lstm_confidence": 0.36668092012405396,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:38:56.504716",
+    "lstm_prediction": 0,
+    "lstm_class_name": "无火",
+    "lstm_confidence": 0.35922008752822876,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:38:57.323816",
+    "lstm_prediction": 0,
+    "lstm_class_name": "无火",
+    "lstm_confidence": 0.4119434952735901,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:38:58.523190",
+    "lstm_prediction": 0,
+    "lstm_class_name": "无火",
+    "lstm_confidence": 0.4605693817138672,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:38:59.680277",
+    "lstm_prediction": 0,
+    "lstm_class_name": "无火",
+    "lstm_confidence": 0.50496506690979,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:39:01.000953",
+    "lstm_prediction": 0,
+    "lstm_class_name": "无火",
+    "lstm_confidence": 0.5457810163497925,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:39:02.181729",
+    "lstm_prediction": 0,
+    "lstm_class_name": "无火",
+    "lstm_confidence": 0.5799033045768738,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:39:03.141720",
+    "lstm_prediction": 0,
+    "lstm_class_name": "无火",
+    "lstm_confidence": 0.6049596071243286,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:39:04.110887",
+    "lstm_prediction": 0,
+    "lstm_class_name": "无火",
+    "lstm_confidence": 0.6177615523338318,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:39:05.159528",
+    "lstm_prediction": 0,
+    "lstm_class_name": "无火",
+    "lstm_confidence": 0.6220083832740784,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:39:06.250583",
+    "lstm_prediction": 0,
+    "lstm_class_name": "无火",
+    "lstm_confidence": 0.6186358332633972,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:39:07.853874",
+    "lstm_prediction": 0,
+    "lstm_class_name": "无火",
+    "lstm_confidence": 0.6097978949546814,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:39:08.992921",
+    "lstm_prediction": 0,
+    "lstm_class_name": "无火",
+    "lstm_confidence": 0.5644460916519165,
+    "yolo_detections_count": 1,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:39:09.952274",
+    "lstm_prediction": 0,
+    "lstm_class_name": "无火",
+    "lstm_confidence": 0.5104982852935791,
+    "yolo_detections_count": 2,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:39:10.933468",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.4555756151676178,
+    "yolo_detections_count": 2,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:39:11.860736",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.4747702479362488,
+    "yolo_detections_count": 2,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:39:12.638968",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.4951854646205902,
+    "yolo_detections_count": 2,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:39:13.349511",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.518702507019043,
+    "yolo_detections_count": 2,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:39:14.206414",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.5348073244094849,
+    "yolo_detections_count": 2,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:39:14.952617",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.5396746397018433,
+    "yolo_detections_count": 2,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:39:16.070701",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.5563867688179016,
+    "yolo_detections_count": 3,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:39:16.920353",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.5925120115280151,
+    "yolo_detections_count": 1,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:39:17.755227",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.6165691614151001,
+    "yolo_detections_count": 1,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:39:18.493361",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.6479548811912537,
+    "yolo_detections_count": 1,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:39:19.647791",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.6878490447998047,
+    "yolo_detections_count": 1,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:39:20.536443",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.7283982038497925,
+    "yolo_detections_count": 1,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:39:21.287738",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.7681249976158142,
+    "yolo_detections_count": 2,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:39:22.351092",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.8050384521484375,
+    "yolo_detections_count": 2,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:39:23.265708",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.8497570753097534,
+    "yolo_detections_count": 2,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:39:24.208743",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9057291746139526,
+    "yolo_detections_count": 2,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:39:25.382443",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9487397074699402,
+    "yolo_detections_count": 2,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:39:26.547259",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9709163904190063,
+    "yolo_detections_count": 2,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:39:27.876035",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9817107915878296,
+    "yolo_detections_count": 2,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:39:28.797417",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9871861338615417,
+    "yolo_detections_count": 1,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:39:29.844512",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9904460906982422,
+    "yolo_detections_count": 2,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:39:30.777991",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9927870035171509,
+    "yolo_detections_count": 2,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:39:31.580687",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9945898056030273,
+    "yolo_detections_count": 2,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:39:32.343004",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9959856271743774,
+    "yolo_detections_count": 2,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:39:33.180544",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9968865513801575,
+    "yolo_detections_count": 2,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:39:33.896926",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9972359538078308,
+    "yolo_detections_count": 2,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:39:34.580879",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9971892237663269,
+    "yolo_detections_count": 2,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:39:35.447929",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.99701327085495,
+    "yolo_detections_count": 2,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:39:36.324790",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9961501955986023,
+    "yolo_detections_count": 2,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:39:37.801086",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9949880838394165,
+    "yolo_detections_count": 1,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:39:38.915250",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9920781850814819,
+    "yolo_detections_count": 1,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:39:40.084345",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9884641766548157,
+    "yolo_detections_count": 2,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:39:40.913332",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9855815768241882,
+    "yolo_detections_count": 2,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:39:42.230833",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9832258224487305,
+    "yolo_detections_count": 2,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:39:43.122413",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.980536162853241,
+    "yolo_detections_count": 1,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:39:43.912956",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9760252237319946,
+    "yolo_detections_count": 1,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:39:44.734312",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9701617956161499,
+    "yolo_detections_count": 1,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:39:45.713776",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9638408422470093,
+    "yolo_detections_count": 1,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:39:46.626046",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.959348201751709,
+    "yolo_detections_count": 1,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:39:47.387984",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.956806480884552,
+    "yolo_detections_count": 1,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:39:48.108135",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9576425552368164,
+    "yolo_detections_count": 1,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:39:48.797055",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9599302411079407,
+    "yolo_detections_count": 1,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:39:49.466253",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9617810249328613,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:39:50.208277",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.963170051574707,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:39:51.221979",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9646786451339722,
+    "yolo_detections_count": 1,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:39:52.021149",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9674941897392273,
+    "yolo_detections_count": 1,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:39:52.763354",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9709153175354004,
+    "yolo_detections_count": 1,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:39:54.064927",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.974096953868866,
+    "yolo_detections_count": 1,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:39:54.836135",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9759113192558289,
+    "yolo_detections_count": 1,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:39:55.630510",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.97565758228302,
+    "yolo_detections_count": 1,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:39:56.450333",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9730634689331055,
+    "yolo_detections_count": 1,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:39:57.232443",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9693330526351929,
+    "yolo_detections_count": 1,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:39:58.064092",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9657741785049438,
+    "yolo_detections_count": 1,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:39:58.787044",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9628604650497437,
+    "yolo_detections_count": 1,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:39:59.558242",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9608144760131836,
+    "yolo_detections_count": 1,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:40:00.308515",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9602683186531067,
+    "yolo_detections_count": 1,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:40:01.049365",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.962218165397644,
+    "yolo_detections_count": 1,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:40:01.818012",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9651800990104675,
+    "yolo_detections_count": 1,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:40:02.640965",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9686511754989624,
+    "yolo_detections_count": 1,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:40:03.338976",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9724300503730774,
+    "yolo_detections_count": 2,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:40:04.428355",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9766390919685364,
+    "yolo_detections_count": 1,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:40:05.394185",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9812417030334473,
+    "yolo_detections_count": 1,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:40:06.602234",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.985568642616272,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:40:07.399646",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9892512559890747,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:40:08.166572",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9922887086868286,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:40:08.877516",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9941796064376831,
+    "yolo_detections_count": 1,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:40:09.636571",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9939596056938171,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:40:10.399627",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9929205775260925,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:40:11.430304",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9918136596679688,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:40:12.412247",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9913773536682129,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:40:13.206096",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9914290308952332,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:40:14.183438",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9914959073066711,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:40:15.197322",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9913153648376465,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:40:16.080387",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9910557866096497,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:40:17.443991",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9909073114395142,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:40:19.029412",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9908226132392883,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:40:20.479006",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9908156394958496,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:40:21.436347",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9919428825378418,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:40:22.516414",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9931342005729675,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:40:23.696929",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9938004612922668,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:40:24.441968",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9941915273666382,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:40:25.321774",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9937040209770203,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:40:26.111070",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9727551341056824,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:40:27.120490",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.8938263058662415,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:40:28.261960",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.7980598211288452,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:40:29.243036",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.7003557085990906,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:40:30.336821",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.6045363545417786,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:40:31.777464",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.5076389312744141,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:40:33.134125",
+    "lstm_prediction": 2,
+    "lstm_class_name": "火焰",
+    "lstm_confidence": 0.578266978263855,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:40:34.426628",
+    "lstm_prediction": 2,
+    "lstm_class_name": "火焰",
+    "lstm_confidence": 0.6208889484405518,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:40:35.239510",
+    "lstm_prediction": 2,
+    "lstm_class_name": "火焰",
+    "lstm_confidence": 0.6892443895339966,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:40:36.396033",
+    "lstm_prediction": 2,
+    "lstm_class_name": "火焰",
+    "lstm_confidence": 0.6885776519775391,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:40:37.199629",
+    "lstm_prediction": 2,
+    "lstm_class_name": "火焰",
+    "lstm_confidence": 0.667884886264801,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:40:38.207820",
+    "lstm_prediction": 2,
+    "lstm_class_name": "火焰",
+    "lstm_confidence": 0.5891503095626831,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:40:39.195014",
+    "lstm_prediction": 2,
+    "lstm_class_name": "火焰",
+    "lstm_confidence": 0.49354806542396545,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:40:40.317332",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.509738564491272,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:40:41.197235",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.53631991147995,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:40:42.021281",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.5633729100227356,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:40:42.876996",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.584147572517395,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:40:43.631216",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.556887149810791,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:40:44.399841",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.5557452440261841,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:40:45.295276",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.49021607637405396,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:40:46.278638",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.4253615736961365,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:40:46.965153",
+    "lstm_prediction": 0,
+    "lstm_class_name": "无火",
+    "lstm_confidence": 0.44026023149490356,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:40:47.640238",
+    "lstm_prediction": 0,
+    "lstm_class_name": "无火",
+    "lstm_confidence": 0.4836140275001526,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:40:48.245909",
+    "lstm_prediction": 0,
+    "lstm_class_name": "无火",
+    "lstm_confidence": 0.4836140275001526,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:40:48.903785",
+    "lstm_prediction": 0,
+    "lstm_class_name": "无火",
+    "lstm_confidence": 0.4836140275001526,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:40:49.475511",
+    "lstm_prediction": 0,
+    "lstm_class_name": "无火",
+    "lstm_confidence": 0.4836140275001526,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:40:50.055135",
+    "lstm_prediction": 0,
+    "lstm_class_name": "无火",
+    "lstm_confidence": 0.4836140275001526,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:40:50.693776",
+    "lstm_prediction": 0,
+    "lstm_class_name": "无火",
+    "lstm_confidence": 0.4836140275001526,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:40:51.377520",
+    "lstm_prediction": 0,
+    "lstm_class_name": "无火",
+    "lstm_confidence": 0.4836140275001526,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:40:51.955211",
+    "lstm_prediction": 0,
+    "lstm_class_name": "无火",
+    "lstm_confidence": 0.4836140275001526,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:40:52.822073",
+    "lstm_prediction": 0,
+    "lstm_class_name": "无火",
+    "lstm_confidence": 0.4836140275001526,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:40:53.649201",
+    "lstm_prediction": 0,
+    "lstm_class_name": "无火",
+    "lstm_confidence": 0.4836140275001526,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:40:54.590515",
+    "lstm_prediction": 0,
+    "lstm_class_name": "无火",
+    "lstm_confidence": 0.4836140275001526,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:40:55.363870",
+    "lstm_prediction": 0,
+    "lstm_class_name": "无火",
+    "lstm_confidence": 0.4836140275001526,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:40:56.222744",
+    "lstm_prediction": 0,
+    "lstm_class_name": "无火",
+    "lstm_confidence": 0.4836140275001526,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:40:57.025206",
+    "lstm_prediction": 0,
+    "lstm_class_name": "无火",
+    "lstm_confidence": 0.4836140275001526,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:40:57.755639",
+    "lstm_prediction": 0,
+    "lstm_class_name": "无火",
+    "lstm_confidence": 0.4836140275001526,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:40:58.542120",
+    "lstm_prediction": 0,
+    "lstm_class_name": "无火",
+    "lstm_confidence": 0.4836140275001526,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:40:59.341527",
+    "lstm_prediction": 0,
+    "lstm_class_name": "无火",
+    "lstm_confidence": 0.4836140275001526,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:41:00.288829",
+    "lstm_prediction": 0,
+    "lstm_class_name": "无火",
+    "lstm_confidence": 0.4836140275001526,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:41:01.342465",
+    "lstm_prediction": 0,
+    "lstm_class_name": "无火",
+    "lstm_confidence": 0.4836140275001526,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:41:02.268945",
+    "lstm_prediction": 0,
+    "lstm_class_name": "无火",
+    "lstm_confidence": 0.4836140275001526,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:41:03.105284",
+    "lstm_prediction": 0,
+    "lstm_class_name": "无火",
+    "lstm_confidence": 0.4836140275001526,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:41:03.981132",
+    "lstm_prediction": 0,
+    "lstm_class_name": "无火",
+    "lstm_confidence": 0.4836140275001526,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:41:04.812027",
+    "lstm_prediction": 0,
+    "lstm_class_name": "无火",
+    "lstm_confidence": 0.4836140275001526,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:41:05.599198",
+    "lstm_prediction": 0,
+    "lstm_class_name": "无火",
+    "lstm_confidence": 0.4836140275001526,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:41:06.373983",
+    "lstm_prediction": 0,
+    "lstm_class_name": "无火",
+    "lstm_confidence": 0.4836140275001526,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:41:07.209827",
+    "lstm_prediction": 0,
+    "lstm_class_name": "无火",
+    "lstm_confidence": 0.4836140275001526,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:41:07.949393",
+    "lstm_prediction": 0,
+    "lstm_class_name": "无火",
+    "lstm_confidence": 0.4836140275001526,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:41:08.748625",
+    "lstm_prediction": 0,
+    "lstm_class_name": "无火",
+    "lstm_confidence": 0.4836140275001526,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:41:09.583845",
+    "lstm_prediction": 0,
+    "lstm_class_name": "无火",
+    "lstm_confidence": 0.4836140275001526,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:41:10.336932",
+    "lstm_prediction": 0,
+    "lstm_class_name": "无火",
+    "lstm_confidence": 0.4836140275001526,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:41:11.154027",
+    "lstm_prediction": 0,
+    "lstm_class_name": "无火",
+    "lstm_confidence": 0.4836140275001526,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:41:11.930784",
+    "lstm_prediction": 0,
+    "lstm_class_name": "无火",
+    "lstm_confidence": 0.4836140275001526,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:41:12.711449",
+    "lstm_prediction": 0,
+    "lstm_class_name": "无火",
+    "lstm_confidence": 0.4836140275001526,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:41:13.542602",
+    "lstm_prediction": 0,
+    "lstm_class_name": "无火",
+    "lstm_confidence": 0.4836140275001526,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:41:14.497171",
+    "lstm_prediction": 0,
+    "lstm_class_name": "无火",
+    "lstm_confidence": 0.4836140275001526,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:41:15.360175",
+    "lstm_prediction": 0,
+    "lstm_class_name": "无火",
+    "lstm_confidence": 0.4836140275001526,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:41:16.162420",
+    "lstm_prediction": 0,
+    "lstm_class_name": "无火",
+    "lstm_confidence": 0.4836140275001526,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:41:16.984556",
+    "lstm_prediction": 0,
+    "lstm_class_name": "无火",
+    "lstm_confidence": 0.4836140275001526,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:41:17.791764",
+    "lstm_prediction": 0,
+    "lstm_class_name": "无火",
+    "lstm_confidence": 0.4836140275001526,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:41:18.598269",
+    "lstm_prediction": 0,
+    "lstm_class_name": "无火",
+    "lstm_confidence": 0.4836140275001526,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:41:19.419050",
+    "lstm_prediction": 0,
+    "lstm_class_name": "无火",
+    "lstm_confidence": 0.4836140275001526,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:41:20.348053",
+    "lstm_prediction": 0,
+    "lstm_class_name": "无火",
+    "lstm_confidence": 0.4836140275001526,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:41:21.255240",
+    "lstm_prediction": 0,
+    "lstm_class_name": "无火",
+    "lstm_confidence": 0.4836140275001526,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:41:22.098201",
+    "lstm_prediction": 0,
+    "lstm_class_name": "无火",
+    "lstm_confidence": 0.4836140275001526,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:41:22.893429",
+    "lstm_prediction": 0,
+    "lstm_class_name": "无火",
+    "lstm_confidence": 0.4836140275001526,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:41:23.767175",
+    "lstm_prediction": 0,
+    "lstm_class_name": "无火",
+    "lstm_confidence": 0.4836140275001526,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:41:24.607362",
+    "lstm_prediction": 0,
+    "lstm_class_name": "无火",
+    "lstm_confidence": 0.4836140275001526,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:41:25.557089",
+    "lstm_prediction": 0,
+    "lstm_class_name": "无火",
+    "lstm_confidence": 0.4836140275001526,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:41:26.449896",
+    "lstm_prediction": 0,
+    "lstm_class_name": "无火",
+    "lstm_confidence": 0.45857635140419006,
+    "yolo_detections_count": 1,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:41:27.224845",
+    "lstm_prediction": 0,
+    "lstm_class_name": "无火",
+    "lstm_confidence": 0.4345111846923828,
+    "yolo_detections_count": 1,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:41:27.984871",
+    "lstm_prediction": 0,
+    "lstm_class_name": "无火",
+    "lstm_confidence": 0.4148229956626892,
+    "yolo_detections_count": 1,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:41:28.791576",
+    "lstm_prediction": 0,
+    "lstm_class_name": "无火",
+    "lstm_confidence": 0.38494712114334106,
+    "yolo_detections_count": 1,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:41:29.643977",
+    "lstm_prediction": 2,
+    "lstm_class_name": "火焰",
+    "lstm_confidence": 0.41318708658218384,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:41:30.317792",
+    "lstm_prediction": 2,
+    "lstm_class_name": "火焰",
+    "lstm_confidence": 0.48561105132102966,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:41:30.991754",
+    "lstm_prediction": 2,
+    "lstm_class_name": "火焰",
+    "lstm_confidence": 0.5600658059120178,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:41:31.795698",
+    "lstm_prediction": 2,
+    "lstm_class_name": "火焰",
+    "lstm_confidence": 0.6348568201065063,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:41:32.502897",
+    "lstm_prediction": 2,
+    "lstm_class_name": "火焰",
+    "lstm_confidence": 0.709776759147644,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:41:33.201248",
+    "lstm_prediction": 2,
+    "lstm_class_name": "火焰",
+    "lstm_confidence": 0.7848442196846008,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:41:33.852671",
+    "lstm_prediction": 2,
+    "lstm_class_name": "火焰",
+    "lstm_confidence": 0.8452135324478149,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:41:34.523518",
+    "lstm_prediction": 2,
+    "lstm_class_name": "火焰",
+    "lstm_confidence": 0.8942273855209351,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:41:35.157292",
+    "lstm_prediction": 2,
+    "lstm_class_name": "火焰",
+    "lstm_confidence": 0.9365363121032715,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:41:35.802280",
+    "lstm_prediction": 2,
+    "lstm_class_name": "火焰",
+    "lstm_confidence": 0.9609211087226868,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:41:36.428220",
+    "lstm_prediction": 2,
+    "lstm_class_name": "火焰",
+    "lstm_confidence": 0.9711700677871704,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:41:37.069741",
+    "lstm_prediction": 2,
+    "lstm_class_name": "火焰",
+    "lstm_confidence": 0.9751418828964233,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:41:37.688436",
+    "lstm_prediction": 2,
+    "lstm_class_name": "火焰",
+    "lstm_confidence": 0.9773433804512024,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:41:38.360705",
+    "lstm_prediction": 2,
+    "lstm_class_name": "火焰",
+    "lstm_confidence": 0.9794350862503052,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:41:38.975594",
+    "lstm_prediction": 2,
+    "lstm_class_name": "火焰",
+    "lstm_confidence": 0.9815765619277954,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:41:39.631339",
+    "lstm_prediction": 2,
+    "lstm_class_name": "火焰",
+    "lstm_confidence": 0.9841787219047546,
+    "yolo_detections_count": 1,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:41:40.280085",
+    "lstm_prediction": 2,
+    "lstm_class_name": "火焰",
+    "lstm_confidence": 0.9866101145744324,
+    "yolo_detections_count": 1,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:41:40.939736",
+    "lstm_prediction": 2,
+    "lstm_class_name": "火焰",
+    "lstm_confidence": 0.9887628555297852,
+    "yolo_detections_count": 1,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:41:41.699629",
+    "lstm_prediction": 2,
+    "lstm_class_name": "火焰",
+    "lstm_confidence": 0.9906509518623352,
+    "yolo_detections_count": 1,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:41:42.331407",
+    "lstm_prediction": 2,
+    "lstm_class_name": "火焰",
+    "lstm_confidence": 0.9923744201660156,
+    "yolo_detections_count": 1,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:41:43.005184",
+    "lstm_prediction": 2,
+    "lstm_class_name": "火焰",
+    "lstm_confidence": 0.9938909411430359,
+    "yolo_detections_count": 1,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:41:43.689929",
+    "lstm_prediction": 2,
+    "lstm_class_name": "火焰",
+    "lstm_confidence": 0.9951349496841431,
+    "yolo_detections_count": 1,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:41:44.358410",
+    "lstm_prediction": 2,
+    "lstm_class_name": "火焰",
+    "lstm_confidence": 0.9960983991622925,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:41:45.012572",
+    "lstm_prediction": 2,
+    "lstm_class_name": "火焰",
+    "lstm_confidence": 0.9968528747558594,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:41:45.707414",
+    "lstm_prediction": 2,
+    "lstm_class_name": "火焰",
+    "lstm_confidence": 0.9974155426025391,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:41:46.406313",
+    "lstm_prediction": 2,
+    "lstm_class_name": "火焰",
+    "lstm_confidence": 0.9973015785217285,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:41:47.074441",
+    "lstm_prediction": 2,
+    "lstm_class_name": "火焰",
+    "lstm_confidence": 0.9970417022705078,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:41:47.749622",
+    "lstm_prediction": 2,
+    "lstm_class_name": "火焰",
+    "lstm_confidence": 0.9966056942939758,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:41:48.392933",
+    "lstm_prediction": 2,
+    "lstm_class_name": "火焰",
+    "lstm_confidence": 0.9956520199775696,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:41:48.990684",
+    "lstm_prediction": 2,
+    "lstm_class_name": "火焰",
+    "lstm_confidence": 0.9153093099594116,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:41:49.612295",
+    "lstm_prediction": 2,
+    "lstm_class_name": "火焰",
+    "lstm_confidence": 0.8329395055770874,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:41:50.420934",
+    "lstm_prediction": 2,
+    "lstm_class_name": "火焰",
+    "lstm_confidence": 0.7498295903205872,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:41:51.152206",
+    "lstm_prediction": 2,
+    "lstm_class_name": "火焰",
+    "lstm_confidence": 0.6671215295791626,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:41:51.831888",
+    "lstm_prediction": 2,
+    "lstm_class_name": "火焰",
+    "lstm_confidence": 0.5855945348739624,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:41:52.573382",
+    "lstm_prediction": 2,
+    "lstm_class_name": "火焰",
+    "lstm_confidence": 0.5054563283920288,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:41:53.690424",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.5699493288993835,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:41:54.754568",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.6487123966217041,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:41:56.095357",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.7277483940124512,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:41:57.073428",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.8065888285636902,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:41:57.958281",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.8063284158706665,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:41:58.902973",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.80340576171875,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:41:59.808561",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.7990237474441528,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:42:00.683099",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.793586015701294,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:42:01.515295",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.7882546782493591,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:42:02.529992",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.7890197038650513,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:42:03.651233",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.7892818450927734,
+    "yolo_detections_count": 1,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:42:04.806593",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.7792108058929443,
+    "yolo_detections_count": 2,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:42:06.134032",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.7635437846183777,
+    "yolo_detections_count": 2,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:42:07.184287",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.7511076927185059,
+    "yolo_detections_count": 2,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:42:08.202731",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.7340258359909058,
+    "yolo_detections_count": 2,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:42:09.424920",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.7040209770202637,
+    "yolo_detections_count": 3,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:42:10.535885",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.69221431016922,
+    "yolo_detections_count": 2,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:42:11.841283",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.6988551020622253,
+    "yolo_detections_count": 2,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:42:12.964777",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.713599681854248,
+    "yolo_detections_count": 2,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:42:13.793167",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.7234915494918823,
+    "yolo_detections_count": 2,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:42:14.711753",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.7358202338218689,
+    "yolo_detections_count": 3,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:42:15.437037",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.7623053789138794,
+    "yolo_detections_count": 2,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:42:16.098381",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.7957512736320496,
+    "yolo_detections_count": 1,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:42:16.818113",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.8264443278312683,
+    "yolo_detections_count": 1,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:42:17.483157",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.8624690771102905,
+    "yolo_detections_count": 1,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:42:18.163272",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9122565984725952,
+    "yolo_detections_count": 1,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:42:18.796618",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9447020292282104,
+    "yolo_detections_count": 2,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:42:19.498609",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9602969288825989,
+    "yolo_detections_count": 2,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:42:20.184444",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9690390825271606,
+    "yolo_detections_count": 2,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:42:20.795654",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9780399203300476,
+    "yolo_detections_count": 2,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:42:21.475367",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9860144853591919,
+    "yolo_detections_count": 2,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:42:22.221306",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9901947975158691,
+    "yolo_detections_count": 2,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:42:22.881118",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.992554783821106,
+    "yolo_detections_count": 2,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:42:23.522487",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9941588640213013,
+    "yolo_detections_count": 2,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:42:24.236128",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9953344464302063,
+    "yolo_detections_count": 2,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:42:24.828334",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9962580800056458,
+    "yolo_detections_count": 1,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:42:25.521080",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9970162510871887,
+    "yolo_detections_count": 2,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:42:26.238845",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9976293444633484,
+    "yolo_detections_count": 2,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:42:27.072615",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9980735778808594,
+    "yolo_detections_count": 1,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:42:28.003616",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9982640147209167,
+    "yolo_detections_count": 2,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:42:28.738657",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9983517527580261,
+    "yolo_detections_count": 2,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:42:29.546759",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9984221458435059,
+    "yolo_detections_count": 2,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:42:30.326903",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9984774589538574,
+    "yolo_detections_count": 2,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:42:31.049713",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9984917640686035,
+    "yolo_detections_count": 1,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:42:33.157508",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9983762502670288,
+    "yolo_detections_count": 1,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:42:34.501879",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9982044100761414,
+    "yolo_detections_count": 2,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:42:35.526971",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9980304837226868,
+    "yolo_detections_count": 2,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:42:36.858282",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9978491067886353,
+    "yolo_detections_count": 2,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:42:37.857931",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9976421594619751,
+    "yolo_detections_count": 1,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:42:38.566289",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9973864555358887,
+    "yolo_detections_count": 1,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:42:39.378103",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9967337846755981,
+    "yolo_detections_count": 1,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:42:40.226410",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9957388043403625,
+    "yolo_detections_count": 1,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:42:41.273978",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9946883320808411,
+    "yolo_detections_count": 1,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:42:42.274407",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9941485524177551,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:42:42.696019",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9941919445991516,
+    "yolo_detections_count": 1,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:42:43.170725",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9944624900817871,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:42:43.744103",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9946531057357788,
+    "yolo_detections_count": 1,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:42:44.366243",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9946392178535461,
+    "yolo_detections_count": 1,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:42:44.921871",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9944009780883789,
+    "yolo_detections_count": 1,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:42:45.621436",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9944656491279602,
+    "yolo_detections_count": 1,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:42:45.965362",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9950968027114868,
+    "yolo_detections_count": 1,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:42:46.564008",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9955219030380249,
+    "yolo_detections_count": 1,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:42:46.971340",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9955774545669556,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:42:47.512355",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9950789213180542,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:42:48.007644",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9942388534545898,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:42:48.541003",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9921924471855164,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:42:49.109254",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9897942543029785,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:42:49.591026",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9885684847831726,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:42:50.115197",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9863646626472473,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:42:50.640532",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9775059819221497,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:42:51.227470",
+    "lstm_prediction": null,
+    "lstm_class_name": null,
+    "lstm_confidence": null,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:42:51.662532",
+    "lstm_prediction": null,
+    "lstm_class_name": null,
+    "lstm_confidence": null,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:42:52.183005",
+    "lstm_prediction": null,
+    "lstm_class_name": null,
+    "lstm_confidence": null,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:42:52.712381",
+    "lstm_prediction": null,
+    "lstm_class_name": null,
+    "lstm_confidence": null,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:42:53.199683",
+    "lstm_prediction": null,
+    "lstm_class_name": null,
+    "lstm_confidence": null,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:42:53.736191",
+    "lstm_prediction": null,
+    "lstm_class_name": null,
+    "lstm_confidence": null,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:42:54.269992",
+    "lstm_prediction": null,
+    "lstm_class_name": null,
+    "lstm_confidence": null,
+    "yolo_detections_count": 1,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:42:56.053449",
+    "lstm_prediction": null,
+    "lstm_class_name": null,
+    "lstm_confidence": null,
+    "yolo_detections_count": 1,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:42:57.307092",
+    "lstm_prediction": null,
+    "lstm_class_name": null,
+    "lstm_confidence": null,
+    "yolo_detections_count": 2,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:42:58.545788",
+    "lstm_prediction": null,
+    "lstm_class_name": null,
+    "lstm_confidence": null,
+    "yolo_detections_count": 2,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:42:59.446900",
+    "lstm_prediction": null,
+    "lstm_class_name": null,
+    "lstm_confidence": null,
+    "yolo_detections_count": 2,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:43:00.877549",
+    "lstm_prediction": null,
+    "lstm_class_name": null,
+    "lstm_confidence": null,
+    "yolo_detections_count": 1,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:43:01.586867",
+    "lstm_prediction": null,
+    "lstm_class_name": null,
+    "lstm_confidence": null,
+    "yolo_detections_count": 2,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:43:02.073160",
+    "lstm_prediction": null,
+    "lstm_class_name": null,
+    "lstm_confidence": null,
+    "yolo_detections_count": 2,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:43:02.664169",
+    "lstm_prediction": null,
+    "lstm_class_name": null,
+    "lstm_confidence": null,
+    "yolo_detections_count": 1,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:43:03.283274",
+    "lstm_prediction": null,
+    "lstm_class_name": null,
+    "lstm_confidence": null,
+    "yolo_detections_count": 2,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:43:03.869105",
+    "lstm_prediction": null,
+    "lstm_class_name": null,
+    "lstm_confidence": null,
+    "yolo_detections_count": 2,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:43:04.450399",
+    "lstm_prediction": null,
+    "lstm_class_name": null,
+    "lstm_confidence": null,
+    "yolo_detections_count": 1,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:43:05.533486",
+    "lstm_prediction": null,
+    "lstm_class_name": null,
+    "lstm_confidence": null,
+    "yolo_detections_count": 1,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:43:06.969905",
+    "lstm_prediction": null,
+    "lstm_class_name": null,
+    "lstm_confidence": null,
+    "yolo_detections_count": 1,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:43:08.553640",
+    "lstm_prediction": null,
+    "lstm_class_name": null,
+    "lstm_confidence": null,
+    "yolo_detections_count": 1,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:43:10.372396",
+    "lstm_prediction": null,
+    "lstm_class_name": null,
+    "lstm_confidence": null,
+    "yolo_detections_count": 1,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:43:12.258990",
+    "lstm_prediction": null,
+    "lstm_class_name": null,
+    "lstm_confidence": null,
+    "yolo_detections_count": 2,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:43:13.035731",
+    "lstm_prediction": null,
+    "lstm_class_name": null,
+    "lstm_confidence": null,
+    "yolo_detections_count": 1,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:43:13.519304",
+    "lstm_prediction": null,
+    "lstm_class_name": null,
+    "lstm_confidence": null,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:44:33.421580",
+    "lstm_prediction": null,
+    "lstm_class_name": null,
+    "lstm_confidence": null,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:44:34.077782",
+    "lstm_prediction": null,
+    "lstm_class_name": null,
+    "lstm_confidence": null,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:44:34.756305",
+    "lstm_prediction": null,
+    "lstm_class_name": null,
+    "lstm_confidence": null,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:44:35.390957",
+    "lstm_prediction": null,
+    "lstm_class_name": null,
+    "lstm_confidence": null,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:44:36.061667",
+    "lstm_prediction": null,
+    "lstm_class_name": null,
+    "lstm_confidence": null,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:44:38.782706",
+    "lstm_prediction": null,
+    "lstm_class_name": null,
+    "lstm_confidence": null,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:44:41.320462",
+    "lstm_prediction": null,
+    "lstm_class_name": null,
+    "lstm_confidence": null,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:44:43.106110",
+    "lstm_prediction": null,
+    "lstm_class_name": null,
+    "lstm_confidence": null,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:44:45.158549",
+    "lstm_prediction": null,
+    "lstm_class_name": null,
+    "lstm_confidence": null,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:44:47.118100",
+    "lstm_prediction": null,
+    "lstm_class_name": null,
+    "lstm_confidence": null,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:44:48.860748",
+    "lstm_prediction": null,
+    "lstm_class_name": null,
+    "lstm_confidence": null,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:44:51.232722",
+    "lstm_prediction": null,
+    "lstm_class_name": null,
+    "lstm_confidence": null,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:44:52.794423",
+    "lstm_prediction": null,
+    "lstm_class_name": null,
+    "lstm_confidence": null,
+    "yolo_detections_count": 2,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:44:54.631552",
+    "lstm_prediction": null,
+    "lstm_class_name": null,
+    "lstm_confidence": null,
+    "yolo_detections_count": 1,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:44:56.535935",
+    "lstm_prediction": null,
+    "lstm_class_name": null,
+    "lstm_confidence": null,
+    "yolo_detections_count": 2,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:44:58.209258",
+    "lstm_prediction": null,
+    "lstm_class_name": null,
+    "lstm_confidence": null,
+    "yolo_detections_count": 2,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:45:00.191243",
+    "lstm_prediction": null,
+    "lstm_class_name": null,
+    "lstm_confidence": null,
+    "yolo_detections_count": 1,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:45:01.948991",
+    "lstm_prediction": null,
+    "lstm_class_name": null,
+    "lstm_confidence": null,
+    "yolo_detections_count": 2,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:45:03.616135",
+    "lstm_prediction": null,
+    "lstm_class_name": null,
+    "lstm_confidence": null,
+    "yolo_detections_count": 2,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:45:05.423578",
+    "lstm_prediction": null,
+    "lstm_class_name": null,
+    "lstm_confidence": null,
+    "yolo_detections_count": 1,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:45:06.949597",
+    "lstm_prediction": null,
+    "lstm_class_name": null,
+    "lstm_confidence": null,
+    "yolo_detections_count": 1,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:45:08.753198",
+    "lstm_prediction": null,
+    "lstm_class_name": null,
+    "lstm_confidence": null,
+    "yolo_detections_count": 2,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:45:10.391771",
+    "lstm_prediction": null,
+    "lstm_class_name": null,
+    "lstm_confidence": null,
+    "yolo_detections_count": 2,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:45:11.836533",
+    "lstm_prediction": null,
+    "lstm_class_name": null,
+    "lstm_confidence": null,
+    "yolo_detections_count": 2,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:45:13.437932",
+    "lstm_prediction": null,
+    "lstm_class_name": null,
+    "lstm_confidence": null,
+    "yolo_detections_count": 2,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:45:14.632124",
+    "lstm_prediction": null,
+    "lstm_class_name": null,
+    "lstm_confidence": null,
+    "yolo_detections_count": 1,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:45:16.320208",
+    "lstm_prediction": null,
+    "lstm_class_name": null,
+    "lstm_confidence": null,
+    "yolo_detections_count": 1,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:45:17.822442",
+    "lstm_prediction": null,
+    "lstm_class_name": null,
+    "lstm_confidence": null,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:45:19.461915",
+    "lstm_prediction": null,
+    "lstm_class_name": null,
+    "lstm_confidence": null,
+    "yolo_detections_count": 1,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:45:21.497260",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9951157569885254,
+    "yolo_detections_count": 1,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:45:22.892869",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9946850538253784,
+    "yolo_detections_count": 1,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:45:24.302255",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9948291778564453,
+    "yolo_detections_count": 1,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:45:25.766007",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9949344396591187,
+    "yolo_detections_count": 1,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:45:27.078710",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.995021641254425,
+    "yolo_detections_count": 1,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:45:28.449644",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9949886202812195,
+    "yolo_detections_count": 1,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:45:29.859653",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9948769807815552,
+    "yolo_detections_count": 1,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:45:31.214958",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9949363470077515,
+    "yolo_detections_count": 2,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:45:32.556267",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9951767325401306,
+    "yolo_detections_count": 2,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:45:34.109902",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9954850077629089,
+    "yolo_detections_count": 1,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:45:35.401579",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9958316683769226,
+    "yolo_detections_count": 1,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:45:36.700482",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9962045550346375,
+    "yolo_detections_count": 1,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:45:38.234438",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9965153932571411,
+    "yolo_detections_count": 1,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:45:40.083667",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9966440200805664,
+    "yolo_detections_count": 1,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:45:41.771337",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9967243075370789,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:45:43.368233",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9968043565750122,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:45:45.181468",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9967818260192871,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:45:46.582264",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9963915944099426,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:45:47.852988",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9949848055839539,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:45:49.210767",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9928829073905945,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:45:50.580394",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9909850358963013,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:45:52.012203",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9903445243835449,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:45:53.457166",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9889847636222839,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:45:55.124544",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9863519668579102,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:45:56.515047",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9850538372993469,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:45:58.245842",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9849506616592407,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:45:59.888677",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9850208163261414,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:46:01.820332",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9847365617752075,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:46:03.551506",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9856932759284973,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:46:04.953386",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9867596626281738,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:46:06.584082",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9880975484848022,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:46:07.988904",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9881472587585449,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:46:09.633201",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9881699681282043,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:46:11.145809",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9697343111038208,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:46:12.680655",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.8780316114425659,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:46:14.161529",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.7789862155914307,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:46:15.747960",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.6799007654190063,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:46:17.590059",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.5813692212104797,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:46:19.344641",
+    "lstm_prediction": 2,
+    "lstm_class_name": "火焰",
+    "lstm_confidence": 0.5135263204574585,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:46:20.865071",
+    "lstm_prediction": 2,
+    "lstm_class_name": "火焰",
+    "lstm_confidence": 0.6103638410568237,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:46:22.288761",
+    "lstm_prediction": 2,
+    "lstm_class_name": "火焰",
+    "lstm_confidence": 0.6802477240562439,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:46:23.747165",
+    "lstm_prediction": 2,
+    "lstm_class_name": "火焰",
+    "lstm_confidence": 0.7143267393112183,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:46:25.136477",
+    "lstm_prediction": 2,
+    "lstm_class_name": "火焰",
+    "lstm_confidence": 0.7438963651657104,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:46:26.573887",
+    "lstm_prediction": 2,
+    "lstm_class_name": "火焰",
+    "lstm_confidence": 0.7450850009918213,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:46:27.918095",
+    "lstm_prediction": 2,
+    "lstm_class_name": "火焰",
+    "lstm_confidence": 0.6744523048400879,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:46:29.495710",
+    "lstm_prediction": 2,
+    "lstm_class_name": "火焰",
+    "lstm_confidence": 0.5974113345146179,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:46:31.164681",
+    "lstm_prediction": 2,
+    "lstm_class_name": "火焰",
+    "lstm_confidence": 0.5203522443771362,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:46:32.819719",
+    "lstm_prediction": 2,
+    "lstm_class_name": "火焰",
+    "lstm_confidence": 0.44323402643203735,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:46:34.181589",
+    "lstm_prediction": 2,
+    "lstm_class_name": "火焰",
+    "lstm_confidence": 0.3662758469581604,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:46:35.828703",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.36878523230552673,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:46:37.389620",
+    "lstm_prediction": 0,
+    "lstm_class_name": "无火",
+    "lstm_confidence": 0.388249009847641,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:46:39.112964",
+    "lstm_prediction": 0,
+    "lstm_class_name": "无火",
+    "lstm_confidence": 0.4360540509223938,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:46:40.530416",
+    "lstm_prediction": 0,
+    "lstm_class_name": "无火",
+    "lstm_confidence": 0.4836140275001526,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:46:42.074429",
+    "lstm_prediction": 0,
+    "lstm_class_name": "无火",
+    "lstm_confidence": 0.45055335760116577,
+    "yolo_detections_count": 1,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:46:43.403317",
+    "lstm_prediction": 0,
+    "lstm_class_name": "无火",
+    "lstm_confidence": 0.41377630829811096,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:46:44.878859",
+    "lstm_prediction": 0,
+    "lstm_class_name": "无火",
+    "lstm_confidence": 0.3800819516181946,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:46:46.691610",
+    "lstm_prediction": 0,
+    "lstm_class_name": "无火",
+    "lstm_confidence": 0.349556565284729,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:46:48.276013",
+    "lstm_prediction": 2,
+    "lstm_class_name": "火焰",
+    "lstm_confidence": 0.362693190574646,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:46:49.848748",
+    "lstm_prediction": 2,
+    "lstm_class_name": "火焰",
+    "lstm_confidence": 0.38382548093795776,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:46:51.180183",
+    "lstm_prediction": 2,
+    "lstm_class_name": "火焰",
+    "lstm_confidence": 0.39383476972579956,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:46:52.523670",
+    "lstm_prediction": 2,
+    "lstm_class_name": "火焰",
+    "lstm_confidence": 0.39141663908958435,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:46:54.164250",
+    "lstm_prediction": 2,
+    "lstm_class_name": "火焰",
+    "lstm_confidence": 0.38179919123649597,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:46:55.541517",
+    "lstm_prediction": 2,
+    "lstm_class_name": "火焰",
+    "lstm_confidence": 0.36668092012405396,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:46:56.966317",
+    "lstm_prediction": 0,
+    "lstm_class_name": "无火",
+    "lstm_confidence": 0.35922008752822876,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:46:58.346173",
+    "lstm_prediction": 0,
+    "lstm_class_name": "无火",
+    "lstm_confidence": 0.4119434952735901,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:46:59.713233",
+    "lstm_prediction": 0,
+    "lstm_class_name": "无火",
+    "lstm_confidence": 0.4605693817138672,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:47:01.208494",
+    "lstm_prediction": 0,
+    "lstm_class_name": "无火",
+    "lstm_confidence": 0.50496506690979,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:47:02.892165",
+    "lstm_prediction": 0,
+    "lstm_class_name": "无火",
+    "lstm_confidence": 0.5457810163497925,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:47:04.650455",
+    "lstm_prediction": 0,
+    "lstm_class_name": "无火",
+    "lstm_confidence": 0.5799033045768738,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:47:06.478175",
+    "lstm_prediction": 0,
+    "lstm_class_name": "无火",
+    "lstm_confidence": 0.6049596071243286,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:47:08.667848",
+    "lstm_prediction": 0,
+    "lstm_class_name": "无火",
+    "lstm_confidence": 0.6177615523338318,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:47:10.440910",
+    "lstm_prediction": 0,
+    "lstm_class_name": "无火",
+    "lstm_confidence": 0.6220083832740784,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:47:12.362298",
+    "lstm_prediction": 0,
+    "lstm_class_name": "无火",
+    "lstm_confidence": 0.6186358332633972,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:47:14.202357",
+    "lstm_prediction": 0,
+    "lstm_class_name": "无火",
+    "lstm_confidence": 0.5773236155509949,
+    "yolo_detections_count": 1,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:47:16.042745",
+    "lstm_prediction": 0,
+    "lstm_class_name": "无火",
+    "lstm_confidence": 0.523666262626648,
+    "yolo_detections_count": 2,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:47:17.878344",
+    "lstm_prediction": 0,
+    "lstm_class_name": "无火",
+    "lstm_confidence": 0.4669485092163086,
+    "yolo_detections_count": 2,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:47:19.771806",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.47367340326309204,
+    "yolo_detections_count": 2,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:47:21.288324",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.4950873851776123,
+    "yolo_detections_count": 2,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:47:22.919644",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.5201531052589417,
+    "yolo_detections_count": 2,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:47:24.304127",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.5463830828666687,
+    "yolo_detections_count": 3,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:47:25.677289",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.5811105966567993,
+    "yolo_detections_count": 1,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:47:27.030587",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.6268287897109985,
+    "yolo_detections_count": 1,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:47:28.539895",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.6789581179618835,
+    "yolo_detections_count": 1,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:47:29.937240",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.7107416391372681,
+    "yolo_detections_count": 1,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:47:31.489752",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.7434462308883667,
+    "yolo_detections_count": 1,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:47:32.900483",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.7846280932426453,
+    "yolo_detections_count": 2,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:47:34.351173",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.8267095685005188,
+    "yolo_detections_count": 2,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:47:35.734090",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.8668233156204224,
+    "yolo_detections_count": 2,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:47:37.239187",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9033592343330383,
+    "yolo_detections_count": 2,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:47:38.666656",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9386903643608093,
+    "yolo_detections_count": 2,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:47:40.042635",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9655245542526245,
+    "yolo_detections_count": 2,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:47:41.683584",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9810724258422852,
+    "yolo_detections_count": 2,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:47:43.359471",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.988914966583252,
+    "yolo_detections_count": 1,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:47:44.852261",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9919452667236328,
+    "yolo_detections_count": 2,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:47:46.265212",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9939721822738647,
+    "yolo_detections_count": 2,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:47:47.728619",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9954525232315063,
+    "yolo_detections_count": 2,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:47:49.110432",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9965470433235168,
+    "yolo_detections_count": 2,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:47:50.528000",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9972481727600098,
+    "yolo_detections_count": 2,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:47:51.950359",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9975284337997437,
+    "yolo_detections_count": 2,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:47:53.360618",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9975162744522095,
+    "yolo_detections_count": 2,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:47:54.755280",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9973452687263489,
+    "yolo_detections_count": 2,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:47:56.160161",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9965962171554565,
+    "yolo_detections_count": 2,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:47:57.537758",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9953327178955078,
+    "yolo_detections_count": 1,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:47:59.001982",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9922239184379578,
+    "yolo_detections_count": 1,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:48:00.675919",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.987952709197998,
+    "yolo_detections_count": 2,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:48:02.761066",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9850541949272156,
+    "yolo_detections_count": 2,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:48:04.275699",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.982685923576355,
+    "yolo_detections_count": 2,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:48:05.890361",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9799827337265015,
+    "yolo_detections_count": 1,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:48:07.181084",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9754301905632019,
+    "yolo_detections_count": 1,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:48:08.829028",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9694761037826538,
+    "yolo_detections_count": 1,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:48:10.261368",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9630938768386841,
+    "yolo_detections_count": 1,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:48:11.906681",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9584528207778931,
+    "yolo_detections_count": 1,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:48:13.343127",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9559887051582336,
+    "yolo_detections_count": 1,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:48:14.737228",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9570034742355347,
+    "yolo_detections_count": 1,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:48:16.174717",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9599302411079407,
+    "yolo_detections_count": 1,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:48:17.873686",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9617810249328613,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:48:19.219148",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.963170051574707,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:48:20.689478",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9646786451339722,
+    "yolo_detections_count": 1,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:48:22.443005",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9674941897392273,
+    "yolo_detections_count": 1,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:48:24.194436",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9709153175354004,
+    "yolo_detections_count": 1,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:48:25.877513",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.974096953868866,
+    "yolo_detections_count": 1,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:48:27.400479",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9759113192558289,
+    "yolo_detections_count": 1,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:48:28.895923",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.97565758228302,
+    "yolo_detections_count": 1,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:48:30.321468",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9730634689331055,
+    "yolo_detections_count": 1,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:48:31.828168",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9693330526351929,
+    "yolo_detections_count": 1,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:48:33.179096",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9657741785049438,
+    "yolo_detections_count": 1,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:48:34.623579",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9628604650497437,
+    "yolo_detections_count": 1,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:48:35.950904",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9608144760131836,
+    "yolo_detections_count": 1,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:48:37.576589",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9602683186531067,
+    "yolo_detections_count": 1,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:48:39.152885",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.962218165397644,
+    "yolo_detections_count": 1,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:48:40.691596",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9651800990104675,
+    "yolo_detections_count": 1,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:48:42.443142",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9686511754989624,
+    "yolo_detections_count": 1,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:48:44.033548",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9724300503730774,
+    "yolo_detections_count": 2,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:48:45.743793",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9766390919685364,
+    "yolo_detections_count": 1,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:48:47.350524",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9812417030334473,
+    "yolo_detections_count": 1,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:48:49.041513",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.985568642616272,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:48:50.452988",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9892512559890747,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:48:51.854686",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9922887086868286,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:48:53.248724",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9941796064376831,
+    "yolo_detections_count": 1,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:48:54.730244",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9939596056938171,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:48:56.181843",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9929205775260925,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:48:57.657970",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9918136596679688,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:48:59.099932",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9913773536682129,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:49:00.756458",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9914290308952332,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:49:02.283098",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9914959073066711,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:49:03.703029",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9913153648376465,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:49:05.064839",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9910557866096497,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:49:06.540409",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9909073114395142,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:49:07.935709",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9908226132392883,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:49:09.304050",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9908156394958496,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:49:10.958651",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9919428825378418,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:49:12.258785",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9931342005729675,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:49:13.537801",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9938004612922668,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:49:14.942819",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9941915273666382,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:49:16.445952",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9937040209770203,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:49:17.766919",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9727551341056824,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:49:19.191750",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.8938263058662415,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:49:20.541980",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.7980598211288452,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:49:21.900083",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.7003557085990906,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:49:23.241367",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.6045363545417786,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:49:24.849176",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.5076389312744141,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:49:26.199283",
+    "lstm_prediction": 2,
+    "lstm_class_name": "火焰",
+    "lstm_confidence": 0.578266978263855,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:49:27.621809",
+    "lstm_prediction": 2,
+    "lstm_class_name": "火焰",
+    "lstm_confidence": 0.6208889484405518,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:49:29.413831",
+    "lstm_prediction": 2,
+    "lstm_class_name": "火焰",
+    "lstm_confidence": 0.6892443895339966,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:49:30.930597",
+    "lstm_prediction": 2,
+    "lstm_class_name": "火焰",
+    "lstm_confidence": 0.6885776519775391,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:49:32.475732",
+    "lstm_prediction": 2,
+    "lstm_class_name": "火焰",
+    "lstm_confidence": 0.667884886264801,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:49:33.876968",
+    "lstm_prediction": 2,
+    "lstm_class_name": "火焰",
+    "lstm_confidence": 0.5891503095626831,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:49:35.318067",
+    "lstm_prediction": 2,
+    "lstm_class_name": "火焰",
+    "lstm_confidence": 0.49354806542396545,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:49:36.673575",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.509738564491272,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:49:38.148489",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.53631991147995,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:49:39.552552",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.5633729100227356,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:49:41.108044",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.584147572517395,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:49:42.523490",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.556887149810791,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:49:43.953765",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.5557452440261841,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:49:45.308090",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.49021607637405396,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:49:46.819217",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.4253615736961365,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:49:48.129421",
+    "lstm_prediction": 0,
+    "lstm_class_name": "无火",
+    "lstm_confidence": 0.44026023149490356,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:49:49.569973",
+    "lstm_prediction": 0,
+    "lstm_class_name": "无火",
+    "lstm_confidence": 0.4836140275001526,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:49:51.056347",
+    "lstm_prediction": 0,
+    "lstm_class_name": "无火",
+    "lstm_confidence": 0.4836140275001526,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:49:52.639757",
+    "lstm_prediction": 0,
+    "lstm_class_name": "无火",
+    "lstm_confidence": 0.4836140275001526,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:49:54.255368",
+    "lstm_prediction": 0,
+    "lstm_class_name": "无火",
+    "lstm_confidence": 0.4836140275001526,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:49:56.123553",
+    "lstm_prediction": 0,
+    "lstm_class_name": "无火",
+    "lstm_confidence": 0.4836140275001526,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:49:57.956363",
+    "lstm_prediction": 0,
+    "lstm_class_name": "无火",
+    "lstm_confidence": 0.4836140275001526,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:49:59.899657",
+    "lstm_prediction": 0,
+    "lstm_class_name": "无火",
+    "lstm_confidence": 0.4836140275001526,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:50:02.088670",
+    "lstm_prediction": 0,
+    "lstm_class_name": "无火",
+    "lstm_confidence": 0.4836140275001526,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:50:04.048925",
+    "lstm_prediction": 0,
+    "lstm_class_name": "无火",
+    "lstm_confidence": 0.4836140275001526,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:50:06.062021",
+    "lstm_prediction": 0,
+    "lstm_class_name": "无火",
+    "lstm_confidence": 0.4836140275001526,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:50:08.260469",
+    "lstm_prediction": 0,
+    "lstm_class_name": "无火",
+    "lstm_confidence": 0.4836140275001526,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:50:09.657113",
+    "lstm_prediction": 0,
+    "lstm_class_name": "无火",
+    "lstm_confidence": 0.4836140275001526,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:50:11.104021",
+    "lstm_prediction": 0,
+    "lstm_class_name": "无火",
+    "lstm_confidence": 0.4836140275001526,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:50:12.606144",
+    "lstm_prediction": 0,
+    "lstm_class_name": "无火",
+    "lstm_confidence": 0.4836140275001526,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:50:14.430039",
+    "lstm_prediction": 0,
+    "lstm_class_name": "无火",
+    "lstm_confidence": 0.4836140275001526,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:50:15.926925",
+    "lstm_prediction": 0,
+    "lstm_class_name": "无火",
+    "lstm_confidence": 0.4836140275001526,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:50:17.580389",
+    "lstm_prediction": 0,
+    "lstm_class_name": "无火",
+    "lstm_confidence": 0.4836140275001526,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:50:19.182564",
+    "lstm_prediction": 0,
+    "lstm_class_name": "无火",
+    "lstm_confidence": 0.4836140275001526,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:50:20.803832",
+    "lstm_prediction": 0,
+    "lstm_class_name": "无火",
+    "lstm_confidence": 0.4836140275001526,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:50:22.339849",
+    "lstm_prediction": 0,
+    "lstm_class_name": "无火",
+    "lstm_confidence": 0.4836140275001526,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:50:23.835822",
+    "lstm_prediction": 0,
+    "lstm_class_name": "无火",
+    "lstm_confidence": 0.4836140275001526,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:50:25.561527",
+    "lstm_prediction": 0,
+    "lstm_class_name": "无火",
+    "lstm_confidence": 0.4836140275001526,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:50:27.069009",
+    "lstm_prediction": 0,
+    "lstm_class_name": "无火",
+    "lstm_confidence": 0.4836140275001526,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:50:28.570581",
+    "lstm_prediction": 0,
+    "lstm_class_name": "无火",
+    "lstm_confidence": 0.4836140275001526,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:50:29.977428",
+    "lstm_prediction": 0,
+    "lstm_class_name": "无火",
+    "lstm_confidence": 0.4836140275001526,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:50:31.298100",
+    "lstm_prediction": 0,
+    "lstm_class_name": "无火",
+    "lstm_confidence": 0.4836140275001526,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:50:32.779064",
+    "lstm_prediction": 0,
+    "lstm_class_name": "无火",
+    "lstm_confidence": 0.4836140275001526,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:50:34.507843",
+    "lstm_prediction": 0,
+    "lstm_class_name": "无火",
+    "lstm_confidence": 0.4836140275001526,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:50:36.255151",
+    "lstm_prediction": 0,
+    "lstm_class_name": "无火",
+    "lstm_confidence": 0.4836140275001526,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:50:37.697073",
+    "lstm_prediction": 0,
+    "lstm_class_name": "无火",
+    "lstm_confidence": 0.4836140275001526,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:50:38.893174",
+    "lstm_prediction": 0,
+    "lstm_class_name": "无火",
+    "lstm_confidence": 0.4836140275001526,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:50:40.041518",
+    "lstm_prediction": 0,
+    "lstm_class_name": "无火",
+    "lstm_confidence": 0.4836140275001526,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:50:41.274075",
+    "lstm_prediction": 0,
+    "lstm_class_name": "无火",
+    "lstm_confidence": 0.4836140275001526,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:50:42.920097",
+    "lstm_prediction": 0,
+    "lstm_class_name": "无火",
+    "lstm_confidence": 0.4836140275001526,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:50:44.752885",
+    "lstm_prediction": 0,
+    "lstm_class_name": "无火",
+    "lstm_confidence": 0.4836140275001526,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:50:46.558826",
+    "lstm_prediction": 0,
+    "lstm_class_name": "无火",
+    "lstm_confidence": 0.4836140275001526,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:50:48.253686",
+    "lstm_prediction": 0,
+    "lstm_class_name": "无火",
+    "lstm_confidence": 0.4836140275001526,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:50:49.880098",
+    "lstm_prediction": 0,
+    "lstm_class_name": "无火",
+    "lstm_confidence": 0.4836140275001526,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:50:51.485627",
+    "lstm_prediction": 0,
+    "lstm_class_name": "无火",
+    "lstm_confidence": 0.4836140275001526,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:50:52.925959",
+    "lstm_prediction": 0,
+    "lstm_class_name": "无火",
+    "lstm_confidence": 0.4836140275001526,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:50:54.449588",
+    "lstm_prediction": 0,
+    "lstm_class_name": "无火",
+    "lstm_confidence": 0.4836140275001526,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:50:56.007983",
+    "lstm_prediction": 0,
+    "lstm_class_name": "无火",
+    "lstm_confidence": 0.4836140275001526,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:50:57.847366",
+    "lstm_prediction": 0,
+    "lstm_class_name": "无火",
+    "lstm_confidence": 0.4836140275001526,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:50:59.480903",
+    "lstm_prediction": 0,
+    "lstm_class_name": "无火",
+    "lstm_confidence": 0.4836140275001526,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:51:01.337305",
+    "lstm_prediction": 0,
+    "lstm_class_name": "无火",
+    "lstm_confidence": 0.4836140275001526,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:51:03.000662",
+    "lstm_prediction": 0,
+    "lstm_class_name": "无火",
+    "lstm_confidence": 0.45857635140419006,
+    "yolo_detections_count": 1,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:51:04.818265",
+    "lstm_prediction": 0,
+    "lstm_class_name": "无火",
+    "lstm_confidence": 0.4345111846923828,
+    "yolo_detections_count": 1,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:51:06.555126",
+    "lstm_prediction": 0,
+    "lstm_class_name": "无火",
+    "lstm_confidence": 0.4148229956626892,
+    "yolo_detections_count": 1,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:51:08.272923",
+    "lstm_prediction": 0,
+    "lstm_class_name": "无火",
+    "lstm_confidence": 0.38494712114334106,
+    "yolo_detections_count": 1,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:51:09.914311",
+    "lstm_prediction": 2,
+    "lstm_class_name": "火焰",
+    "lstm_confidence": 0.41318708658218384,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:51:11.319291",
+    "lstm_prediction": 2,
+    "lstm_class_name": "火焰",
+    "lstm_confidence": 0.48561105132102966,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:51:12.603869",
+    "lstm_prediction": 2,
+    "lstm_class_name": "火焰",
+    "lstm_confidence": 0.5600658059120178,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:51:14.458502",
+    "lstm_prediction": 2,
+    "lstm_class_name": "火焰",
+    "lstm_confidence": 0.6348568201065063,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:51:16.011890",
+    "lstm_prediction": 2,
+    "lstm_class_name": "火焰",
+    "lstm_confidence": 0.709776759147644,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:51:17.598377",
+    "lstm_prediction": 2,
+    "lstm_class_name": "火焰",
+    "lstm_confidence": 0.7848442196846008,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:51:19.363867",
+    "lstm_prediction": 2,
+    "lstm_class_name": "火焰",
+    "lstm_confidence": 0.8452135324478149,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:51:20.817002",
+    "lstm_prediction": 2,
+    "lstm_class_name": "火焰",
+    "lstm_confidence": 0.8942273855209351,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:51:22.332522",
+    "lstm_prediction": 2,
+    "lstm_class_name": "火焰",
+    "lstm_confidence": 0.9365363121032715,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:51:23.767973",
+    "lstm_prediction": 2,
+    "lstm_class_name": "火焰",
+    "lstm_confidence": 0.9609211087226868,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:51:25.240654",
+    "lstm_prediction": 2,
+    "lstm_class_name": "火焰",
+    "lstm_confidence": 0.9711700677871704,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:51:26.814751",
+    "lstm_prediction": 2,
+    "lstm_class_name": "火焰",
+    "lstm_confidence": 0.9751418828964233,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:51:28.570558",
+    "lstm_prediction": 2,
+    "lstm_class_name": "火焰",
+    "lstm_confidence": 0.9773433804512024,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:51:30.229438",
+    "lstm_prediction": 2,
+    "lstm_class_name": "火焰",
+    "lstm_confidence": 0.9794350862503052,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:51:31.849569",
+    "lstm_prediction": 2,
+    "lstm_class_name": "火焰",
+    "lstm_confidence": 0.9815765619277954,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:51:33.430510",
+    "lstm_prediction": 2,
+    "lstm_class_name": "火焰",
+    "lstm_confidence": 0.9841787219047546,
+    "yolo_detections_count": 1,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:51:35.064240",
+    "lstm_prediction": 2,
+    "lstm_class_name": "火焰",
+    "lstm_confidence": 0.9866101145744324,
+    "yolo_detections_count": 1,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:51:36.880655",
+    "lstm_prediction": 2,
+    "lstm_class_name": "火焰",
+    "lstm_confidence": 0.9887628555297852,
+    "yolo_detections_count": 1,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:51:38.336689",
+    "lstm_prediction": 2,
+    "lstm_class_name": "火焰",
+    "lstm_confidence": 0.9906509518623352,
+    "yolo_detections_count": 1,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:51:40.137695",
+    "lstm_prediction": 2,
+    "lstm_class_name": "火焰",
+    "lstm_confidence": 0.9923744201660156,
+    "yolo_detections_count": 1,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:51:41.901235",
+    "lstm_prediction": 2,
+    "lstm_class_name": "火焰",
+    "lstm_confidence": 0.9938909411430359,
+    "yolo_detections_count": 1,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:51:43.462659",
+    "lstm_prediction": 2,
+    "lstm_class_name": "火焰",
+    "lstm_confidence": 0.9951349496841431,
+    "yolo_detections_count": 1,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:51:45.130844",
+    "lstm_prediction": 2,
+    "lstm_class_name": "火焰",
+    "lstm_confidence": 0.9960983991622925,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:51:46.799883",
+    "lstm_prediction": 2,
+    "lstm_class_name": "火焰",
+    "lstm_confidence": 0.9968528747558594,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:51:48.277582",
+    "lstm_prediction": 2,
+    "lstm_class_name": "火焰",
+    "lstm_confidence": 0.9974155426025391,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:51:49.667108",
+    "lstm_prediction": 2,
+    "lstm_class_name": "火焰",
+    "lstm_confidence": 0.9973015785217285,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:51:51.253161",
+    "lstm_prediction": 2,
+    "lstm_class_name": "火焰",
+    "lstm_confidence": 0.9970417022705078,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:51:52.805606",
+    "lstm_prediction": 2,
+    "lstm_class_name": "火焰",
+    "lstm_confidence": 0.9966056942939758,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:51:54.294301",
+    "lstm_prediction": 2,
+    "lstm_class_name": "火焰",
+    "lstm_confidence": 0.9956520199775696,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:51:55.771779",
+    "lstm_prediction": 2,
+    "lstm_class_name": "火焰",
+    "lstm_confidence": 0.9153093099594116,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:51:57.308737",
+    "lstm_prediction": 2,
+    "lstm_class_name": "火焰",
+    "lstm_confidence": 0.8329395055770874,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:51:59.079799",
+    "lstm_prediction": 2,
+    "lstm_class_name": "火焰",
+    "lstm_confidence": 0.7498295903205872,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:52:00.621098",
+    "lstm_prediction": 2,
+    "lstm_class_name": "火焰",
+    "lstm_confidence": 0.6671215295791626,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:52:02.158326",
+    "lstm_prediction": 2,
+    "lstm_class_name": "火焰",
+    "lstm_confidence": 0.5855945348739624,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:52:03.460555",
+    "lstm_prediction": 2,
+    "lstm_class_name": "火焰",
+    "lstm_confidence": 0.5054563283920288,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:52:05.128687",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.5699493288993835,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:52:06.707651",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.6487123966217041,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:52:08.018006",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.7277483940124512,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:52:09.329856",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.8065888285636902,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:52:10.876569",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.8063284158706665,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:52:12.260649",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.80340576171875,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:52:13.852029",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.7990237474441528,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:52:15.390390",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.793586015701294,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:52:16.798612",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.7882546782493591,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:52:18.445813",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.7890197038650513,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:52:19.717853",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.7892818450927734,
+    "yolo_detections_count": 1,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:52:21.069590",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.7792108058929443,
+    "yolo_detections_count": 2,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:52:22.527554",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.7635437846183777,
+    "yolo_detections_count": 2,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:52:24.184125",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.7511076927185059,
+    "yolo_detections_count": 2,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:52:25.875336",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.7340258359909058,
+    "yolo_detections_count": 2,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:52:27.997694",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.7040209770202637,
+    "yolo_detections_count": 3,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:52:30.142586",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.69221431016922,
+    "yolo_detections_count": 2,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:52:32.130047",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.6988551020622253,
+    "yolo_detections_count": 2,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:52:34.088896",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.713599681854248,
+    "yolo_detections_count": 2,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:52:36.125186",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.7234915494918823,
+    "yolo_detections_count": 2,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:52:38.156734",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.7358202338218689,
+    "yolo_detections_count": 3,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:52:40.083027",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.7623053789138794,
+    "yolo_detections_count": 2,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:52:42.308784",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.7957512736320496,
+    "yolo_detections_count": 1,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:52:44.344617",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.8264443278312683,
+    "yolo_detections_count": 1,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:52:46.277472",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.8624690771102905,
+    "yolo_detections_count": 1,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:52:48.287700",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9122565984725952,
+    "yolo_detections_count": 1,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:52:50.176656",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9447020292282104,
+    "yolo_detections_count": 2,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:52:52.241430",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9602969288825989,
+    "yolo_detections_count": 2,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:52:54.362420",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9690390825271606,
+    "yolo_detections_count": 2,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:52:56.340912",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9780399203300476,
+    "yolo_detections_count": 2,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:52:58.448465",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9860144853591919,
+    "yolo_detections_count": 2,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:53:00.958295",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9901947975158691,
+    "yolo_detections_count": 2,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:53:03.205545",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.992554783821106,
+    "yolo_detections_count": 2,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:53:05.215359",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9941588640213013,
+    "yolo_detections_count": 2,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:53:07.688991",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9953344464302063,
+    "yolo_detections_count": 2,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:53:10.374199",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9962580800056458,
+    "yolo_detections_count": 1,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:53:13.151287",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9970162510871887,
+    "yolo_detections_count": 2,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:53:15.550460",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9976293444633484,
+    "yolo_detections_count": 2,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:53:17.830638",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9980735778808594,
+    "yolo_detections_count": 1,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:53:20.149389",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9982640147209167,
+    "yolo_detections_count": 2,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:53:22.041356",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9983517527580261,
+    "yolo_detections_count": 2,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:53:24.117968",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9984221458435059,
+    "yolo_detections_count": 2,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:53:26.011733",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9984774589538574,
+    "yolo_detections_count": 2,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:53:27.611066",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9984917640686035,
+    "yolo_detections_count": 1,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:53:29.164656",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9983762502670288,
+    "yolo_detections_count": 1,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:53:30.628123",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9982044100761414,
+    "yolo_detections_count": 2,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:53:32.111442",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9980304837226868,
+    "yolo_detections_count": 2,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:53:33.556877",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9978491067886353,
+    "yolo_detections_count": 2,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:53:35.098410",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9976421594619751,
+    "yolo_detections_count": 1,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:53:36.417875",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9973864555358887,
+    "yolo_detections_count": 1,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:53:37.822608",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9967337846755981,
+    "yolo_detections_count": 1,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:53:39.285928",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9957388043403625,
+    "yolo_detections_count": 1,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:53:41.015022",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9946883320808411,
+    "yolo_detections_count": 1,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:53:42.774269",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9941485524177551,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:53:44.631075",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9941919445991516,
+    "yolo_detections_count": 1,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:53:46.678974",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9944230914115906,
+    "yolo_detections_count": 1,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:53:48.169639",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9946283102035522,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:53:49.548764",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9947821497917175,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:53:51.098615",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9948691129684448,
+    "yolo_detections_count": 1,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:53:52.614041",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9950271844863892,
+    "yolo_detections_count": 1,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:53:54.063857",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9954856634140015,
+    "yolo_detections_count": 1,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:53:55.370616",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9951336979866028,
+    "yolo_detections_count": 1,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:53:56.995219",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9938532710075378,
+    "yolo_detections_count": 1,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:53:58.314343",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9911137819290161,
+    "yolo_detections_count": 1,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:53:59.720112",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9862958788871765,
+    "yolo_detections_count": 1,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:54:01.216240",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9787852168083191,
+    "yolo_detections_count": 1,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:54:02.810466",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9719624519348145,
+    "yolo_detections_count": 1,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:54:04.167055",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9670742750167847,
+    "yolo_detections_count": 1,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:54:05.621334",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9628464579582214,
+    "yolo_detections_count": 1,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:54:07.562716",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9593905210494995,
+    "yolo_detections_count": 1,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:54:09.357434",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9582843780517578,
+    "yolo_detections_count": 1,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:54:11.190330",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9590414762496948,
+    "yolo_detections_count": 1,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:54:13.268435",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.961266040802002,
+    "yolo_detections_count": 1,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:54:14.929170",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9641091227531433,
+    "yolo_detections_count": 1,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:54:17.129052",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.968005359172821,
+    "yolo_detections_count": 1,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:54:18.829687",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9746952056884766,
+    "yolo_detections_count": 1,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:54:20.364185",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9810339212417603,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:54:22.033246",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9856482744216919,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:54:23.659846",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9897571802139282,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:54:26.167520",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9930200576782227,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:54:28.877868",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9938162565231323,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:54:31.074055",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9939826130867004,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:54:32.812688",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.993993878364563,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:54:34.203093",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9942671060562134,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:54:35.648344",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9951063394546509,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:54:37.055474",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.995679497718811,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:54:38.577448",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9959461092948914,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:54:40.017839",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9960591197013855,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:54:41.499151",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9961386919021606,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:54:42.928600",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9962600469589233,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:54:44.547491",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9961673021316528,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:54:46.288196",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9962154626846313,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:54:48.585914",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9961414337158203,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:54:50.028138",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.996196448802948,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:54:51.551657",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9962180852890015,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:54:52.947931",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9953638315200806,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:54:54.138558",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9610203504562378,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:54:55.453681",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.8890223503112793,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:54:56.859905",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.808297336101532,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:54:58.195688",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.7202986478805542,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:54:59.441256",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.6348675489425659,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:55:00.795293",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.5572179555892944,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:55:02.078302",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.5094199776649475,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:55:03.359975",
+    "lstm_prediction": 2,
+    "lstm_class_name": "火焰",
+    "lstm_confidence": 0.5021883845329285,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:55:04.642844",
+    "lstm_prediction": 2,
+    "lstm_class_name": "火焰",
+    "lstm_confidence": 0.527888298034668,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:55:06.009318",
+    "lstm_prediction": 2,
+    "lstm_class_name": "火焰",
+    "lstm_confidence": 0.5490584373474121,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:55:07.259297",
+    "lstm_prediction": 2,
+    "lstm_class_name": "火焰",
+    "lstm_confidence": 0.5371187925338745,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:55:08.447669",
+    "lstm_prediction": 2,
+    "lstm_class_name": "火焰",
+    "lstm_confidence": 0.48768696188926697,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:55:09.801922",
+    "lstm_prediction": 2,
+    "lstm_class_name": "火焰",
+    "lstm_confidence": 0.42955684661865234,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:55:11.225809",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.39086490869522095,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:55:12.527498",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.40663033723831177,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:55:13.842437",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.4143550992012024,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:55:15.126478",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.3919861912727356,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:55:16.507802",
+    "lstm_prediction": 0,
+    "lstm_class_name": "无火",
+    "lstm_confidence": 0.43613332509994507,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:55:17.644494",
+    "lstm_prediction": null,
+    "lstm_class_name": null,
+    "lstm_confidence": null,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:55:18.971295",
+    "lstm_prediction": null,
+    "lstm_class_name": null,
+    "lstm_confidence": null,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:55:20.342746",
+    "lstm_prediction": null,
+    "lstm_class_name": null,
+    "lstm_confidence": null,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:55:22.320069",
+    "lstm_prediction": null,
+    "lstm_class_name": null,
+    "lstm_confidence": null,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:55:23.926038",
+    "lstm_prediction": null,
+    "lstm_class_name": null,
+    "lstm_confidence": null,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:55:25.505339",
+    "lstm_prediction": null,
+    "lstm_class_name": null,
+    "lstm_confidence": null,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:55:27.166597",
+    "lstm_prediction": null,
+    "lstm_class_name": null,
+    "lstm_confidence": null,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:55:28.698911",
+    "lstm_prediction": null,
+    "lstm_class_name": null,
+    "lstm_confidence": null,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:55:30.635121",
+    "lstm_prediction": null,
+    "lstm_class_name": null,
+    "lstm_confidence": null,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:55:32.718231",
+    "lstm_prediction": null,
+    "lstm_class_name": null,
+    "lstm_confidence": null,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:55:34.429975",
+    "lstm_prediction": null,
+    "lstm_class_name": null,
+    "lstm_confidence": null,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:55:36.114921",
+    "lstm_prediction": null,
+    "lstm_class_name": null,
+    "lstm_confidence": null,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:55:37.867680",
+    "lstm_prediction": null,
+    "lstm_class_name": null,
+    "lstm_confidence": null,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:55:39.604891",
+    "lstm_prediction": null,
+    "lstm_class_name": null,
+    "lstm_confidence": null,
+    "yolo_detections_count": 1,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:55:41.308036",
+    "lstm_prediction": null,
+    "lstm_class_name": null,
+    "lstm_confidence": null,
+    "yolo_detections_count": 1,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:55:43.165037",
+    "lstm_prediction": null,
+    "lstm_class_name": null,
+    "lstm_confidence": null,
+    "yolo_detections_count": 2,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:55:45.023590",
+    "lstm_prediction": null,
+    "lstm_class_name": null,
+    "lstm_confidence": null,
+    "yolo_detections_count": 2,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:55:46.821174",
+    "lstm_prediction": null,
+    "lstm_class_name": null,
+    "lstm_confidence": null,
+    "yolo_detections_count": 2,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:55:48.469354",
+    "lstm_prediction": null,
+    "lstm_class_name": null,
+    "lstm_confidence": null,
+    "yolo_detections_count": 1,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:55:50.472096",
+    "lstm_prediction": null,
+    "lstm_class_name": null,
+    "lstm_confidence": null,
+    "yolo_detections_count": 2,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:55:52.491385",
+    "lstm_prediction": null,
+    "lstm_class_name": null,
+    "lstm_confidence": null,
+    "yolo_detections_count": 2,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:55:54.237356",
+    "lstm_prediction": null,
+    "lstm_class_name": null,
+    "lstm_confidence": null,
+    "yolo_detections_count": 2,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:55:56.127986",
+    "lstm_prediction": null,
+    "lstm_class_name": null,
+    "lstm_confidence": null,
+    "yolo_detections_count": 1,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:55:57.969341",
+    "lstm_prediction": null,
+    "lstm_class_name": null,
+    "lstm_confidence": null,
+    "yolo_detections_count": 2,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:55:59.590252",
+    "lstm_prediction": null,
+    "lstm_class_name": null,
+    "lstm_confidence": null,
+    "yolo_detections_count": 2,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:56:01.062895",
+    "lstm_prediction": null,
+    "lstm_class_name": null,
+    "lstm_confidence": null,
+    "yolo_detections_count": 1,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:56:02.809465",
+    "lstm_prediction": null,
+    "lstm_class_name": null,
+    "lstm_confidence": null,
+    "yolo_detections_count": 2,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:56:04.141966",
+    "lstm_prediction": null,
+    "lstm_class_name": null,
+    "lstm_confidence": null,
+    "yolo_detections_count": 1,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:56:05.402745",
+    "lstm_prediction": null,
+    "lstm_class_name": null,
+    "lstm_confidence": null,
+    "yolo_detections_count": 1,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:56:06.821384",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9695326685905457,
+    "yolo_detections_count": 1,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:56:08.070613",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9710838794708252,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:56:09.237150",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9685469269752502,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:56:10.267035",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9633582830429077,
+    "yolo_detections_count": 1,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:56:11.537301",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9531852602958679,
+    "yolo_detections_count": 1,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:56:12.619417",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9438156485557556,
+    "yolo_detections_count": 1,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:56:13.642284",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9399178624153137,
+    "yolo_detections_count": 1,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:56:14.724514",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9389857053756714,
+    "yolo_detections_count": 1,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:56:15.864809",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9392039179801941,
+    "yolo_detections_count": 1,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:56:17.145514",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9403854608535767,
+    "yolo_detections_count": 1,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:56:18.151285",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9395154118537903,
+    "yolo_detections_count": 1,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:56:19.146247",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9391034245491028,
+    "yolo_detections_count": 1,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:56:20.295358",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9395993947982788,
+    "yolo_detections_count": 1,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:56:21.424595",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9422607421875,
+    "yolo_detections_count": 1,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:56:22.531205",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9491052627563477,
+    "yolo_detections_count": 2,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:56:23.649518",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9582194089889526,
+    "yolo_detections_count": 2,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:56:24.689419",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9657338857650757,
+    "yolo_detections_count": 1,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:56:25.848294",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9716533422470093,
+    "yolo_detections_count": 1,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:56:26.981682",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9768317341804504,
+    "yolo_detections_count": 1,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:56:28.154350",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9808810949325562,
+    "yolo_detections_count": 1,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:56:29.397218",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9836870431900024,
+    "yolo_detections_count": 1,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:56:30.605385",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9859305620193481,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:56:31.669038",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9880099296569824,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:56:32.907934",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.989955723285675,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:56:34.001099",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.990495502948761,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:56:35.700900",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9900044202804565,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:56:36.693886",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9852834939956665,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:56:37.752675",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9799898266792297,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:56:38.868246",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9787501096725464,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:56:39.958380",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9788934588432312,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:56:41.110491",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.979101836681366,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:56:42.181606",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9794529676437378,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:56:43.278157",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.979762077331543,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:56:44.268738",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.979826807975769,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:56:45.359734",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9803969264030457,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:56:46.421567",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9802162051200867,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:56:47.421270",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9845601320266724,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:56:48.598254",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9899865388870239,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:56:49.628292",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9912033081054688,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:56:50.818261",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9903513193130493,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:56:51.745794",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.9698389768600464,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:56:52.743881",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.8771646618843079,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:56:53.953255",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.778191328048706,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:56:54.973537",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.6791232228279114,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:56:56.064812",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.5802483558654785,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:56:57.074276",
+    "lstm_prediction": 2,
+    "lstm_class_name": "火焰",
+    "lstm_confidence": 0.5135263204574585,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:56:58.106829",
+    "lstm_prediction": 2,
+    "lstm_class_name": "火焰",
+    "lstm_confidence": 0.6103638410568237,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:56:59.237377",
+    "lstm_prediction": 2,
+    "lstm_class_name": "火焰",
+    "lstm_confidence": 0.6802477240562439,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:57:00.188570",
+    "lstm_prediction": 2,
+    "lstm_class_name": "火焰",
+    "lstm_confidence": 0.7143267393112183,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:57:01.405412",
+    "lstm_prediction": 2,
+    "lstm_class_name": "火焰",
+    "lstm_confidence": 0.7438963651657104,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:57:02.425288",
+    "lstm_prediction": 2,
+    "lstm_class_name": "火焰",
+    "lstm_confidence": 0.7450850009918213,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:57:03.506813",
+    "lstm_prediction": 2,
+    "lstm_class_name": "火焰",
+    "lstm_confidence": 0.6744523048400879,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:57:04.797625",
+    "lstm_prediction": 2,
+    "lstm_class_name": "火焰",
+    "lstm_confidence": 0.5974113345146179,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:57:05.788121",
+    "lstm_prediction": 2,
+    "lstm_class_name": "火焰",
+    "lstm_confidence": 0.5203522443771362,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:57:06.847335",
+    "lstm_prediction": 2,
+    "lstm_class_name": "火焰",
+    "lstm_confidence": 0.44323402643203735,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:57:08.001383",
+    "lstm_prediction": 2,
+    "lstm_class_name": "火焰",
+    "lstm_confidence": 0.3662758469581604,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:57:09.097612",
+    "lstm_prediction": 1,
+    "lstm_class_name": "烟雾",
+    "lstm_confidence": 0.36878523230552673,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:57:10.163354",
+    "lstm_prediction": 0,
+    "lstm_class_name": "无火",
+    "lstm_confidence": 0.388249009847641,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:57:11.299165",
+    "lstm_prediction": 0,
+    "lstm_class_name": "无火",
+    "lstm_confidence": 0.4360540509223938,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:57:12.316895",
+    "lstm_prediction": 0,
+    "lstm_class_name": "无火",
+    "lstm_confidence": 0.4836140275001526,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:57:13.288995",
+    "lstm_prediction": 0,
+    "lstm_class_name": "无火",
+    "lstm_confidence": 0.45055335760116577,
+    "yolo_detections_count": 1,
+    "has_detection": true
+  },
+  {
+    "timestamp": "2026-02-14T20:57:14.378646",
+    "lstm_prediction": 0,
+    "lstm_class_name": "无火",
+    "lstm_confidence": 0.41377630829811096,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:57:15.576638",
+    "lstm_prediction": 0,
+    "lstm_class_name": "无火",
+    "lstm_confidence": 0.3800819516181946,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:57:17.266477",
+    "lstm_prediction": 0,
+    "lstm_class_name": "无火",
+    "lstm_confidence": 0.349556565284729,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:57:18.855320",
+    "lstm_prediction": 2,
+    "lstm_class_name": "火焰",
+    "lstm_confidence": 0.362693190574646,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:57:20.267886",
+    "lstm_prediction": 2,
+    "lstm_class_name": "火焰",
+    "lstm_confidence": 0.38382548093795776,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:57:21.317394",
+    "lstm_prediction": 2,
+    "lstm_class_name": "火焰",
+    "lstm_confidence": 0.39383476972579956,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:57:22.159354",
+    "lstm_prediction": 2,
+    "lstm_class_name": "火焰",
+    "lstm_confidence": 0.39141663908958435,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  },
+  {
+    "timestamp": "2026-02-14T20:57:23.146931",
+    "lstm_prediction": 2,
+    "lstm_class_name": "火焰",
+    "lstm_confidence": 0.38179919123649597,
+    "yolo_detections_count": 0,
+    "has_detection": false
+  }
+]

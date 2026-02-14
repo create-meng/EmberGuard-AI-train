@@ -49,8 +49,17 @@ class DetectionEngine:
         # 视频订阅推送控制
         self.video_push_interval = 0.25
 
-        # 推理节流：即使推理很慢，也保证视频缩略图持续输出
-        self.infer_interval = 0.5
+        # 推理节流：推理在后台线程执行，避免阻塞视频帧输出
+        self.infer_interval = 0.033  # 30fps 推理目标，极大提升框更新速度
+
+        # Demo 流畅度：MJPEG 目标输出帧率（仅影响 latest_jpeg 更新频率）
+        self.stream_fps = 30  # 提升到 30fps 保证绝对流畅
+
+        # CPU 加速：推理时对帧做降采样（bbox 结果再缩放回 640x480）
+        self.infer_size = (320, 240)
+
+        # 终端可视化：每隔 N 秒输出一次推理耗时与 LSTM 缓冲进度
+        self.log_interval_sec = 1.0
         
         # 系统开关
         self.alert_enabled = True  # 告警开关
@@ -60,8 +69,8 @@ class DetectionEngine:
         self.running_cameras = {}  # camera_id -> thread
         self.camera_locks = {}  # camera_id -> lock
         
-        # 智能帧率控制
-        self.normal_fps = 5
+        # 智能帧率控制（仅用于状态展示/告警节奏；不再用于视频帧输出）
+        self.normal_fps = 10
         self.alert_fps = 15
         self.camera_fps = {}  # camera_id -> current_fps
         self.alert_cooldown = 5  # 告警后5秒恢复正常帧率
@@ -227,8 +236,10 @@ class DetectionEngine:
         
         frame_count = 0
         last_push_time = time.time()
-        last_video_push_time = 0
         last_infer_time = 0
+        last_frame_time = 0
+        last_log_time = 0
+        last_infer_ms = None
         
         try:
             while camera_info['status'] != 'stopped':
@@ -261,8 +272,8 @@ class DetectionEngine:
                 # 先生成缩略图，确保前端画面不会被推理阻塞
                 thumbnail = self._generate_thumbnail(frame_resized, 640, 480)
 
-                # 同步缓存 MJPEG 使用的 JPEG 二进制（不做 base64）
-                latest_jpeg = self._encode_jpeg_bytes(frame_resized)
+                # MJPEG：只在需要刷新画面时才编码 JPEG，避免每帧都 imencode 抢 CPU
+                latest_jpeg = None
 
                 # 诊断：确认是否能生成首帧缩略图
                 if thumbnail and not camera_info.get('_logged_first_thumbnail'):
@@ -272,33 +283,102 @@ class DetectionEngine:
                     print(f"✗ 摄像头 {camera_id} thumbnail生成失败(None)")
                     camera_info['_logged_thumbnail_none'] = True
                 
-                # 获取当前帧率
+                # 获取当前帧率（用于展示/告警，不用于视频输出）
                 current_fps = self.camera_fps.get(camera_id, self.normal_fps)
-                
-                # 帧率控制
-                frame_count += 1
-                should_process = (frame_count % max(1, int(30 / current_fps)) == 0)
 
-                # 推理节流：按时间间隔执行真实 YOLO+LSTM 推理
-                detection_result = None
                 current_time = time.time()
-                if should_process and (current_time - last_infer_time >= self.infer_interval):
-                    detection_result = self._detect_frame(frame_resized, camera_id)
-                    last_infer_time = current_time
+
+                # 推理节流：后台线程执行，避免阻塞 MJPEG
+                # - 只要到达 infer_interval 且当前没有推理任务，就启动一次
+                detection_result = None
+                if current_time - last_infer_time >= self.infer_interval:
+                    with self.camera_locks[camera_id]:
+                        infer_busy = bool(camera_info.get('_infer_busy'))
+                    if not infer_busy:
+                        # 推理用更小的分辨率，加速 CPU 推理
+                        try:
+                            frame_for_infer = cv2.resize(frame_resized, self.infer_size)
+                            sx = 640.0 / float(self.infer_size[0])
+                            sy = 480.0 / float(self.infer_size[1])
+                        except Exception:
+                            frame_for_infer = frame_resized.copy()
+                            sx, sy = 1.0, 1.0
+
+                        def _infer_job():
+                            try:
+                                _t0 = time.time()
+                                res = self._detect_frame(frame_for_infer, camera_id)
+                                if res is None:
+                                    return
+                                try:
+                                    res['infer_ms'] = int((time.time() - _t0) * 1000)
+                                except Exception:
+                                    pass
+
+                                # bbox 坐标缩放回 640x480（前端固定按 640x480 解释）
+                                try:
+                                    yolo = res.get('yolo_detections')
+                                    if isinstance(yolo, list) and (sx != 1.0 or sy != 1.0):
+                                        for det in yolo:
+                                            bb = det.get('bbox') if isinstance(det, dict) else None
+                                            if not bb or len(bb) != 4:
+                                                continue
+                                            x1, y1, x2, y2 = bb
+                                            det['bbox'] = [
+                                                int(x1 * sx),
+                                                int(y1 * sy),
+                                                int(x2 * sx),
+                                                int(y2 * sy),
+                                            ]
+                                except Exception:
+                                    pass
+
+                                with self.camera_locks[camera_id]:
+                                    camera_info['last_detection'] = res
+                            finally:
+                                with self.camera_locks[camera_id]:
+                                    camera_info['_infer_busy'] = False
+
+                        with self.camera_locks[camera_id]:
+                            camera_info['_infer_busy'] = True
+                        t = threading.Thread(target=_infer_job, daemon=True)
+                        t.start()
+                        last_infer_time = current_time
                 
                 # 更新摄像头信息
-                with self.camera_locks[camera_id]:
-                    if detection_result is not None:
-                        camera_info['last_detection'] = detection_result
-                    camera_info['fps'] = current_fps
-                    camera_info['thumbnail'] = thumbnail
-                    if latest_jpeg is not None:
-                        camera_info['latest_jpeg'] = latest_jpeg
-                        camera_info['latest_jpeg_ts'] = datetime.now().isoformat()
+                # MJPEG：按 stream_fps 更新 latest_jpeg，保证画面流畅
+                stream_interval = 1.0 / max(1, int(self.stream_fps))
+                if (current_time - last_frame_time) >= stream_interval:
+                    latest_jpeg = self._encode_jpeg_bytes(frame_resized, quality=80)
+                    with self.camera_locks[camera_id]:
+                        camera_info['fps'] = current_fps
+                        camera_info['thumbnail'] = thumbnail
+                        if latest_jpeg is not None:
+                            camera_info['latest_jpeg'] = latest_jpeg
+                            camera_info['latest_jpeg_ts'] = datetime.now().isoformat()
+                    last_frame_time = current_time
                 
-                # 检查是否需要触发告警
-                if detection_result is not None:
-                    self._check_alert(camera_id, detection_result)
+                # 告警：基于 last_detection（可能由后台线程更新）
+                with self.camera_locks[camera_id]:
+                    _det = camera_info.get('last_detection')
+
+                # 终端输出：让你看到推理是否在跑、耗时多少、LSTM 缓冲进度
+                if (current_time - last_log_time) >= self.log_interval_sec:
+                    try:
+                        if isinstance(_det, dict):
+                            last_infer_ms = _det.get('infer_ms', last_infer_ms)
+                            buf = _det.get('buffer_size', '-')
+                            ycnt = len(_det.get('yolo_detections', []) or [])
+                        else:
+                            buf = '-'
+                            ycnt = 0
+                        ms_txt = f"{last_infer_ms}ms" if last_infer_ms is not None else "-"
+                        print(f"[DEMO][{camera_id}] infer={ms_txt} | yolo={ycnt} | lstm_buf={buf}/30")
+                    except Exception:
+                        pass
+                    last_log_time = current_time
+                if _det is not None:
+                    self._check_alert(camera_id, _det)
                 
                 # 推送轻量状态（每0.5秒推送一次）
                 if current_time - last_push_time >= 0.5:
@@ -309,17 +389,20 @@ class DetectionEngine:
                 # 这里不再做高频 emit，避免大包导致连接不稳定。
                 
                 # 智能帧率调整
-                if detection_result is not None:
-                    self._adjust_fps(camera_id, detection_result)
+                if _det is not None:
+                    self._adjust_fps(camera_id, _det)
                 
                 # 保存历史数据
                 if self.history_manager:
-                    if detection_result is not None:
-                        self.history_manager.save_detection_record(camera_id, detection_result)
+                    if _det is not None:
+                        self.history_manager.save_detection_record(camera_id, _det)
                 
                 # 保存视频帧到循环缓冲区（使用调整后的帧）
                 if self.video_recorder:
-                    self.video_recorder.save_frame(camera_id, frame_resized, detection_result)
+                    self.video_recorder.save_frame(camera_id, frame_resized, _det)
+
+                # 轻微 sleep 防止 CPU 空转，同时不影响流畅度
+                time.sleep(0.001)
                 
         except Exception as e:
             print(f"✗ 摄像头 {camera_id} 检测循环异常: {e}")

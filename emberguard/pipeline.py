@@ -37,6 +37,12 @@ class FireDetectionPipeline:
         if not os.environ.get('SILENT_MODE'):
             print(f"加载YOLO模型: {yolo_model_path}")
         self.yolo_model = YOLO(yolo_model_path)
+
+        # Demo 性能参数：imgsz 越小越快（牺牲一定检测精度）
+        self.yolo_imgsz = 256
+
+        # CUDA 下可以用 half 提速（CPU 下不要启用）
+        self.yolo_half = (self.device != 'cpu')
         
         # 特征提取器
         self.feature_extractor = FeatureExtractor()
@@ -87,7 +93,15 @@ class FireDetectionPipeline:
             dict: 检测结果
         """
         # YOLO检测
-        results = self.yolo_model(frame, conf=conf_threshold, verbose=False)
+        # 使用 predict API 显式指定 device/imgsz，提高推理稳定性与速度
+        results = self.yolo_model.predict(
+            frame,
+            conf=conf_threshold,
+            verbose=False,
+            device=self.device,
+            imgsz=self.yolo_imgsz,
+            half=self.yolo_half,
+        )
         
         # 提取特征
         features = self.feature_extractor.get_best_detection(results, frame.shape)

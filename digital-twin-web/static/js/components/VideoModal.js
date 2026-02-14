@@ -11,22 +11,18 @@ app.component('video-modal', {
       videoFrame: null,
       lstmResult: null,
       updateInterval: null,
-      rafId: null
+      lastDrawSig: null,
+      preferVideo: true
     };
   },
   
   mounted() {
     this.syncFromCamera();
-    this.startOverlayLoop();
   },
   
   beforeUnmount() {
     if (this.updateInterval) {
       clearInterval(this.updateInterval);
-    }
-    if (this.rafId) {
-      cancelAnimationFrame(this.rafId);
-      this.rafId = null;
     }
   },
 
@@ -93,7 +89,9 @@ app.component('video-modal', {
       }
 
       // 只有当有新画面或新检测结果时才更新
-      if (this.camera.stream_url) {
+      if (this.preferVideo && this.camera.demo_video_url) {
+        this.videoFrame = this.camera.demo_video_url;
+      } else if (this.camera.stream_url) {
         this.videoFrame = this.camera.stream_url;
       } else if (this.camera.thumbnail) {
         this.videoFrame = this.camera.thumbnail;
@@ -103,24 +101,40 @@ app.component('video-modal', {
         this.lstmResult = this.camera.last_detection;
       }
 
-      // 触发一次绘制
-      this.drawOverlay();
+      // 检测结果变化时触发绘制（避免高频循环绘制导致卡顿）
+      const det = this.camera.last_detection;
+      const sig = det ? JSON.stringify({
+        t: det.timestamp,
+        p: det.lstm_prediction,
+        c: det.lstm_confidence,
+        y: det.yolo_detections
+      }) : '';
+      if (sig !== this.lastDrawSig) {
+        this.lastDrawSig = sig;
+        this.$nextTick(() => this.drawOverlay());
+      }
     },
 
-    startOverlayLoop() {
-      const loop = () => {
-        this.drawOverlay();
-        this.rafId = requestAnimationFrame(loop);
-      };
-      this.rafId = requestAnimationFrame(loop);
+    onVideoError() {
+      // 浏览器不支持视频格式（例如 .avi）时，自动回退到 MJPEG。
+      if (this.preferVideo) {
+        this.preferVideo = false;
+        this.$nextTick(() => {
+          if (this.camera?.stream_url) {
+            this.videoFrame = this.camera.stream_url;
+          }
+          this.syncFromCamera();
+          this.drawOverlay();
+        });
+      }
     },
 
     drawOverlay() {
       const canvas = this.$refs.overlay;
-      const img = this.$refs.videoImg;
-      if (!canvas || !img) return;
+      const media = this.$refs.videoEl || this.$refs.videoImg;
+      if (!canvas || !media) return;
 
-      const rect = img.getBoundingClientRect();
+      const rect = media.getBoundingClientRect();
       const w = Math.max(1, Math.floor(rect.width));
       const h = Math.max(1, Math.floor(rect.height));
 
@@ -198,10 +212,22 @@ app.component('video-modal', {
         <div class="video-modal-body">
           <div class="video-display">
             <div class="video-frame">
-              <img 
-                v-if="videoFrame" 
-                :src="videoFrame" 
-                alt="视频加载中..." 
+              <video
+                v-if="videoFrame && preferVideo"
+                :src="videoFrame"
+                class="video-frame-img"
+                ref="videoEl"
+                autoplay
+                muted
+                loop
+                playsinline
+                @loadedmetadata="drawOverlay"
+                @error="onVideoError"
+              ></video>
+              <img
+                v-else-if="videoFrame"
+                :src="videoFrame"
+                alt="视频加载中..."
                 class="video-frame-img"
                 ref="videoImg"
               >
