@@ -1,11 +1,9 @@
 (() => {
   const els = {
     statusText: document.getElementById('statusText'),
-    cameraSelect: document.getElementById('cameraSelect'),
     videoImg: document.getElementById('videoImg'),
     overlay: document.getElementById('overlay'),
     camMeta: document.getElementById('camMeta'),
-    lstmMeta: document.getElementById('lstmMeta'),
     lstmClass: document.getElementById('lstmClass'),
     lstmConf: document.getElementById('lstmConf'),
     yoloCount: document.getElementById('yoloCount'),
@@ -13,28 +11,25 @@
     alarmBadge: document.getElementById('alarmBadge'),
     sensorList: document.getElementById('sensorList'),
   };
-
-  let cameras = [];
-  let selectedCameraId = null;
   let eventSource = null;
   let lastDetectionSig = '';
   let lastDetection = null;
 
   function setBadge(level) {
     const el = els.alarmBadge;
-    el.classList.remove('danger', 'warn', 'ok');
+    el.classList.remove('badge-danger', 'badge-warn', 'badge-ok');
     if (level === 'fire') {
       el.textContent = '火焰告警';
-      el.classList.add('danger');
+      el.classList.add('badge-danger');
       return;
     }
     if (level === 'smoke') {
       el.textContent = '烟雾预警';
-      el.classList.add('warn');
+      el.classList.add('badge-warn');
       return;
     }
-    el.textContent = '正常';
-    el.classList.add('ok');
+    el.textContent = '系统正常';
+    el.classList.add('badge-ok');
   }
 
   function pickAlarmFromDetection(det) {
@@ -121,7 +116,7 @@
 
     for (const s of sensors) {
       const row = document.createElement('div');
-      row.className = 'card';
+      row.className = 'sensor-item';
 
       const name = safeText(s?.name || s?.id);
       const unit = safeText(s?.unit, '');
@@ -130,13 +125,12 @@
       const ts = safeText(s?.timestamp, '');
 
       row.innerHTML = `
-        <div class="row">
-          <div>
-            <div class="k">${name}</div>
-            <div class="v" style="font-size:18px">${safeText(value)}${unit}</div>
-            <div class="s">${ts}</div>
-          </div>
-          <span class="badge2 ${status === 'alert' ? 'danger' : 'ok'}">${status === 'alert' ? '告警' : '正常'}</span>
+        <div class="sensor-info">
+          <h4>${name}</h4>
+          <p>${ts}</p>
+        </div>
+        <div class="sensor-value" style="color: ${status === 'alert' ? 'var(--danger)' : 'var(--success)'}">
+          ${safeText(value)}${unit}
         </div>
       `;
 
@@ -145,7 +139,7 @@
 
     if (sensors.length === 0) {
       const empty = document.createElement('div');
-      empty.className = 'card';
+      empty.className = 'sensor-item';
       empty.innerHTML = '<div class="k">暂无传感器数据</div>';
       els.sensorList.appendChild(empty);
     }
@@ -179,22 +173,32 @@
 
     const yolo = Array.isArray(det.yolo_detections) ? det.yolo_detections : [];
     els.yoloCount.textContent = String(yolo.length);
-    els.yoloHint.textContent = safeText(det.timestamp, '-');
+    els.yoloHint.textContent = det.infer_ms ? `帧耗时: ${det.infer_ms}ms` : safeText(det.timestamp, '-');
 
     drawBoxes(det);
   }
 
   function stopEvents() {
-    if (eventSource) {
-      try { eventSource.close(); } catch (e) {}
-      eventSource = null;
-    }
+    try { eventSource.close(); } catch (e) {}
+    eventSource = null;
   }
 
-  function startEvents(cameraId) {
+  function startEvents() {
     stopEvents();
-    const url = `/demo/events?camera_id=${encodeURIComponent(cameraId)}`;
+    const url = `/demo/events?_t=${Date.now()}`;
     eventSource = new EventSource(url);
+    
+    eventSource.onopen = () => {
+      els.statusText.textContent = '实时同步中';
+      els.statusText.style.color = 'var(--success)';
+    };
+
+    eventSource.onerror = () => {
+      els.statusText.textContent = '连接断开，重连中...';
+      els.statusText.style.color = 'var(--danger)';
+      stopEvents();
+      setTimeout(startEvents, 1000);
+    };
 
     eventSource.onmessage = (evt) => {
       if (!evt?.data) return;
@@ -222,55 +226,15 @@
       renderSensors(payload?.sensors);
       els.statusText.textContent = `SSE 在线 | ${safeText(payload?.ts)}`;
       els.camMeta.textContent = `${safeText(cam?.camera_id)} | ${safeText(cam?.status)}`;
-      if (det && typeof det.buffer_size === 'number') {
-        els.lstmMeta.textContent = `LSTM 缓冲: ${det.buffer_size}/30`;
-      } else {
-        els.lstmMeta.textContent = '';
-      }
-    };
-
-    eventSource.onerror = () => {
-      els.statusText.textContent = 'SSE 断开，自动重连中...';
     };
   }
 
-  function setCamera(cameraId) {
-    selectedCameraId = String(cameraId);
-    els.videoImg.src = `/demo/stream/${encodeURIComponent(selectedCameraId)}`;
+  function initSingleCamera() {
+    els.videoImg.src = `/demo/stream`;
     lastDetectionSig = '';
     renderDetection(null);
-    startEvents(selectedCameraId);
+    startEvents();
   }
-
-  async function loadCameras() {
-    els.statusText.textContent = '加载摄像头列表...';
-    const resp = await fetch('/demo/cameras');
-    const json = await resp.json();
-    cameras = json?.data || [];
-
-    els.cameraSelect.innerHTML = '';
-    for (const c of cameras) {
-      const opt = document.createElement('option');
-      opt.value = String(c.id);
-      opt.textContent = `${c.name || c.id}`;
-      els.cameraSelect.appendChild(opt);
-    }
-
-    if (cameras.length > 0) {
-      const first = String(cameras[0].id);
-      els.cameraSelect.value = first;
-      setCamera(first);
-      els.statusText.textContent = 'Demo 已就绪';
-    } else {
-      els.statusText.textContent = '未发现摄像头（请检查 buildings/demo/config.json）';
-    }
-  }
-
-  els.cameraSelect.addEventListener('change', (e) => {
-    const v = e.target.value;
-    if (!v) return;
-    setCamera(v);
-  });
 
   window.addEventListener('resize', () => {
     // resize 时重画一次框
@@ -282,7 +246,5 @@
   });
 
   // 启动
-  loadCameras().catch(() => {
-    els.statusText.textContent = '初始化失败，请查看后端控制台';
-  });
+  initSingleCamera();
 })();

@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="color-scheme" content="dark" />
+  <meta name="theme-color" content="#0a0a0c" />
+  <title>EmberGuard AI - 智慧安防监控</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/static/css/style.css" />
+  <style>
+    :root {
+      --bg-main: #0a0a0c;
+      --glass-bg: rgba(255, 255, 255, 0.04);
+      --glass-border: rgba(255, 255, 255, 0.08);
+      --accent: #3b82f6;
+      --danger: #ef4444;
+      --warning: #f59e0b;
+      --success: #10b981;
+      --text-main: rgba(255, 255, 255, 0.92);
+      --text-muted: rgba(255, 255, 255, 0.5);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      background: var(--bg-main);
+      color: var(--text-main);
+      overflow: hidden;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* 顶部导航 */
+    .nav {
+      height: 64px;
+      padding: 0 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--glass-border);
+      background: rgba(10, 10, 12, 0.8);
+      backdrop-filter: blur(20px);
+      z-index: 100;
+    }
+    .nav-brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .nav-logo {
+      width: 32px;
+      height: 32px;
+      background: var(--accent);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      box-shadow: 0 0 20px rgba(59, 130, 246, 0.4);
+    }
+    .nav-title {
+      font-size: 18px;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+    }
+    .nav-status {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    /* 主布局 */
+    .main {
+      flex: 1;
+      display: grid;
+      grid-template-columns: 1fr 380px;
+      gap: 20px;
+      padding: 20px;
+      overflow: hidden;
+    }
+
+    /* 视频区域 */
+    .video-section {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+    .panel {
+      background: var(--glass-bg);
+      border: 1px solid var(--glass-border);
+      border-radius: 20px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+    .panel-header {
+      padding: 16px 20px;
+      background: rgba(255, 255, 255, 0.02);
+      border-bottom: 1px solid var(--glass-border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .panel-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .video-container {
+      position: relative;
+      flex: 1;
+      background: #000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 0;
+    }
+    #videoImg {
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: contain;
+    }
+    #overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+    }
+
+    /* 侧边栏 */
+    .sidebar {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+    .card-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+    .stat-card {
+      background: var(--glass-bg);
+      border: 1px solid var(--glass-border);
+      border-radius: 16px;
+      padding: 16px;
+    }
+    .stat-label {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-bottom: 8px;
+    }
+    .stat-value {
+      font-size: 20px;
+      font-weight: 700;
+    }
+    .stat-sub {
+      font-size: 11px;
+      color: var(--text-muted);
+      margin-top: 4px;
+    }
+
+    .sensor-list {
+      flex: 1;
+      overflow-y: auto;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      padding: 20px;
+      align-content: start;
+    }
+    .sensor-item {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid var(--glass-border);
+      border-radius: 12px;
+      padding: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .sensor-info h4 { font-size: 13px; margin-bottom: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .sensor-info p { font-size: 10px; color: var(--text-muted); }
+    .sensor-value { font-size: 16px; font-weight: 700; }
+
+    /* 徽章 */
+    .badge {
+      padding: 4px 12px;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 600;
+    }
+    .badge-ok { background: rgba(16, 185, 129, 0.1); color: var(--success); }
+    .badge-warn { background: rgba(245, 158, 11, 0.1); color: var(--warning); }
+    .badge-danger { background: rgba(239, 68, 68, 0.1); color: var(--danger); }
+
+    select {
+      background: var(--glass-bg);
+      border: 1px solid var(--glass-border);
+      color: #fff;
+      padding: 6px 12px;
+      border-radius: 8px;
+      outline: none;
+      font-size: 13px;
+    }
+
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-thumb { background: var(--glass-border); border-radius: 3px; }
+  </style>
+</head>
+<body>
+  <nav class="nav">
+    <div class="nav-brand">
+      <div class="nav-logo">E</div>
+      <h1 class="nav-title">EmberGuard AI</h1>
+    </div>
+    <div class="nav-status">
+      <div id="alarmBadge" class="badge badge-ok">系统正常</div>
+      <div id="statusText" style="font-size: 12px; color: var(--text-muted)">正在同步...</div>
+    </div>
+  </nav>
+
+  <main class="main">
+    <div class="video-section panel">
+      <div class="panel-header">
+        <span class="panel-title">实时监控画面</span>
+        <span id="camMeta" style="font-size: 11px; color: var(--text-muted)">-</span>
+      </div>
+      <div class="video-container">
+        <img id="videoImg" src="" alt="实时视频流" />
+        <canvas id="overlay"></canvas>
+      </div>
+    </div>
+
+    <aside class="sidebar">
+      <div class="panel">
+        <div class="panel-header">
+          <span class="panel-title">AI 推理状态</span>
+        </div>
+        <div style="padding: 20px">
+          <div class="card-grid">
+            <div class="stat-card">
+              <div class="stat-label">LSTM 分类</div>
+              <div id="lstmClass" class="stat-value">等待中</div>
+              <div id="lstmConf" class="stat-sub">-</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-label">检测目标</div>
+              <div id="yoloCount" class="stat-value">0</div>
+              <div id="yoloHint" class="stat-sub">帧耗时: -</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel" style="flex: 1">
+        <div class="panel-header">
+          <span class="panel-title">环境传感器</span>
+        </div>
+        <div id="sensorList" class="sensor-list">
+          <!-- 传感器条目 -->
+        </div>
+      </div>
+    </aside>
+  </main>
+
+  <script src="/static/js/demo.js"></script>
+</body>
+</html>

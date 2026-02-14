@@ -1,8 +1,5 @@
-"""
-数字孪生古建筑火灾监控Web系统 - Flask后端主应用
-"""
-from flask import Flask, render_template, jsonify, request, Response
-from flask_cors import CORS
+"""数字孪生演示系统 - Flask 后端"""
+from flask import Flask, render_template, Response
 import os
 import sys
 import json
@@ -11,7 +8,6 @@ import warnings
 import time
 import cv2
 import numpy as np
-from pathlib import Path
 
 # 静默警告
 warnings.filterwarnings('ignore', category=FutureWarning)
@@ -22,9 +18,6 @@ os.environ['SILENT_MODE'] = '1'
 
 # 添加项目根目录到Python路径
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../..')))
-
-# 项目根目录（ultralytics-main），用于解析 demo_video 相对路径
-PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), '../..'))
 
 # 导入管理器
 from config_manager import ConfigManager
@@ -42,9 +35,6 @@ app = Flask(__name__,
             static_folder='../static',
             template_folder='../frontend')
 
-# 配置CORS
-CORS(app, resources={r"/*": {"origins": "*"}})
-
 # 初始化（仅保留必要组件）
 config_manager = ConfigManager()
 sensor_manager = SensorManager(socketio=None, app=app)
@@ -59,48 +49,27 @@ lstm_path = models.get('lstm', 'models/lstm/best.pt')
 detection_engine = DetectionEngine(
     yolo_path,
     lstm_path,
-    socketio=None,
-    alert_manager=None,
-    history_manager=None,
-    video_recorder=None,
 )
 
 
-def _load_demo_building_config() -> dict:
-    cfg_path = Path(__file__).parent.parent / 'buildings' / 'demo' / 'config.json'
-    with open(cfg_path, 'r', encoding='utf-8') as f:
-        return json.load(f)
-
-
 def _start_demo_devices():
-    building_config = _load_demo_building_config()
+    # 单路演示：固定视频源 + 单个传感器
+    demo_video = r"D:\a安建大\大二\下学期\比赛\挑战杯\院赛\AI消防\ultralytics-main\datasets\fire_videos_organized\fire\archive_fire2.mp4"
 
-    facilities = []
-    if 'floors' in building_config:
-        for floor in building_config.get('floors', []):
-            facilities.extend(floor.get('facilities', []))
+    if not os.path.exists(demo_video):
+        print(f"✗ Demo 视频不存在: {demo_video}")
     else:
-        facilities = building_config.get('facilities', [])
+        detection_engine.start(demo_video, name='主摄像头')
 
-    # 注册传感器
-    for facility in facilities:
-        if facility.get('type') in ['temperature_sensor', 'humidity_sensor', 'smoke_detector']:
-            sensor_manager.register_sensor(
-                sensor_id=facility['id'],
-                sensor_type=facility['type'],
-                threshold=facility.get('threshold'),
-                name=facility.get('name'),
-                unit=facility.get('unit')
-            )
-
-    # 启动摄像头（强制 demo 视频源）
-    camera_configs = [f for f in facilities if f.get('type') == 'camera']
-    if camera_configs:
-        detection_engine.start_all_cameras(camera_configs, use_demo_video=True)
-
-    # 启动传感器模拟（Demo-only 总是模拟）
-    if len(sensor_manager.sensors) > 0:
-        sensor_manager.start_simulation()
+    # 单个传感器（演示模式：始终模拟）
+    sensor_manager.register_sensor(
+        sensor_id='sensor_temp_001',
+        sensor_type='temperature_sensor',
+        threshold=60,
+        name='温度传感器',
+        unit='°C'
+    )
+    sensor_manager.start_simulation()
 
 
 _start_demo_devices()
@@ -111,45 +80,19 @@ def demo_index():
     return render_template('demo.html')
 
 
-@app.route('/demo/cameras')
-def demo_cameras():
-    cams = detection_engine.get_all_camera_status()
-    return jsonify({'success': True, 'data': cams})
-
-
 @app.route('/demo/events')
 def demo_events():
     """Demo 结果流：SSE 低频推送推理结果 + 传感器快照，避免 Socket 高频更新卡顿。"""
-    camera_id = request.args.get('camera_id')
-    camera_id = str(camera_id) if camera_id is not None else None
-
     def gen():
         while True:
             try:
                 payload = {
-                    'ts': datetime.now().isoformat(),
+                    'ts': datetime.now().strftime('%H:%M:%S'),
                     'camera': None,
                     'sensors': None
                 }
 
-                if camera_id:
-                    cam = detection_engine.cameras.get(camera_id)
-                    if cam:
-                        lock = detection_engine.camera_locks.get(camera_id)
-                        if lock:
-                            with lock:
-                                last_detection = cam.get('last_detection')
-                                status = cam.get('status')
-                        else:
-                            last_detection = cam.get('last_detection')
-                            status = cam.get('status')
-
-                        # 仅取轻量字段（避免把 thumbnail/latest_jpeg 推给前端）
-                        payload['camera'] = {
-                            'camera_id': camera_id,
-                            'status': status,
-                            'last_detection': last_detection
-                        }
+                payload['camera'] = detection_engine.get_snapshot()
 
                 # 传感器快照（轻量）
                 try:
@@ -168,9 +111,7 @@ def demo_events():
     return Response(gen(), mimetype='text/event-stream')
 
 
-def _mjpeg_response(camera_id: str):
-    camera_id = str(camera_id)
-
+def _mjpeg_response():
     # 立即输出的占位帧：保证浏览器能立刻拿到首字节
     try:
         _placeholder_img = np.zeros((1, 1, 3), dtype=np.uint8)
@@ -186,7 +127,7 @@ def _mjpeg_response(camera_id: str):
 
         while True:
             try:
-                jpeg = detection_engine.get_latest_jpeg(camera_id)
+                jpeg = detection_engine.get_latest_jpeg()
                 if jpeg:
                     yield (b'--frame\r\n'
                            b'Content-Type: image/jpeg\r\n\r\n' + jpeg + b'\r\n')
@@ -200,16 +141,12 @@ def _mjpeg_response(camera_id: str):
     return Response(gen(), mimetype='multipart/x-mixed-replace; boundary=frame')
 
 
-@app.route('/demo/stream/<camera_id>')
-def demo_stream(camera_id):
-    return _mjpeg_response(camera_id)
-
-
-@app.route('/stream/<camera_id>')
-def stream_camera(camera_id):
-    return _mjpeg_response(camera_id)
+@app.route('/demo/stream')
+def demo_stream():
+    return _mjpeg_response()
 
 if __name__ == '__main__':
     model_status = '✓' if getattr(detection_engine, 'pipeline_available', False) else '✗'
-    print(f"🚀 Demo 服务器启动 http://localhost:5000 | 摄像头: {len(detection_engine.cameras)} | 模型: {model_status}")
+    print(f"🚀 Demo 服务器启动 http://localhost:5000 | 摄像头: demo_cam_001 | 模型: {model_status}")
+    app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0
     app.run(host='0.0.0.0', port=5000, debug=True, use_reloader=False)
