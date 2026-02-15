@@ -11,156 +11,110 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/static/css/style.css" />
   <style>
-    body { overflow: auto; }
-    .demo-root {
-      min-height: 100vh;
-      display: grid;
-      grid-template-rows: 64px 1fr;
-    }
-    .demo-top {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 0 18px;
-      border-bottom: 1px solid rgba(255,255,255,0.10);
-      background: linear-gradient(180deg, rgba(255, 255, 255, 0.10), rgba(255, 255, 255, 0.06));
-      backdrop-filter: blur(16px);
-    }
-    .demo-title {
-      font-size: 18px;
-      font-weight: 700;
-      letter-spacing: 0.2px;
-      color: var(--color-accent);
-      display: flex;
-      gap: 10px;
-      align-items: center;
-    }
-    .demo-sub {
-      font-size: 12px;
-      color: rgba(235,235,245,0.68);
-    }
-    .demo-main {
-      display: grid;
-      grid-template-columns: 1.8fr 1fr;
-      gap: 16px;
-      padding: 16px;
-    }
-    .panel {
-      border: 1px solid rgba(255,255,255,0.10);
-      background: rgba(255,255,255,0.06);
-      border-radius: 16px;
-      overflow: hidden;
-      box-shadow: 0 14px 40px rgba(0,0,0,0.40);
-    }
-    .panel-h {
-      padding: 12px 14px;
-      border-bottom: 1px solid rgba(255,255,255,0.10);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      background: rgba(0,0,0,0.22);
-    }
-    .panel-h b { font-size: 14px; }
-    .panel-b { padding: 14px; }
-
-    .video-wrap { position: relative; border-radius: 14px; overflow: hidden; background:#000; }
-    #videoImg { width: 100%; display:block; }
-    #overlay { position:absolute; left:0; top:0; width:100%; height:100%; pointer-events:none; }
-
-    .grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 10px;
-    }
-    .card {
-      border: 1px solid rgba(255,255,255,0.10);
-      background: rgba(0,0,0,0.22);
-      border-radius: 14px;
-      padding: 12px;
-    }
-    .card .k { font-size: 12px; color: rgba(235,235,245,0.68); }
-    .card .v { font-size: 22px; font-weight: 700; margin-top: 6px; }
-    .card .s { font-size: 12px; margin-top: 6px; color: rgba(235,235,245,0.68); }
-
-    .badge2 {
-      padding: 4px 10px;
-      border-radius: 999px;
-      border: 1px solid rgba(255,255,255,0.16);
-      background: rgba(255,255,255,0.06);
-      font-size: 12px;
-      color: rgba(235,235,245,0.85);
-    }
-    .badge2.danger { border-color: rgba(255,59,48,0.35); background: rgba(255,59,48,0.12); }
-    .badge2.warn { border-color: rgba(255,149,0,0.35); background: rgba(255,149,0,0.12); }
-    .badge2.ok { border-color: rgba(52,199,89,0.35); background: rgba(52,199,89,0.12); }
-
-    .list { display:flex; flex-direction:column; gap:10px; }
-    .row { display:flex; align-items:center; justify-content:space-between; gap:12px; }
-    select {
-      background: rgba(0,0,0,0.35);
-      border: 1px solid rgba(255,255,255,0.14);
-      color: rgba(235,235,245,0.90);
-      padding: 6px 10px;
-      border-radius: 12px;
-      outline: none;
-    }
-
-    @media (max-width: 1100px) {
-      .demo-main { grid-template-columns: 1fr; }
+    #videoImg { display: block; }
+    #overlay {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
     }
   </style>
 </head>
 <body>
-  <div class="demo-root">
-    <div class="demo-top">
-      <div>
-        <div class="demo-title">EmberGuard Demo <span class="demo-sub">YOLO + LSTM (pt)</span></div>
-        <div class="demo-sub" id="statusText">初始化中...</div>
-      </div>
-      <div class="row">
-        <span class="badge2" id="alarmBadge">-</span>
-        <select id="cameraSelect"></select>
-      </div>
-    </div>
-
-    <div class="demo-main">
-      <div class="panel">
-        <div class="panel-h">
-          <b>实时画面</b>
-          <span class="demo-sub" id="camMeta">-</span>
+  <div id="app">
+    <header class="header-bar">
+      <div class="header-left">
+        <div class="header-logo">
+          EmberGuard
+          <span class="muted-text" style="font-size: 12px; font-weight: 500; letter-spacing: 0.3px;">数字孪生消防大屏</span>
         </div>
-        <div class="panel-b">
+        <div class="header-pills">
+          <div class="pill">
+            <span class="pill-label">运行状态</span>
+            <span class="pill-value" id="statusText">初始化中...</span>
+          </div>
+          <div class="pill">
+            <span class="pill-label">摄像头</span>
+            <span class="pill-value" id="camMeta">-</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="header-center">
+        <span class="badge badge--neutral" id="alarmBadge">-</span>
+      </div>
+
+      <div class="header-right">
+        <div class="header-time" id="headerTime">--:--:--</div>
+      </div>
+    </header>
+
+    <main class="main-container">
+      <aside class="sidebar-left">
+        <section class="sidebar-section">
+          <div class="sidebar-section-title">传感器概览</div>
+          <div class="sensor-list" id="sensorList"></div>
+        </section>
+      </aside>
+
+      <section class="floor-plan-container">
+        <div style="padding: 14px 16px; border-bottom: 1px solid var(--color-border); display:flex; align-items:center; justify-content:space-between; position: relative; z-index: 1;">
+          <div style="font-size: 14px; font-weight: 600; color: rgba(235, 235, 245, 0.88);">实时画面</div>
+          <div class="muted-text" style="font-size: 12px;">YOLO 检测框叠加</div>
+        </div>
+        <div class="video-frame" style="flex: 1; margin: 16px; border-radius: var(--radius-lg);">
           <div class="video-wrap" id="videoWrap">
             <img id="videoImg" alt="stream" />
             <canvas id="overlay"></canvas>
           </div>
         </div>
-      </div>
+      </section>
 
-      <div class="panel">
-        <div class="panel-h">
-          <b>状态与传感器</b>
-          <span class="demo-sub" id="lstmMeta">-</span>
-        </div>
-        <div class="panel-b">
-          <div class="grid">
-            <div class="card">
-              <div class="k">LSTM 类别</div>
-              <div class="v" id="lstmClass">无数据</div>
-              <div class="s" id="lstmConf">置信度 -</div>
+      <aside class="sidebar-right">
+        <section class="sidebar-section">
+          <div class="sidebar-section-title">综合判定</div>
+          <div class="lstm-panel">
+            <div class="lstm-result">
+              <div class="muted-text" style="font-size: 12px; letter-spacing: 0.2px;">最终告警</div>
+              <div class="lstm-status normal" id="finalStatus">-</div>
+              <div class="lstm-confidence" id="finalReason">-</div>
             </div>
-            <div class="card">
-              <div class="k">YOLO 检测框</div>
-              <div class="v" id="yoloCount">0</div>
-              <div class="s" id="yoloHint">-</div>
+            <div class="lstm-probabilities">
+              <div class="probability-label" style="justify-content: space-between;">
+                <span class="muted-text" style="font-size: 12px;">LSTM</span>
+                <span id="lstmClass">无数据</span>
+              </div>
+              <div class="muted-text" style="font-size: 12px; margin-top: 6px;" id="lstmConf">置信度 -</div>
+
+              <div style="height: 10px;"></div>
+
+              <div class="probability-label" style="justify-content: space-between;">
+                <span class="muted-text" style="font-size: 12px;">YOLO 火焰框</span>
+                <span id="yoloCount">0</span>
+              </div>
+              <div class="muted-text" style="font-size: 12px; margin-top: 6px;" id="yoloHint">-</div>
             </div>
           </div>
+        </section>
+      </aside>
+    </main>
 
-          <div style="height:12px"></div>
-          <div class="list" id="sensorList"></div>
-        </div>
+    <footer class="footer-stats">
+      <div class="stat-item stat-item--wide">
+        <div class="stat-label">当前告警</div>
+        <div class="stat-value" id="footerAlarm">-</div>
       </div>
-    </div>
+      <div class="stat-item stat-item--wide">
+        <div class="stat-label">综合</div>
+        <div class="stat-value" id="footerDecision">-</div>
+      </div>
+      <div class="stat-item stat-item--wide">
+        <div class="stat-label">YOLO</div>
+        <div class="stat-value" id="footerYolo">0</div>
+      </div>
+    </footer>
   </div>
 
   <script src="/static/js/demo.js"></script>
