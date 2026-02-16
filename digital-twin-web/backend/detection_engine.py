@@ -62,15 +62,17 @@ class DetectionEngine:
         self._infer_busy = False
         self._source = None
         self._name = '主摄像头'
+        self._camera_id = 'demo_cam_001'  # 默认摄像头ID
         self._status = 'idle'
         self._latest_jpeg: Optional[bytes] = None
         self._latest_jpeg_ts: Optional[str] = None
         self._last_detection = None
 
-    def start(self, source: str, name: str = '主摄像头'):
+    def start(self, source: str, name: str = '主摄像头', camera_id: str = 'demo_cam_001'):
         """启动单路视频源推理线程（demo-only）。"""
         self._source = source
         self._name = name
+        self._camera_id = camera_id
 
         if not self.pipeline_available:
             with self._lock:
@@ -307,7 +309,7 @@ class DetectionEngine:
     def get_snapshot(self) -> dict:
         with self._lock:
             return {
-                'camera_id': 'demo_cam_001',
+                'camera_id': self._camera_id,
                 'camera_name': self._name,
                 'status': self._status,
                 'last_detection': self._last_detection,

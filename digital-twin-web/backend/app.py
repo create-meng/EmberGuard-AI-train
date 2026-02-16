@@ -45,21 +45,30 @@ models = config.get('models', {})
 yolo_path = models.get('yolo', 'runs/detect/train2/weights/best.pt')
 lstm_path = models.get('lstm', 'models/lstm/best.pt')
 
-# 初始化检测引擎
-detection_engine = DetectionEngine(
-    yolo_path,
-    lstm_path,
-)
+# 初始化多个独立的检测引擎（每个摄像头一个）
+detection_engines = {
+    'demo_cam_001': DetectionEngine(yolo_path, lstm_path),
+    'demo_cam_002': DetectionEngine(yolo_path, lstm_path),
+    'demo_cam_003': DetectionEngine(yolo_path, lstm_path),
+}
 
 
 def _start_demo_devices():
-    # 单路演示：固定视频源 + 单个传感器
+    # 多路演示：3个独立的视频源 + 单个传感器
     demo_video = r"D:\a安建大\大二\下学期\比赛\挑战杯\院赛\AI消防\ultralytics-main\datasets\fire_videos_organized\fire\archive_fire2.mp4"
 
-    if not os.path.exists(demo_video):
-        print(f"✗ Demo 视频不存在: {demo_video}")
-    else:
-        detection_engine.start(demo_video, name='主摄像头')
+    # 启动3个独立的摄像头
+    camera_configs = [
+        {'id': 'demo_cam_001', 'name': '摄像头01', 'point_id': 'CAM-01'},
+        {'id': 'demo_cam_002', 'name': '摄像头02', 'point_id': 'CAM-02'},
+        {'id': 'demo_cam_003', 'name': '摄像头03', 'point_id': 'CAM-03'},
+    ]
+
+    for cfg in camera_configs:
+        engine = detection_engines.get(cfg['id'])
+        if engine and os.path.exists(demo_video):
+            engine.start(demo_video, name=cfg['name'], camera_id=cfg['id'])
+            print(f"✓ {cfg['name']} ({cfg['point_id']}) 已启动")
 
     # 单个传感器（演示模式：始终模拟）
     sensor_manager.register_sensor(
@@ -82,17 +91,21 @@ def demo_index():
 
 @app.route('/demo/events')
 def demo_events():
-    """Demo 结果流：SSE 低频推送推理结果 + 传感器快照，避免 Socket 高频更新卡顿。"""
+    """Demo 结果流：SSE 低频推送所有摄像头的推理结果 + 传感器快照，避免 Socket 高频更新卡顿。"""
     def gen():
         while True:
             try:
                 payload = {
                     'ts': datetime.now().strftime('%H:%M:%S'),
-                    'camera': None,
+                    'cameras': [],  # 改为数组，包含所有摄像头数据
                     'sensors': None
                 }
 
-                payload['camera'] = detection_engine.get_snapshot()
+                # 获取所有摄像头的快照
+                for camera_id, engine in detection_engines.items():
+                    snapshot = engine.get_snapshot()
+                    if snapshot:
+                        payload['cameras'].append(snapshot)
 
                 # 传感器快照（轻量）
                 try:
@@ -111,7 +124,7 @@ def demo_events():
     return Response(gen(), mimetype='text/event-stream')
 
 
-def _mjpeg_response():
+def _mjpeg_response(camera_id=None):
     # 立即输出的占位帧：保证浏览器能立刻拿到首字节
     try:
         _placeholder_img = np.zeros((1, 1, 3), dtype=np.uint8)
@@ -125,14 +138,25 @@ def _mjpeg_response():
             yield (b'--frame\r\n'
                    b'Content-Type: image/jpeg\r\n\r\n' + placeholder_jpeg + b'\r\n')
 
+        # 根据camera_id选择对应的检测引擎
+        engine = None
+        if camera_id and camera_id in detection_engines:
+            engine = detection_engines[camera_id]
+        elif not camera_id:
+            # 默认使用第一个摄像头
+            engine = list(detection_engines.values())[0] if detection_engines else None
+
         while True:
             try:
-                jpeg = detection_engine.get_latest_jpeg()
-                if jpeg:
-                    yield (b'--frame\r\n'
-                           b'Content-Type: image/jpeg\r\n\r\n' + jpeg + b'\r\n')
+                if engine:
+                    jpeg = engine.get_latest_jpeg()
+                    if jpeg:
+                        yield (b'--frame\r\n'
+                               b'Content-Type: image/jpeg\r\n\r\n' + jpeg + b'\r\n')
+                    else:
+                        time.sleep(0.05)
                 else:
-                    time.sleep(0.05)
+                    time.sleep(0.1)
             except GeneratorExit:
                 return
             except Exception:
@@ -143,10 +167,23 @@ def _mjpeg_response():
 
 @app.route('/demo/stream')
 def demo_stream():
-    return _mjpeg_response()
+    from flask import request
+    camera_id = request.args.get('camera_id', None)
+    # 兼容前端可能传入的CAM-01格式，转换为demo_cam_001
+    if camera_id:
+        # 尝试从CAM-01格式转换为demo_cam_001
+        import re
+        m = re.match(r'CAM-(\d+)', camera_id)
+        if m:
+            num = m.group(1)
+            camera_id = f'demo_cam_{num.zfill(3)}'
+    return _mjpeg_response(camera_id)
 
 if __name__ == '__main__':
-    model_status = '✓' if getattr(detection_engine, 'pipeline_available', False) else '✗'
-    print(f"🚀 Demo 服务器启动 http://localhost:5000 | 摄像头: demo_cam_001 | 模型: {model_status}")
+    # 检查模型状态（使用第一个引擎的状态）
+    first_engine = list(detection_engines.values())[0] if detection_engines else None
+    model_status = '✓' if first_engine and getattr(first_engine, 'pipeline_available', False) else '✗'
+    cam_count = len(detection_engines)
+    print(f"🚀 Demo 服务器启动 http://localhost:5000 | 摄像头数量: {cam_count} | 模型: {model_status}")
     app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0
     app.run(host='0.0.0.0', port=5000, debug=True, use_reloader=False)
