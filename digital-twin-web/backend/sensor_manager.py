@@ -87,25 +87,39 @@ class SensorManager:
             if sensor_id not in self._base_values:
                 if sensor['type'] == 'temperature_sensor':
                     self._base_values[sensor_id] = random.uniform(20, 35)
+                elif sensor['type'] == 'humidity_sensor':
+                    self._base_values[sensor_id] = random.uniform(45, 65)
                 elif sensor['type'] == 'smoke_detector':
                     self._base_values[sensor_id] = random.uniform(5, 15)
                 else:
                     self._base_values[sensor_id] = 20
 
-            change = random.uniform(-0.5, 0.5)
+            # 平滑漂移（无跳变）：随机游走 + 小概率持续偏移，用于“缓慢变异常”
+            if sensor['type'] == 'humidity_sensor':
+                change = random.uniform(-0.35, 0.35)
+                drift = random.uniform(0.05, 0.18) if random.random() < 0.06 else 0.0
+                change += drift
+            else:
+                change = random.uniform(-0.5, 0.5)
+                drift = random.uniform(0.06, 0.22) if random.random() < 0.05 else 0.0
+                change += drift
             self._base_values[sensor_id] += change
 
-            if random.random() < 0.01:
+            # 温湿度取消“突刺跳变”；保留其他传感器的随机突刺
+            if sensor['type'] in ('temperature_sensor', 'humidity_sensor'):
                 if sensor['type'] == 'temperature_sensor':
-                    value = random.uniform(60, 70)
+                    # 允许缓慢升到告警阈值附近，但仍限制上界，避免不现实飙升
+                    self._base_values[sensor_id] = max(15, min(72, self._base_values[sensor_id]))
                 else:
-                    value = random.uniform(50, 80)
+                    self._base_values[sensor_id] = max(30, min(92, self._base_values[sensor_id]))
+                value = self._base_values[sensor_id]
             else:
-                if sensor['type'] == 'temperature_sensor':
-                    self._base_values[sensor_id] = max(15, min(55, self._base_values[sensor_id]))
+                spike_prob = 0.01
+                if random.random() < spike_prob:
+                    value = random.uniform(50, 80)
                 else:
                     self._base_values[sensor_id] = max(0, min(40, self._base_values[sensor_id]))
-                value = self._base_values[sensor_id]
+                    value = self._base_values[sensor_id]
 
             self._update_sensor_data(sensor_id, round(value, 1))
     

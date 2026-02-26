@@ -1,13 +1,21 @@
 """数字孪生演示系统 - Flask 后端"""
-from flask import Flask, render_template, Response
+from flask import Flask, render_template, Response, request, jsonify
 import os
 import sys
 import json
+import threading
 from datetime import datetime
 import warnings
 import time
 import cv2
 import numpy as np
+
+
+ALARM_LOG_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), 'alarm_logs.json'))
+ALARM_TREND_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), 'alarm_trend.json'))
+_JSON_FILE_LOCK = threading.Lock()
+ALARM_LOG_MAX_ITEMS = 20
+ALARM_TREND_MAX_POINTS = 120
 
 # 静默警告
 warnings.filterwarnings('ignore', category=FutureWarning)
@@ -78,10 +86,198 @@ def _start_demo_devices():
         name='温度传感器',
         unit='°C'
     )
+
+    sensor_manager.register_sensor(
+        sensor_id='sensor_hum_001',
+        sensor_type='humidity_sensor',
+        threshold=85,
+        name='湿度传感器',
+        unit='%'
+    )
     sensor_manager.start_simulation()
 
 
 _start_demo_devices()
+
+
+def _read_alarm_logs_unlocked():
+    if not os.path.exists(ALARM_LOG_PATH):
+        return []
+    with open(ALARM_LOG_PATH, 'r', encoding='utf-8') as f:
+        data = json.load(f)
+    if not isinstance(data, list):
+        return []
+    return data
+
+
+def _read_alarm_logs():
+    try:
+        with _JSON_FILE_LOCK:
+            return _read_alarm_logs_unlocked()
+    except Exception:
+        return []
+
+
+def _write_alarm_logs(items):
+    try:
+        if not isinstance(items, list):
+            items = []
+        tmp = ALARM_LOG_PATH + '.tmp'
+        with _JSON_FILE_LOCK:
+            with open(tmp, 'w', encoding='utf-8') as f:
+                json.dump(items, f, ensure_ascii=False, indent=2)
+            try:
+                os.replace(tmp, ALARM_LOG_PATH)
+            except PermissionError:
+                with open(ALARM_LOG_PATH, 'w', encoding='utf-8') as f:
+                    json.dump(items, f, ensure_ascii=False, indent=2)
+                try:
+                    os.remove(tmp)
+                except Exception:
+                    pass
+        return True
+    except Exception:
+        return False
+
+
+def _read_alarm_trend_unlocked():
+    if not os.path.exists(ALARM_TREND_PATH):
+        return []
+    with open(ALARM_TREND_PATH, 'r', encoding='utf-8') as f:
+        data = json.load(f)
+    if not isinstance(data, list):
+        return []
+    # 只保留数值点
+    result = []
+    for x in data:
+        try:
+            v = float(x)
+            if v != v:
+                continue
+            result.append(v)
+        except Exception:
+            continue
+    return result
+
+
+def _read_alarm_trend():
+    try:
+        with _JSON_FILE_LOCK:
+            return _read_alarm_trend_unlocked()
+    except Exception:
+        return []
+
+
+def _write_alarm_trend(points):
+    try:
+        if not isinstance(points, list):
+            points = []
+        tmp = ALARM_TREND_PATH + '.tmp'
+        with _JSON_FILE_LOCK:
+            with open(tmp, 'w', encoding='utf-8') as f:
+                json.dump(points, f, ensure_ascii=False, indent=2)
+            try:
+                os.replace(tmp, ALARM_TREND_PATH)
+            except PermissionError:
+                with open(ALARM_TREND_PATH, 'w', encoding='utf-8') as f:
+                    json.dump(points, f, ensure_ascii=False, indent=2)
+                try:
+                    os.remove(tmp)
+                except Exception:
+                    pass
+        return True
+    except Exception:
+        return False
+
+
+@app.route('/demo/alarm_trend', methods=['GET', 'POST', 'DELETE'])
+def demo_alarm_trend():
+    if request.method == 'GET':
+        return jsonify({'points': _read_alarm_trend()})
+
+    if request.method == 'DELETE':
+        _write_alarm_trend([])
+        return jsonify({'ok': True, 'points': []})
+
+    payload = request.get_json(silent=True) or {}
+    points = payload.get('points')
+    if not isinstance(points, list):
+        return jsonify({'ok': False, 'error': 'points must be list'}), 400
+
+    mode = payload.get('mode')
+    if mode not in (None, 'append', 'replace'):
+        return jsonify({'ok': False, 'error': 'mode must be append|replace'}), 400
+
+    # 限制长度，避免无限增长
+    with _JSON_FILE_LOCK:
+        merged = [] if mode == 'replace' else _read_alarm_trend_unlocked()
+        for x in points:
+            try:
+                v = float(x)
+                if v != v:
+                    continue
+                merged.append(v)
+            except Exception:
+                continue
+        merged = merged[-ALARM_TREND_MAX_POINTS:]
+        tmp = ALARM_TREND_PATH + '.tmp'
+        with open(tmp, 'w', encoding='utf-8') as f:
+            json.dump(merged, f, ensure_ascii=False, indent=2)
+        try:
+            os.replace(tmp, ALARM_TREND_PATH)
+        except PermissionError:
+            with open(ALARM_TREND_PATH, 'w', encoding='utf-8') as f:
+                json.dump(merged, f, ensure_ascii=False, indent=2)
+            try:
+                os.remove(tmp)
+            except Exception:
+                pass
+    return jsonify({'ok': True, 'points': merged, 'mode': (mode or 'append')})
+
+
+@app.route('/demo/alarm_logs', methods=['GET', 'POST', 'DELETE'])
+def demo_alarm_logs():
+    if request.method == 'GET':
+        return jsonify({'items': _read_alarm_logs()})
+
+    if request.method == 'DELETE':
+        _write_alarm_logs([])
+        return jsonify({'ok': True, 'items': []})
+
+    payload = request.get_json(silent=True) or {}
+    level = payload.get('level')
+    camera_id = payload.get('cameraId')
+    now = datetime.now()
+    ts = payload.get('ts') or now.strftime('%H:%M:%S')
+    day = payload.get('date') or now.strftime('%Y-%m-%d')
+
+    if level not in ('fire', 'smoke'):
+        return jsonify({'ok': False, 'error': 'invalid level'}), 400
+
+    item = {
+        'date': str(day),
+        'ts': ts,
+        'cameraId': str(camera_id) if camera_id else '-',
+        'level': level,
+    }
+
+    with _JSON_FILE_LOCK:
+        items = _read_alarm_logs_unlocked()
+        items.insert(0, item)
+        items = items[:ALARM_LOG_MAX_ITEMS]
+        tmp = ALARM_LOG_PATH + '.tmp'
+        with open(tmp, 'w', encoding='utf-8') as f:
+            json.dump(items, f, ensure_ascii=False, indent=2)
+        try:
+            os.replace(tmp, ALARM_LOG_PATH)
+        except PermissionError:
+            with open(ALARM_LOG_PATH, 'w', encoding='utf-8') as f:
+                json.dump(items, f, ensure_ascii=False, indent=2)
+            try:
+                os.remove(tmp)
+            except Exception:
+                pass
+    return jsonify({'ok': True, 'items': items})
 
 
 @app.route('/')
@@ -115,7 +311,7 @@ def demo_events():
 
                 data = json.dumps(payload, ensure_ascii=False)
                 yield f"data: {data}\n\n"
-                time.sleep(0.05)
+                time.sleep(0.5)
             except GeneratorExit:
                 return
             except Exception:
@@ -133,34 +329,46 @@ def _mjpeg_response(camera_id=None):
     except Exception:
         placeholder_jpeg = b''
 
+    # 根据camera_id选择对应的检测引擎
+    engine = None
+    if camera_id and camera_id in detection_engines:
+        engine = detection_engines[camera_id]
+    elif not camera_id:
+        # 默认使用第一个摄像头
+        engine = list(detection_engines.values())[0] if detection_engines else None
+
     def gen():
-        if placeholder_jpeg:
-            yield (b'--frame\r\n'
-                   b'Content-Type: image/jpeg\r\n\r\n' + placeholder_jpeg + b'\r\n')
-
-        # 根据camera_id选择对应的检测引擎
-        engine = None
-        if camera_id and camera_id in detection_engines:
-            engine = detection_engines[camera_id]
-        elif not camera_id:
-            # 默认使用第一个摄像头
-            engine = list(detection_engines.values())[0] if detection_engines else None
-
-        while True:
+        if engine and hasattr(engine, 'add_stream_client'):
             try:
-                if engine:
-                    jpeg = engine.get_latest_jpeg()
-                    if jpeg:
-                        yield (b'--frame\r\n'
-                               b'Content-Type: image/jpeg\r\n\r\n' + jpeg + b'\r\n')
-                    else:
-                        time.sleep(0.05)
-                else:
-                    time.sleep(0.1)
-            except GeneratorExit:
-                return
+                engine.add_stream_client()
             except Exception:
-                time.sleep(0.1)
+                pass
+        try:
+            if placeholder_jpeg:
+                yield (b'--frame\r\n'
+                       b'Content-Type: image/jpeg\r\n\r\n' + placeholder_jpeg + b'\r\n')
+
+            while True:
+                try:
+                    if engine:
+                        jpeg = engine.get_latest_jpeg()
+                        if jpeg:
+                            yield (b'--frame\r\n'
+                                   b'Content-Type: image/jpeg\r\n\r\n' + jpeg + b'\r\n')
+                        else:
+                            time.sleep(0.05)
+                    else:
+                        time.sleep(0.1)
+                except GeneratorExit:
+                    return
+                except Exception:
+                    time.sleep(0.1)
+        finally:
+            if engine and hasattr(engine, 'remove_stream_client'):
+                try:
+                    engine.remove_stream_client()
+                except Exception:
+                    pass
 
     return Response(gen(), mimetype='multipart/x-mixed-replace; boundary=frame')
 

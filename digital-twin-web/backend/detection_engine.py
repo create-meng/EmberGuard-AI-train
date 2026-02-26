@@ -39,11 +39,15 @@ class DetectionEngine:
         self.yolo_path = yolo_path
         self.lstm_path = lstm_path
 
-        # 推理节流：推理在后台线程执行，避免阻塞视频帧输出
-        self.infer_interval = 0.033
+        # 推理节流：空闲/有人观看时不同频率，避免打开视频时 CPU 抢占导致 infer_ms 飙升
+        self.infer_interval_idle = 0.25
+        self.infer_interval_active = 0.10
+        self.infer_interval = self.infer_interval_idle
 
-        # MJPEG 输出帧率（只影响 latest_jpeg 更新频率）
-        self.stream_fps = 30
+        # MJPEG 输出：没有观看者时不做 JPEG 编码（或极低频），大幅降低 CPU 开销
+        self.stream_fps_idle = 0
+        self.stream_fps_active = 12
+        self.stream_fps = self.stream_fps_idle
 
         # CPU 加速：推理用更小尺寸，bbox 缩放回 640x480
         self.infer_size = (320, 240)
@@ -67,6 +71,19 @@ class DetectionEngine:
         self._latest_jpeg: Optional[bytes] = None
         self._latest_jpeg_ts: Optional[str] = None
         self._last_detection = None
+        self._stream_clients = 0
+
+    def add_stream_client(self):
+        with self._lock:
+            self._stream_clients = int(self._stream_clients) + 1
+
+    def remove_stream_client(self):
+        with self._lock:
+            self._stream_clients = max(0, int(self._stream_clients) - 1)
+
+    def _is_streaming_active(self) -> bool:
+        with self._lock:
+            return int(self._stream_clients) > 0
 
     def start(self, source: str, name: str = '主摄像头', camera_id: str = 'demo_cam_001'):
         """启动单路视频源推理线程（demo-only）。"""
@@ -159,6 +176,15 @@ class DetectionEngine:
                 
                 current_time = time.time()
 
+                # 根据是否有人观看动态调整推理/编码频率
+                streaming_active = self._is_streaming_active()
+                if streaming_active:
+                    self.infer_interval = self.infer_interval_active
+                    self.stream_fps = self.stream_fps_active
+                else:
+                    self.infer_interval = self.infer_interval_idle
+                    self.stream_fps = self.stream_fps_idle
+
                 # 推理节流：后台线程执行，避免阻塞 MJPEG
                 # - 只要到达 infer_interval 且当前没有推理任务，就启动一次
                 if current_time - last_infer_time >= self.infer_interval:
@@ -216,14 +242,15 @@ class DetectionEngine:
                         last_infer_time = current_time
 
                 # MJPEG：按 stream_fps 更新 latest_jpeg，保证画面流畅
-                stream_interval = 1.0 / max(1, int(self.stream_fps))
-                if (current_time - last_frame_time) >= stream_interval:
-                    latest_jpeg = self._encode_jpeg_bytes(frame_resized, quality=80)
-                    with self._lock:
-                        if latest_jpeg is not None:
-                            self._latest_jpeg = latest_jpeg
-                            self._latest_jpeg_ts = datetime.now().strftime('%H:%M:%S')
-                    last_frame_time = current_time
+                if int(self.stream_fps) > 0:
+                    stream_interval = 1.0 / max(1, int(self.stream_fps))
+                    if (current_time - last_frame_time) >= stream_interval:
+                        latest_jpeg = self._encode_jpeg_bytes(frame_resized, quality=78)
+                        with self._lock:
+                            if latest_jpeg is not None:
+                                self._latest_jpeg = latest_jpeg
+                                self._latest_jpeg_ts = datetime.now().strftime('%H:%M:%S')
+                        last_frame_time = current_time
 
                 with self._lock:
                     _det = self._last_detection
@@ -312,6 +339,9 @@ class DetectionEngine:
                 'camera_id': self._camera_id,
                 'camera_name': self._name,
                 'status': self._status,
+                'pipeline_available': bool(self.pipeline_available),
+                'stream_fps': int(self.stream_fps) if self.stream_fps else 0,
+                'infer_interval': float(self.infer_interval) if self.infer_interval else None,
                 'last_detection': self._last_detection,
             }
     

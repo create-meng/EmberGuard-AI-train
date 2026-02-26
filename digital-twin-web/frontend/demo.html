@@ -25,25 +25,25 @@
 <body>
   <div id="app">
     <header class="header-bar">
+      <!-- 四个角的装饰 -->
+      <div class="header-corner header-corner-tl"></div>
+      <div class="header-corner header-corner-tr"></div>
+      <div class="header-corner header-corner-bl"></div>
+      <div class="header-corner header-corner-br"></div>
+      
       <div class="header-left">
         <div class="header-logo">
           EmberGuard
           <span class="muted-text" style="font-size: 12px; font-weight: 500; letter-spacing: 0.3px;">数字孪生消防大屏</span>
         </div>
-        <div class="header-pills">
-          <div class="pill">
-            <span class="pill-label">运行状态</span>
-            <span class="pill-value" id="statusText">初始化中...</span>
-          </div>
-          <div class="pill">
-            <span class="pill-label">摄像头</span>
-            <span class="pill-value" id="camMeta">-</span>
-          </div>
-        </div>
       </div>
 
       <div class="header-center">
-        <span class="badge badge--neutral" id="alarmBadge">-</span>
+        <div class="title-decoration-left"></div>
+        <div class="dt-title">
+          <span class="title-text">智慧消防·火灾联合报警数字孪生平台</span>
+        </div>
+        <div class="title-decoration-right"></div>
       </div>
 
       <div class="header-right">
@@ -54,26 +54,306 @@
     <main class="main-container">
       <aside class="sidebar-left">
         <section class="sidebar-section">
-          <div class="sidebar-section-title">传感器概览</div>
-          <div class="sensor-list" id="sensorList"></div>
+          <div class="sidebar-section-title">实时环境监测</div>
+          <div class="dt-block">
+            <div class="dt-gauge-grid">
+              <div class="dt-gauge-card">
+                <div class="dt-gauge">
+                  <svg viewBox="0 0 120 120" aria-hidden="true">
+                    <circle class="dt-gauge__track" cx="60" cy="60" r="46" />
+                    <circle class="dt-gauge__arc" cx="60" cy="60" r="46" />
+                  </svg>
+                  <div class="dt-gauge__center">
+                    <div class="dt-gauge__value" id="envTemp">--</div>
+                    <div class="dt-gauge__unit">℃</div>
+                  </div>
+                </div>
+                <div class="dt-gauge__label">温度</div>
+              </div>
+
+              <div class="dt-gauge-card">
+                <div class="dt-gauge">
+                  <svg viewBox="0 0 120 120" aria-hidden="true">
+                    <circle class="dt-gauge__track" cx="60" cy="60" r="46" />
+                    <circle class="dt-gauge__arc" cx="60" cy="60" r="46" />
+                  </svg>
+                  <div class="dt-gauge__center">
+                    <div class="dt-gauge__value" id="envHum">--</div>
+                    <div class="dt-gauge__unit">%</div>
+                  </div>
+                </div>
+                <div class="dt-gauge__label">湿度</div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="sidebar-section">
+          <div class="sidebar-section-title">总体运行态势</div>
+          <div class="dt-block">
+            <div class="dt-metric-list">
+              <div class="dt-metric">
+                <div class="dt-metric__k">在线摄像头</div>
+                <div class="dt-metric__v" id="metricYoloLatency">--</div>
+              </div>
+              <div class="dt-metric">
+                <div class="dt-metric__k">当前告警</div>
+                <div class="dt-metric__v" id="metricFps">--</div>
+              </div>
+              <div class="dt-metric">
+                <div class="dt-metric__k">传感器异常</div>
+                <div class="dt-metric__v" id="metricLstm">--</div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="sidebar-section sidebar-section--grow">
+          <div class="sidebar-section-title">告警态势微趋势</div>
+          <div class="dt-block dt-block--fill">
+            <div class="dt-chart-shell dt-chart-shell--fill" aria-label="趋势图占位">
+              <svg class="dt-sparkline" viewBox="0 0 320 140" role="img" aria-label="趋势图">
+                <defs>
+                  <linearGradient id="sparkGrad" x1="0" x2="0" y1="0" y2="1">
+                    <stop offset="0" stop-color="rgba(91, 231, 255, 0.42)" />
+                    <stop offset="1" stop-color="rgba(91, 231, 255, 0.00)" />
+                  </linearGradient>
+                </defs>
+                <path class="dt-sparkline__grid" d="M20 20 L20 120 M20 120 L300 120" />
+                <path class="dt-sparkline__grid" d="M20 80 L300 80" opacity="0.6" />
+                <path class="dt-sparkline__grid" d="M20 40 L300 40" opacity="0.35" />
+                <path class="dt-sparkline__line" d="M20 110 L300 110" />
+                <path class="dt-sparkline__fill" d="M20 110 L300 110 L300 120 L20 120 Z" fill="url(#sparkGrad)" />
+                <g class="dt-sparkline__dots" aria-hidden="true"></g>
+                <text x="20" y="134" class="dt-sparkline__hint">暂无数据</text>
+              </svg>
+            </div>
+          </div>
         </section>
       </aside>
 
-      <section class="floor-plan-container">
-        <div style="padding: 14px 16px; border-bottom: 1px solid var(--color-border); display:flex; align-items:center; justify-content:space-between; position: relative; z-index: 1;">
-          <div style="font-size: 14px; font-weight: 600; color: rgba(235, 235, 245, 0.88);">实时画面</div>
-          <div class="muted-text" style="font-size: 12px;">YOLO 检测框叠加</div>
+      <section class="floor-plan-container dt-map-panel">
+        <div class="dt-panel-head">
+          <div class="dt-panel-head__left">
+            <div class="dt-panel-title">2D 数字孪生平面图</div>
+            <div class="muted-text" style="font-size: 12px;">点击摄像头查看实时画面</div>
+          </div>
+          <div class="dt-panel-head__right muted-text" style="font-size: 12px;">-</div>
         </div>
-        <div class="video-frame" style="flex: 1; margin: 16px; border-radius: var(--radius-lg);">
-          <div class="video-wrap" id="videoWrap">
-            <img id="videoImg" alt="stream" />
-            <canvas id="overlay"></canvas>
+
+        <div class="dt-map-stage" id="mapStage">
+          <svg class="dt-blueprint" viewBox="0 0 1200 700" role="img" aria-label="古建筑2D平面图">
+            <defs>
+              <linearGradient id="bpStroke" x1="0" x2="1" y1="0" y2="1">
+                <stop offset="0" stop-color="#5be7ff" stop-opacity="0.85" />
+                <stop offset="1" stop-color="#00b8d9" stop-opacity="0.55" />
+              </linearGradient>
+              <linearGradient id="bpFill" x1="0" x2="0" y1="0" y2="1">
+                <stop offset="0" stop-color="rgba(61, 220, 255, 0.10)" />
+                <stop offset="1" stop-color="rgba(0, 184, 217, 0.03)" />
+              </linearGradient>
+              <linearGradient id="bpRoomFill" x1="0" x2="0" y1="0" y2="1">
+                <stop offset="0" stop-color="rgba(91, 231, 255, 0.18)" />
+                <stop offset="1" stop-color="rgba(0, 184, 217, 0.04)" />
+              </linearGradient>
+              <linearGradient id="bpRoomFillAlt" x1="0" x2="1" y1="0" y2="1">
+                <stop offset="0" stop-color="rgba(91, 231, 255, 0.12)" />
+                <stop offset="1" stop-color="rgba(91, 231, 255, 0.02)" />
+              </linearGradient>
+              <filter id="bpGlow" x="-30%" y="-30%" width="160%" height="160%">
+                <feGaussianBlur in="SourceGraphic" stdDeviation="2.4" result="blur" />
+                <feColorMatrix in="blur" type="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 0.55 0" result="glow" />
+                <feMerge>
+                  <feMergeNode in="glow" />
+                  <feMergeNode in="SourceGraphic" />
+                </feMerge>
+              </filter>
+              <filter id="bpRoomHover" x="-30%" y="-30%" width="160%" height="160%">
+                <feGaussianBlur in="SourceGraphic" stdDeviation="6" result="blur" />
+                <feColorMatrix in="blur" type="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 0.55 0" result="glow" />
+                <feMerge>
+                  <feMergeNode in="glow" />
+                  <feMergeNode in="SourceGraphic" />
+                </feMerge>
+              </filter>
+              <filter id="bpAlarmFire" x="-50%" y="-50%" width="200%" height="200%">
+                <feGaussianBlur in="SourceGraphic" stdDeviation="10" result="blur" />
+                <feColorMatrix in="blur" type="matrix" values="1 0 0 0 0.15  0 1 0 0 0.00  0 0 1 0 0.06  0 0 0 0.85 0" result="tint" />
+                <feMerge>
+                  <feMergeNode in="tint" />
+                  <feMergeNode in="SourceGraphic" />
+                </feMerge>
+              </filter>
+              <filter id="bpAlarmSmoke" x="-50%" y="-50%" width="200%" height="200%">
+                <feGaussianBlur in="SourceGraphic" stdDeviation="10" result="blur" />
+                <feColorMatrix in="blur" type="matrix" values="1 0 0 0 0.10  0 1 0 0 0.06  0 0 1 0 0.00  0 0 0 0.78 0" result="tint" />
+                <feMerge>
+                  <feMergeNode in="tint" />
+                  <feMergeNode in="SourceGraphic" />
+                </feMerge>
+              </filter>
+              <pattern id="bpGrid" width="40" height="40" patternUnits="userSpaceOnUse">
+                <path d="M 40 0 L 0 0 0 40" fill="none" stroke="rgba(91, 231, 255, 0.10)" stroke-width="1" />
+              </pattern>
+              <pattern id="bpDots" width="20" height="20" patternUnits="userSpaceOnUse">
+                <circle cx="1" cy="1" r="1" fill="rgba(91, 231, 255, 0.10)" />
+              </pattern>
+            </defs>
+
+            <g class="bp-frame" fill="none" stroke-linejoin="round" stroke-linecap="round">
+              <path class="bp-frame__outer" d="M72 90 L120 54 H1080 L1128 90 V610 L1080 646 H120 L72 610 Z" />
+              <path class="bp-frame__inner" d="M108 122 L142 92 H1058 L1092 122 V578 L1058 608 H142 L108 578 Z" />
+              <path class="bp-frame__ticks" d="M142 92 H190 M1010 92 H1058 M142 608 H190 M1010 608 H1058" />
+            </g>
+
+            <rect x="0" y="0" width="1200" height="700" fill="url(#bpGrid)" />
+            <rect x="0" y="0" width="1200" height="700" fill="url(#bpDots)" opacity="0.55" />
+
+            <g class="bp-rooms">
+              <rect class="bp-room" id="room-east" data-room="east" x="140" y="150" width="280" height="180" rx="14" fill="url(#bpRoomFill)" opacity="0.42" />
+              <rect class="bp-room" id="room-hall" data-room="hall" x="420" y="150" width="360" height="180" rx="14" fill="url(#bpRoomFillAlt)" opacity="0.40" />
+              <rect class="bp-room" id="room-west" data-room="west" x="780" y="150" width="280" height="180" rx="14" fill="url(#bpRoomFill)" opacity="0.42" />
+              <rect class="bp-room" id="room-kitchen" data-room="kitchen" x="420" y="330" width="360" height="230" rx="16" fill="url(#bpRoomFill)" opacity="0.48" />
+              <rect class="bp-room" id="room-store" data-room="store" x="780" y="330" width="280" height="230" rx="16" fill="url(#bpRoomFillAlt)" opacity="0.46" />
+            </g>
+
+            <!-- 外墙（更粗） -->
+            <g class="bp-wall bp-wall--outer" fill="none" stroke="url(#bpStroke)" stroke-width="4" stroke-linejoin="round" stroke-linecap="round" opacity="0.98" filter="url(#bpGlow)">
+              <path d="M140 150 H1060 V560 H140 Z" />
+            </g>
+
+            <!-- 内墙（更细，带门洞留白） -->
+            <g class="bp-wall bp-wall--inner" fill="none" stroke="rgba(91, 231, 255, 0.85)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round" opacity="0.92">
+              <!-- 横向分隔：上/下 -->
+              <path d="M140 330 H420" />
+              <path d="M420 330 H520" />
+              <path d="M680 330 H780" />
+              <path d="M780 330 H1060" />
+
+              <!-- 左右分隔：卧室/正厅/书房 -->
+              <path d="M420 150 V330" />
+              <path d="M780 150 V330" />
+
+              <!-- 下部：厨房/储物间 -->
+              <path d="M780 330 V560" />
+
+              <!-- 正厅与厨房之间门洞：中间留口 -->
+              <path d="M420 330 V560" opacity="0.6" />
+            </g>
+
+            <!-- 门洞（用背景色“擦除”一小段，形成通道感） -->
+            <g fill="rgba(8, 12, 22, 0.95)" opacity="1">
+              <rect x="560" y="328" width="80" height="10" rx="4" />
+              <rect x="418" y="360" width="10" height="70" rx="4" />
+            </g>
+
+            <!-- 细节线：轻微辅助线，增加质感但不过分抢眼 -->
+            <g fill="none" stroke="rgba(91, 231, 255, 0.18)" stroke-width="1" opacity="0.65">
+              <path d="M200 330 H1060" />
+              <path d="M420 450 H780" />
+              <path d="M780 450 H1060" />
+              <path d="M600 150 V560" stroke-dasharray="6 10" opacity="0.45" />
+            </g>
+
+            <g fill="none" stroke="rgba(91, 231, 255, 0.30)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" opacity="0.75">
+              <path d="M160 170 H220 M160 170 V230" />
+              <path d="M1040 170 H980 M1040 170 V230" />
+              <path d="M160 540 H220 M160 540 V480" />
+              <path d="M1040 540 H980 M1040 540 V480" />
+            </g>
+
+            <!-- 房间名：更克制，像 CAD 标注 -->
+            <g class="bp-label" fill="rgba(235,235,245,0.62)" font-size="20" font-weight="700" opacity="0.92" letter-spacing="2">
+              <text x="600" y="250" text-anchor="middle">大殿</text>
+              <text x="280" y="250" text-anchor="middle">东厢房</text>
+              <text x="920" y="250" text-anchor="middle">西厢房</text>
+              <text x="600" y="470" text-anchor="middle">庖厨</text>
+              <text x="920" y="470" text-anchor="middle">库房</text>
+            </g>
+          </svg>
+
+          <div class="dt-cam-layer" id="camLayer">
+            <button class="dt-cam-point" type="button" data-camera-id="CAM-01" style="left: 26%; top: 34%;">
+              <span class="dt-cam-dot"></span>
+              <span class="dt-cam-label">CAM-01</span>
+            </button>
+            <button class="dt-cam-point" type="button" data-camera-id="CAM-02" style="left: 50%; top: 30%;">
+              <span class="dt-cam-dot"></span>
+              <span class="dt-cam-label">CAM-02</span>
+            </button>
+            <button class="dt-cam-point" type="button" data-camera-id="CAM-03" style="left: 78%; top: 66%;">
+              <span class="dt-cam-dot"></span>
+              <span class="dt-cam-label">CAM-03</span>
+            </button>
           </div>
         </div>
       </section>
 
       <aside class="sidebar-right">
+        <section class="sidebar-section sidebar-section--grow">
+          <div class="sidebar-section-title">实时告警日志流</div>
+          <div class="dt-block dt-block--fill">
+            <div class="dt-alarm-list dt-alarm-list--scroll" id="alarmList">
+              <div class="empty-state">暂无告警</div>
+            </div>
+          </div>
+        </section>
+
         <section class="sidebar-section">
+          <div class="sidebar-section-title">区域安全态势占比</div>
+          <div class="dt-block">
+            <div class="dt-donut-shell" aria-label="占比环形图占位">
+              <svg class="dt-donut" viewBox="0 0 120 120" role="img" aria-label="环形图">
+                <circle class="dt-donut__track" cx="60" cy="60" r="44" />
+                <circle class="dt-donut__glow" cx="60" cy="60" r="44" />
+              </svg>
+              <div class="dt-donut__center">
+                <div class="dt-donut__value">--</div>
+                <div class="dt-donut__label">暂无数据</div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="sidebar-section">
+          <div class="sidebar-section-title">今日告警概览</div>
+          <div class="dt-block dt-block--fill">
+            <div class="dt-metric-list">
+              <div class="dt-metric">
+                <div class="dt-metric__k">今日火警</div>
+                <div class="dt-metric__v" id="metricAlarmFire">--</div>
+              </div>
+              <div class="dt-metric">
+                <div class="dt-metric__k">今日烟雾</div>
+                <div class="dt-metric__v" id="metricAlarmSmoke">--</div>
+              </div>
+              <div class="dt-metric">
+                <div class="dt-metric__k">今日总计</div>
+                <div class="dt-metric__v" id="metricAlarmTotal">--</div>
+              </div>
+            </div>
+          </div>
+        </section>
+      </aside>
+    </main>
+  </div>
+
+  <div class="video-modal hidden" id="videoModal" aria-hidden="true">
+    <div class="video-modal-content dt-video-float" id="videoModalContent">
+      <div class="video-modal-header" id="videoModalDragHandle">
+        <div class="video-modal-title" id="videoModalTitle">实时监控画面</div>
+        <button class="video-modal-close" id="videoModalClose" type="button" aria-label="关闭">×</button>
+      </div>
+      <div class="video-modal-body">
+        <div class="video-display">
+          <div class="video-frame" style="border-radius: var(--radius-lg);">
+            <div class="video-wrap" id="videoWrap">
+              <img id="videoImg" alt="stream" />
+              <canvas id="overlay"></canvas>
+            </div>
+          </div>
+        </div>
+        <div class="dt-video-side">
           <div class="sidebar-section-title">综合判定</div>
           <div class="lstm-panel">
             <div class="lstm-result">
@@ -97,24 +377,9 @@
               <div class="muted-text" style="font-size: 12px; margin-top: 6px;" id="yoloHint">-</div>
             </div>
           </div>
-        </section>
-      </aside>
-    </main>
-
-    <footer class="footer-stats">
-      <div class="stat-item stat-item--wide">
-        <div class="stat-label">当前告警</div>
-        <div class="stat-value" id="footerAlarm">-</div>
+        </div>
       </div>
-      <div class="stat-item stat-item--wide">
-        <div class="stat-label">综合</div>
-        <div class="stat-value" id="footerDecision">-</div>
-      </div>
-      <div class="stat-item stat-item--wide">
-        <div class="stat-label">YOLO</div>
-        <div class="stat-value" id="footerYolo">0</div>
-      </div>
-    </footer>
+    </div>
   </div>
 
   <script src="/static/js/demo.js"></script>
