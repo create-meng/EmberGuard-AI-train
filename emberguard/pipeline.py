@@ -17,7 +17,21 @@ class FireDetectionPipeline:
     集成YOLO目标检测和LSTM时序分析
     """
     
-    def __init__(self, yolo_model_path, lstm_model_path=None, sequence_length=30, device=None):
+    def __init__(
+        self,
+        yolo_model_path,
+        lstm_model_path=None,
+        sequence_length=30,
+        device=None,
+        enable_feature_denoise=True,
+        feature_ewma_alpha=0.82,
+        feature_spike_ratio_limit=2.8,
+        feature_spike_abs_limit=0.06,
+        persist_k_fire=2,
+        persist_k_smoke=3,
+        persist_conf_fire=0.45,
+        persist_conf_smoke=0.55,
+    ):
         """
         初始化检测管道
         
@@ -32,6 +46,16 @@ class FireDetectionPipeline:
             self.device = 'cuda' if torch.cuda.is_available() else 'cpu'
         else:
             self.device = device
+
+        if self.device == 'cpu':
+            try:
+                torch.set_num_threads(1)
+            except Exception:
+                pass
+            try:
+                torch.set_num_interop_threads(1)
+            except Exception:
+                pass
         
         # 加载YOLO模型
         if not os.environ.get('SILENT_MODE'):
@@ -64,6 +88,19 @@ class FireDetectionPipeline:
         # 时序缓冲区
         self.sequence_length = sequence_length
         self.feature_buffer = deque(maxlen=sequence_length)
+
+        self.enable_feature_denoise = bool(enable_feature_denoise)
+        self.feature_ewma_alpha = float(feature_ewma_alpha)
+        self.feature_spike_ratio_limit = float(feature_spike_ratio_limit)
+        self.feature_spike_abs_limit = float(feature_spike_abs_limit)
+        self.persist_k_fire = int(persist_k_fire)
+        self.persist_k_smoke = int(persist_k_smoke)
+        self.persist_conf_fire = float(persist_conf_fire)
+        self.persist_conf_smoke = float(persist_conf_smoke)
+
+        self._feat_ewma = None
+        self._persist_cls = None
+        self._persist_cnt = 0
         
         # LSTM预测平滑（解决波动性问题）
         self.prediction_buffer = deque(maxlen=10)  # 保存最近10次预测
@@ -75,11 +112,97 @@ class FireDetectionPipeline:
             1: "烟雾", 
             2: "火焰"
         }
+
+        if not os.environ.get('DISABLE_PIPELINE_WARMUP'):
+            try:
+                dummy = np.zeros((self.yolo_imgsz, self.yolo_imgsz, 3), dtype=np.uint8)
+                self.yolo_model.predict(
+                    dummy,
+                    conf=0.25,
+                    verbose=False,
+                    device=self.device,
+                    imgsz=self.yolo_imgsz,
+                    half=self.yolo_half,
+                )
+            except Exception:
+                pass
     
     def reset_buffer(self):
         """重置特征缓冲区"""
         self.feature_buffer.clear()
         self.prediction_buffer.clear()
+        self._feat_ewma = None
+        self._persist_cls = None
+        self._persist_cnt = 0
+
+    def _denoise_features(self, features: np.ndarray) -> np.ndarray:
+        if not self.enable_feature_denoise:
+            return features
+
+        if features is None:
+            return np.zeros(8, dtype=np.float32)
+
+        f = np.asarray(features, dtype=np.float32).reshape(-1)
+        if f.shape[0] != 8:
+            return np.zeros(8, dtype=np.float32)
+
+        conf = float(f[6])
+        cls = int(f[7]) if conf > 0 else -1
+
+        a = self.feature_ewma_alpha
+        a = 0.0 if a < 0.0 else (1.0 if a > 1.0 else a)
+
+        if self._feat_ewma is None:
+            self._feat_ewma = f.copy()
+        else:
+            prev = self._feat_ewma
+            cand = a * f + (1.0 - a) * prev
+
+            for idx in (0, 1, 2, 3, 4, 5, 6):
+                p = float(prev[idx])
+                c = float(cand[idx])
+                if idx in (4, 6):
+                    if p > 1e-6 and c > p * self.feature_spike_ratio_limit:
+                        c = p * self.feature_spike_ratio_limit
+                    if (c - p) > self.feature_spike_abs_limit:
+                        c = p + self.feature_spike_abs_limit
+                cand[idx] = c
+
+            cand[0] = float(np.clip(cand[0], 0.0, 1.0))
+            cand[1] = float(np.clip(cand[1], 0.0, 1.0))
+            cand[2] = float(np.clip(cand[2], 0.0, 1.0))
+            cand[3] = float(np.clip(cand[3], 0.0, 1.0))
+            cand[4] = float(np.clip(cand[4], 0.0, 1.0))
+            cand[5] = float(np.clip(cand[5], 0.0, 40.0))
+            cand[6] = float(np.clip(cand[6], 0.0, 1.0))
+
+            cand[7] = f[7]
+            self._feat_ewma = cand
+
+        out = self._feat_ewma.copy()
+
+        if cls in (0, 1):
+            if self._persist_cls == cls:
+                self._persist_cnt += 1
+            else:
+                self._persist_cls = cls
+                self._persist_cnt = 1
+        else:
+            self._persist_cls = None
+            self._persist_cnt = 0
+
+        if cls == 1:
+            ok = (self._persist_cnt >= max(1, self.persist_k_fire)) and (conf >= self.persist_conf_fire)
+        elif cls == 0:
+            ok = (self._persist_cnt >= max(1, self.persist_k_smoke)) and (conf >= self.persist_conf_smoke)
+        else:
+            ok = True
+
+        if not ok:
+            out[:7] = 0.0
+            out[7] = float(f[7])
+
+        return out.astype(np.float32)
     
     def detect_frame(self, frame, conf_threshold=0.25):
         """
@@ -105,6 +228,7 @@ class FireDetectionPipeline:
         
         # 提取特征
         features = self.feature_extractor.get_best_detection(results, frame.shape)
+        features = self._denoise_features(features)
         
         # 添加到缓冲区
         self.feature_buffer.append(features)
