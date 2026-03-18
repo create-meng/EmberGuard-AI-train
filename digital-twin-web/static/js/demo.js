@@ -1,11 +1,19 @@
 (() => {
+  const EXPERIMENT_PROFILE = (typeof window !== 'undefined' && window.EXPERIMENT_PROFILE) ? window.EXPERIMENT_PROFILE : 'yolo_lstm_denoise_fusion';
+
+  const PROFILE_CFG = {
+    yolo: { fusion: false, source: 'yolo' },
+    yolo_lstm: { fusion: false, source: 'lstm' },
+    yolo_lstm_denoise: { fusion: false, source: 'lstm' },
+    yolo_lstm_fusion: { fusion: true, source: 'fusion' },
+    yolo_lstm_denoise_fusion: { fusion: true, source: 'fusion' },
+  };
+
+  const _profile = PROFILE_CFG[EXPERIMENT_PROFILE] || PROFILE_CFG.yolo_lstm_denoise_fusion;
   const els = {
     videoImg: document.getElementById('videoImg'),
     overlay: document.getElementById('overlay'),
-    lstmClass: document.getElementById('lstmClass'),
-    lstmConf: document.getElementById('lstmConf'),
-    yoloCount: document.getElementById('yoloCount'),
-    yoloHint: document.getElementById('yoloHint'),
+    siteIntroText: document.getElementById('siteIntroText'),
     sensorList: document.getElementById('sensorList'),
     headerTime: document.getElementById('headerTime'),
     finalStatus: document.getElementById('finalStatus'),
@@ -16,6 +24,8 @@
     metricFps: document.getElementById('metricFps'),
     metricLstm: document.getElementById('metricLstm'),
   };
+
+  const showTechDetails = !!(typeof window !== 'undefined' && window.SHOW_TECH_DETAILS_DEFAULT);
 
   const dom = {
     gaugeArcs: document.querySelectorAll('.dt-gauge__arc'),
@@ -42,29 +52,16 @@
 
   const ALARM_CFG = {
     windowSize: 20,
-    ewmaAlpha: 0.35,
-    yoloFireMinConf: 0.5,
-    yoloFireStrongConf: 0.72,
+    onFireRatio: 0.35,
+    offFireRatio: 0.18,
+    onSmokeRatio: 0.45,
+    offSmokeRatio: 0.22,
+    yoloFireMinConf: 0.25,
+    yoloFireStrongConf: 0.7,
     yoloFireStrongMinArea: 0.008,
-    yoloSmokeMinConf: 0.55,
+    yoloSmokeMinConf: 0.25,
     yoloSmokeStrongConf: 0.7,
     yoloSmokeStrongMinArea: 0.01,
-    voteMinConfSmoke: 0.55,
-    voteMinConfFire: 0.45,
-    onFireScore: 0.62,
-    onFireScoreNoYolo: 0.9,
-    offFireScore: 0.42,
-    onSmokeScore: 0.68,
-    onSmokeScoreNoYolo: 0.85,
-    offSmokeScore: 0.52,
-    kFire: 2,
-    kFireNoYolo: 6,
-    kSmoke: 4,
-    kSmokeNoYolo: 8,
-    yoloSmokeConsecutive: 2,
-    yoloStrongConsecutive: 1,
-    holdFireMs: 2500,
-    holdSmokeMs: 600,
   };
 
   let eventSource = null;
@@ -279,7 +276,7 @@
     if (dotsG) {
       let html = '';
       for (const p of pts) {
-        html += `<circle cx="${p.x.toFixed(1)}" cy="${p.y.toFixed(1)}" r="1.6" fill="rgba(91,231,255,0.68)" />`;
+        html += `<circle cx="${p.x.toFixed(1)}" cy="${p.y.toFixed(1)}" r="1.6" fill="rgba(var(--color-accent-rgb), 0.55)" />`;
       }
       dotsG.innerHTML = html;
     }
@@ -478,6 +475,8 @@
       ui.videoModalTitle.textContent = selectedCameraId ? `${selectedCameraId} 实时监控画面` : '实时监控画面';
     }
 
+    updateSiteIntro();
+
     // 弹窗打开时才拉流，减少后台无意义刷新
     refreshStream({ immediate: true });
 
@@ -661,8 +660,45 @@
 
   function alarmName(level) {
     if (level === 'fire') return '火焰告警';
-    if (level === 'smoke') return '烟雾预警';
-    return '系统正常';
+    if (level === 'smoke') return '烟雾告警';
+    return '正常';
+  }
+
+  function fmtDuration(ms) {
+    const sec = Math.max(0, Math.floor(ms / 1000));
+    const m = Math.floor(sec / 60);
+    const s = sec % 60;
+    if (m <= 0) return `${s}s`;
+    return `${m}m ${s}s`;
+  }
+
+  function extinguishMethod(level) {
+    if (level === 'fire') return '高压细雾喷雾';
+    if (level === 'smoke') return '气溶胶';
+    return '';
+  }
+
+  function updateSiteIntro() {
+    if (!els.siteIntroText) return;
+    const cam = safeText(selectedCameraId, '--');
+    const level = safeText(currentAlarmLevel, 'normal');
+    const status = alarmName(level);
+    const since = alarmSince ? fmtDuration(Date.now() - alarmSince) : '-';
+    const temp = els.envTemp ? safeText(els.envTemp.textContent, '--') : '--';
+    const hum = els.envHum ? safeText(els.envHum.textContent, '--') : '--';
+
+    const nowText = new Date().toLocaleString();
+
+    let suggestion = '建议：继续观察，保持通风与通道畅通。';
+    if (level === 'fire') suggestion = '建议：立即核查现场火源，启动应急预案并联动处置。';
+    else if (level === 'smoke') suggestion = '建议：优先排查烟雾来源（厨房/电气/扬尘），必要时进行现场确认。';
+
+    els.siteIntroText.textContent =
+      `时间：${nowText}\n` +
+      `摄像头：${cam}\n` +
+      `状态：${status}${alarmSince ? `（已持续 ${since}）` : ''}\n` +
+      `环境：温度 ${temp}℃｜湿度 ${hum}%\n` +
+      `${suggestion}`;
   }
 
   function normalizeLstmName(name) {
@@ -741,6 +777,70 @@
   }
 
   function updateAlarmFromDetection(det, cameraState = null) {
+    // Prefer backend decision if provided (ensures UI matches server-side EXPERIMENT_PROFILE)
+    if (det && (det.final_alarm !== null && det.final_alarm !== undefined)) {
+      const state = cameraState || { alarmState, alarmSince, hist, ewmaFire, ewmaSmoke, lastDecisionReason };
+      const now = Date.now();
+      const level = String(det.final_alarm || 'normal');
+      state.lastDecisionReason = (det.final_reason !== null && det.final_reason !== undefined) ? String(det.final_reason) : '-';
+      state.alarmState = level;
+      state.alarmSince = (level === 'normal') ? 0 : (state.alarmSince || now);
+
+      if (!cameraState) {
+        alarmState = state.alarmState;
+        alarmSince = state.alarmSince;
+        lastDecisionReason = state.lastDecisionReason;
+      }
+      return level;
+    }
+
+    if (!_profile.fusion) {
+      const state = cameraState || { alarmState, alarmSince, hist, ewmaFire, ewmaSmoke, lastDecisionReason };
+      const now = Date.now();
+      if (!det) {
+        resetAlarm(state);
+        state.lastDecisionReason = '-';
+        if (!cameraState) {
+          lastDecisionReason = state.lastDecisionReason;
+        }
+        return 'normal';
+      }
+
+      let level = 'normal';
+      if (_profile.source === 'yolo') {
+        const yolo = Array.isArray(det?.yolo_detections) ? det.yolo_detections : [];
+        const hasFire = yolo.some(x => x && x.class_name === 'fire');
+        const hasSmoke = yolo.some(x => x && x.class_name === 'smoke');
+        level = hasFire ? 'fire' : (hasSmoke ? 'smoke' : 'normal');
+        state.lastDecisionReason = level === 'normal' ? 'YOLO: 无框' : 'YOLO: 有框';
+      } else {
+        const hasLstm = det != null && det.lstm_prediction !== null && det.lstm_prediction !== undefined;
+        if (!hasLstm) {
+          const yolo = Array.isArray(det?.yolo_detections) ? det.yolo_detections : [];
+          const hasFire = yolo.some(x => x && x.class_name === 'fire');
+          const hasSmoke = yolo.some(x => x && x.class_name === 'smoke');
+          level = hasFire ? 'fire' : (hasSmoke ? 'smoke' : 'normal');
+          state.lastDecisionReason = 'LSTM未就绪: YOLO兜底';
+        } else {
+          const pred = Number(det?.lstm_prediction);
+          if (pred === 2) level = 'fire';
+          else if (pred === 1) level = 'smoke';
+          else level = 'normal';
+          state.lastDecisionReason = 'LSTM: 直接输出';
+        }
+      }
+
+      state.alarmState = level;
+      state.alarmSince = (level === 'normal') ? 0 : (state.alarmSince || now);
+
+      if (!cameraState) {
+        alarmState = state.alarmState;
+        alarmSince = state.alarmSince;
+        lastDecisionReason = state.lastDecisionReason;
+      }
+      return level;
+    }
+
     // 如果提供了cameraState，使用它；否则使用全局状态（当前选中摄像头）
     const state = cameraState || { alarmState, alarmSince, hist, ewmaFire, ewmaSmoke, lastDecisionReason };
     
@@ -757,12 +857,11 @@
     const pred = det?.lstm_prediction;
     const conf = typeof det?.lstm_confidence === 'number' ? det.lstm_confidence : 0;
     const y = yoloEvidence(det);
-    const yoloFire = y.fire;
-    const yoloSmoke = y.smoke;
 
-    const prev = state.hist.length > 0 ? state.hist[state.hist.length - 1] : null;
+    // Scheme A: sliding window vote ratio + hysteresis
+    // - vote source: LSTM if ready, otherwise YOLO
+    // - fast trigger: YOLO strong fire evidence
 
-    // YOLO 出现强火焰证据时快速触发（响应优先）
     if (y.fireStrong > 0) {
       state.alarmState = 'fire';
       state.alarmSince = now;
@@ -775,184 +874,74 @@
       return 'fire';
     }
 
-    // YOLO fire 连续两帧出现时快速触发（避免等 1-3 秒累计）
-    if (yoloFire > 0 && prev?.yoloFire > 0) {
-      state.alarmState = 'fire';
-      state.alarmSince = now;
-      state.lastDecisionReason = 'YOLO 连续两帧火焰框';
-      if (!cameraState) {
-        alarmState = state.alarmState;
-        alarmSince = state.alarmSince;
-        lastDecisionReason = state.lastDecisionReason;
-      }
-      return 'fire';
+    const hasLstm = pred !== null && pred !== undefined;
+    let voteFire = 0;
+    let voteSmoke = 0;
+    let src = 'YOLO';
+    if (hasLstm) {
+      src = 'LSTM';
+      voteFire = Number(pred) === 2 ? 1 : 0;
+      voteSmoke = Number(pred) === 1 ? 1 : 0;
+    } else {
+      voteFire = y.fire > 0 ? 1 : 0;
+      voteSmoke = y.smoke > 0 ? 1 : 0;
     }
 
-    const fireProb = pred === 2 ? conf : 0;
-    const smokeProb = pred === 1 ? conf : 0;
-    state.ewmaFire = ALARM_CFG.ewmaAlpha * fireProb + (1 - ALARM_CFG.ewmaAlpha) * state.ewmaFire;
-    state.ewmaSmoke = ALARM_CFG.ewmaAlpha * smokeProb + (1 - ALARM_CFG.ewmaAlpha) * state.ewmaSmoke;
-
-    state.hist.push({ pred, conf, yoloFire, yoloFireStrong: y.fireStrong, yoloSmoke, yoloSmokeStrong: y.smokeStrong, t: now });
+    state.hist.push({ fire: voteFire, smoke: voteSmoke, src, t: now, conf: hasLstm ? conf : null });
     if (state.hist.length > ALARM_CFG.windowSize) state.hist.shift();
 
+    const n = state.hist.length;
     let fireVotes = 0;
     let smokeVotes = 0;
-    let yoloHits = 0;
-    let yoloStrongHits = 0;
-    let yoloSmokeHits = 0;
-    let yoloSmokeStrongHits = 0;
-    for (const h of state.hist) {
-      if (h.yoloFire > 0) yoloHits += 1;
-      if (h.yoloFireStrong > 0) yoloStrongHits += 1;
-      if (h.yoloSmoke > 0) yoloSmokeHits += 1;
-      if (h.yoloSmokeStrong > 0) yoloSmokeStrongHits += 1;
-      if (h.pred === 2 && h.conf >= ALARM_CFG.voteMinConfFire) fireVotes += 1;
-      if (h.pred === 1 && h.conf >= ALARM_CFG.voteMinConfSmoke) smokeVotes += 1;
+    for (const x of state.hist) {
+      fireVotes += x?.fire ? 1 : 0;
+      smokeVotes += x?.smoke ? 1 : 0;
     }
+    const fireRatio = n ? (fireVotes / n) : 0;
+    const smokeRatio = n ? (smokeVotes / n) : 0;
 
-    const win = Math.max(1, state.hist.length);
-    const voteFireScore = fireVotes / win;
-    const voteSmokeScore = smokeVotes / win;
-    const yoloScore = Math.min(1, yoloHits / win);
-    const yoloStrongScore = Math.min(1, yoloStrongHits / win);
-    const yoloSmokeScore = Math.min(1, yoloSmokeHits / win);
-    const yoloSmokeStrongScore = Math.min(1, yoloSmokeStrongHits / win);
-
-    const fireScore = Math.max(state.ewmaFire, 0.55 * voteFireScore + 0.30 * yoloScore + 0.15 * yoloStrongScore);
-    const smokeScore = Math.max(state.ewmaSmoke, 0.75 * voteSmokeScore + 0.20 * yoloSmokeScore + 0.05 * yoloSmokeStrongScore);
-
-    const elapsed = state.alarmSince ? (now - state.alarmSince) : 0;
-
-    if (state.alarmState === 'fire') {
-      if (elapsed < ALARM_CFG.holdFireMs) return 'fire';
-      if (fireScore <= ALARM_CFG.offFireScore && fireVotes === 0 && yoloHits === 0) {
-        state.alarmState = 'normal';
-        state.alarmSince = now;
-        state.lastDecisionReason = `解除: fireScore=${fireScore.toFixed(2)}`;
-        if (!cameraState) {
-          alarmState = state.alarmState;
-          alarmSince = state.alarmSince;
-          lastDecisionReason = state.lastDecisionReason;
-        }
-        return 'normal';
+    // Decision with hysteresis
+    let next = state.alarmState || 'normal';
+    if (next === 'fire') {
+      if (fireRatio <= ALARM_CFG.offFireRatio) {
+        next = 'normal';
+        state.lastDecisionReason = `解除fire: ratio=${fireRatio.toFixed(2)} src=${src}`;
+      } else {
+        state.lastDecisionReason = `保持fire: ratio=${fireRatio.toFixed(2)} src=${src}`;
       }
-      state.lastDecisionReason = `保持: fireScore=${fireScore.toFixed(2)} yolo=${yoloHits}`;
-      if (!cameraState) {
-        lastDecisionReason = state.lastDecisionReason;
+    } else if (next === 'smoke') {
+      // smoke -> fire upgrade if fire rises
+      if (fireRatio >= ALARM_CFG.onFireRatio) {
+        next = 'fire';
+        state.lastDecisionReason = `升级fire: ratio=${fireRatio.toFixed(2)} src=${src}`;
+      } else if (smokeRatio <= ALARM_CFG.offSmokeRatio) {
+        next = 'normal';
+        state.lastDecisionReason = `解除smoke: ratio=${smokeRatio.toFixed(2)} src=${src}`;
+      } else {
+        state.lastDecisionReason = `保持smoke: ratio=${smokeRatio.toFixed(2)} src=${src}`;
       }
-      return 'fire';
-    }
-
-    if (state.alarmState === 'smoke') {
-      if (elapsed < ALARM_CFG.holdSmokeMs) return 'smoke';
-      if (smokeScore <= ALARM_CFG.offSmokeScore && smokeVotes === 0) {
-        state.alarmState = 'normal';
-        state.alarmSince = now;
-        state.lastDecisionReason = `解除: smokeScore=${smokeScore.toFixed(2)}`;
-        if (!cameraState) {
-          alarmState = state.alarmState;
-          alarmSince = state.alarmSince;
-          lastDecisionReason = state.lastDecisionReason;
-        }
-        return 'normal';
-      }
-      // YOLO 强证据连续出现时快速升级为火焰告警
-      const recent = state.hist.slice(-ALARM_CFG.yoloStrongConsecutive);
-      const strongConsecutive = recent.length >= ALARM_CFG.yoloStrongConsecutive && recent.every(x => x.yoloFireStrong > 0);
-      if (strongConsecutive) {
-        state.alarmState = 'fire';
-        state.alarmSince = now;
-        state.lastDecisionReason = 'YOLO 强证据(窗口)';
-        if (!cameraState) {
-          alarmState = state.alarmState;
-          alarmSince = state.alarmSince;
-          lastDecisionReason = state.lastDecisionReason;
-        }
-        return 'fire';
-      }
-
-      // 禁止 LSTM-only fire：没有 YOLO 火焰证据时不允许触发 fire（防止行人/光照误报）
-      if (yoloHits > 0) {
-        const fireOnThreshold = ALARM_CFG.onFireScore;
-        const fireVotesNeed = ALARM_CFG.kFire;
-        if (fireScore >= fireOnThreshold || fireVotes >= fireVotesNeed || yoloHits >= 2) {
-          state.alarmState = 'fire';
-          state.alarmSince = now;
-          state.lastDecisionReason = `融合: fireScore=${fireScore.toFixed(2)} yolo=${yoloHits}`;
-          if (!cameraState) {
-            alarmState = state.alarmState;
-            alarmSince = state.alarmSince;
-            lastDecisionReason = state.lastDecisionReason;
-          }
-          return 'fire';
-        }
-      }
-      state.lastDecisionReason = `保持烟雾: smokeScore=${smokeScore.toFixed(2)}`;
-      if (!cameraState) {
-        lastDecisionReason = state.lastDecisionReason;
-      }
-      return 'smoke';
-    }
-
-    // YOLO 强证据连续出现时快速触发火焰告警
-    const recent = state.hist.slice(-ALARM_CFG.yoloStrongConsecutive);
-    const strongConsecutive = recent.length >= ALARM_CFG.yoloStrongConsecutive && recent.every(x => x.yoloFireStrong > 0);
-    if (strongConsecutive) {
-      state.alarmState = 'fire';
-      state.alarmSince = now;
-      state.lastDecisionReason = 'YOLO 强证据(窗口)';
-      if (!cameraState) {
-        alarmState = state.alarmState;
-        alarmSince = state.alarmSince;
-        lastDecisionReason = state.lastDecisionReason;
-      }
-      return 'fire';
-    }
-
-    // 禁止 LSTM-only fire：必须有 YOLO 火焰证据
-    if (yoloHits > 0) {
-      if (fireScore >= ALARM_CFG.onFireScore || fireVotes >= ALARM_CFG.kFire || yoloHits >= 2) {
-        state.alarmState = 'fire';
-        state.alarmSince = now;
-        state.lastDecisionReason = `融合: fireScore=${fireScore.toFixed(2)} yolo=${yoloHits}`;
-        if (!cameraState) {
-          alarmState = state.alarmState;
-          alarmSince = state.alarmSince;
-          lastDecisionReason = state.lastDecisionReason;
-        }
-        return 'fire';
+    } else {
+      if (fireRatio >= ALARM_CFG.onFireRatio) {
+        next = 'fire';
+        state.lastDecisionReason = `触发fire: ratio=${fireRatio.toFixed(2)} src=${src}`;
+      } else if (smokeRatio >= ALARM_CFG.onSmokeRatio) {
+        next = 'smoke';
+        state.lastDecisionReason = `触发smoke: ratio=${smokeRatio.toFixed(2)} src=${src}`;
+      } else {
+        state.lastDecisionReason = `normal: fire=${fireRatio.toFixed(2)} smoke=${smokeRatio.toFixed(2)} src=${src}`;
       }
     }
 
-    // Smoke: 允许"及时发现"，但禁止"偶发"：
-    // - 如果窗口内有 YOLO smoke 证据且满足连续性，则使用较低门槛（更快）
-    // - 如果没有 YOLO smoke 证据，则必须更高分数 + 更多投票（更稳）
-    const hasYoloSmoke = yoloSmokeHits > 0;
-    const recentSmoke = state.hist.slice(-ALARM_CFG.yoloSmokeConsecutive);
-    const smokeConsecutive = recentSmoke.length >= ALARM_CFG.yoloSmokeConsecutive && recentSmoke.every(x => x.yoloSmoke > 0);
+    state.alarmState = next;
+    if (next === 'normal') state.alarmSince = 0;
+    else state.alarmSince = state.alarmSince || now;
 
-    const smokeOnScore = (hasYoloSmoke && smokeConsecutive) ? ALARM_CFG.onSmokeScore : ALARM_CFG.onSmokeScoreNoYolo;
-    const smokeVotesNeed = (hasYoloSmoke && smokeConsecutive) ? ALARM_CFG.kSmoke : ALARM_CFG.kSmokeNoYolo;
-
-    if (smokeScore >= smokeOnScore && smokeVotes >= smokeVotesNeed) {
-      state.alarmState = 'smoke';
-      state.alarmSince = now;
-      state.lastDecisionReason = `融合: smokeScore=${smokeScore.toFixed(2)}`;
-      if (!cameraState) {
-        alarmState = state.alarmState;
-        alarmSince = state.alarmSince;
-        lastDecisionReason = state.lastDecisionReason;
-      }
-      return 'smoke';
-    }
-
-    state.lastDecisionReason = `normal: ewmaF=${state.ewmaFire.toFixed(2)} ewmaS=${state.ewmaSmoke.toFixed(2)}`;
     if (!cameraState) {
+      alarmState = state.alarmState;
+      alarmSince = state.alarmSince;
       lastDecisionReason = state.lastDecisionReason;
     }
-
-    return 'normal';
+    return next;
   }
 
   // Backward-compatible wrapper (renderDetection still calls this)
@@ -1071,14 +1060,10 @@
     if (!det) {
       lastDetection = null;
       currentAlarmLevel = 'normal';
-      els.lstmClass.textContent = '无数据';
-      els.lstmClass.classList.remove('normal', 'smoke', 'fire');
-      els.lstmConf.textContent = '置信度 -';
-      els.yoloCount.textContent = '0';
-      els.yoloHint.textContent = '-';
       setBadge('normal');
       if (els.finalStatus) els.finalStatus.textContent = '-';
       if (els.finalReason) els.finalReason.textContent = '-';
+      updateSiteIntro();
       drawBoxes(null);
       return;
     }
@@ -1096,26 +1081,18 @@
       else if (alarm === 'smoke') els.finalStatus.classList.add('smoke');
       else els.finalStatus.classList.add('normal');
     }
-    if (els.finalReason) els.finalReason.textContent = lastDecisionReason || '-';
-
-    els.lstmClass.classList.remove('normal', 'smoke', 'fire');
-    if (alarm === 'fire') els.lstmClass.classList.add('fire');
-    else if (alarm === 'smoke') els.lstmClass.classList.add('smoke');
-    else els.lstmClass.classList.add('normal');
-
-    const buf = typeof det.buffer_size === 'number' ? det.buffer_size : 0;
-    if (buf > 0 && buf < 30) {
-      els.lstmClass.textContent = `预热中 ${buf}/30`;
-      els.lstmConf.textContent = 'LSTM 需要缓存 30 帧后才会稳定输出';
-    } else {
-      els.lstmClass.textContent = normalizeLstmName(det.lstm_class_name);
-      els.lstmConf.textContent = `置信度 ${fmtPercent(det.lstm_confidence)}`;
+    if (els.finalReason) {
+      const method = extinguishMethod(alarm);
+      if (!showTechDetails) {
+        els.finalReason.textContent = method ? `最终灭火方式：${method}` : '-';
+      } else {
+        els.finalReason.textContent = method
+          ? `${safeText(lastDecisionReason, '-')}` + `\n最终灭火方式：${method}`
+          : `${safeText(lastDecisionReason, '-')}`;
+      }
     }
 
-    const yolo = Array.isArray(det.yolo_detections) ? det.yolo_detections : [];
-    const yoloFireCount = yolo.filter(d => d?.class_name === 'fire').length;
-    els.yoloCount.textContent = String(yoloFireCount);
-    els.yoloHint.textContent = det.infer_ms ? `帧耗时: ${det.infer_ms}ms` : safeText(det.timestamp, '-');
+    updateSiteIntro();
 
     // 只有弹窗打开时才绘制 bbox，避免后台无意义重绘
     if (ui.videoModal && !ui.videoModal.classList.contains('hidden')) {

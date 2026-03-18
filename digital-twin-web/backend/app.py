@@ -53,11 +53,26 @@ models = config.get('models', {})
 yolo_path = models.get('yolo', 'runs/detect/train2/weights/best.pt')
 lstm_path = models.get('lstm', 'models/lstm/best.pt')
 
+# 是否显示技术字段（即如何得到最终告警）
+SHOW_TECH_DETAILS_DEFAULT = False
+
+EXPERIMENT_PROFILE = 'yolo_lstm_denoise_fusion'
+
+_PROFILE_MAP = {
+    'yolo': {'use_lstm': False, 'feature_denoise': False, 'frame_denoise': False, 'fusion': False},
+    'yolo_lstm': {'use_lstm': True, 'feature_denoise': False, 'frame_denoise': False, 'fusion': False},
+    'yolo_lstm_denoise': {'use_lstm': True, 'feature_denoise': True, 'frame_denoise': True, 'fusion': False},
+    'yolo_lstm_fusion': {'use_lstm': True, 'feature_denoise': False, 'frame_denoise': False, 'fusion': True},
+    'yolo_lstm_denoise_fusion': {'use_lstm': True, 'feature_denoise': True, 'frame_denoise': True, 'fusion': True},
+}
+
+_p = _PROFILE_MAP.get(EXPERIMENT_PROFILE) or _PROFILE_MAP['yolo_lstm_denoise_fusion']
+
 # 初始化多个独立的检测引擎（每个摄像头一个）
 detection_engines = {
-    'demo_cam_001': DetectionEngine(yolo_path, lstm_path),
-    'demo_cam_002': DetectionEngine(yolo_path, lstm_path),
-    'demo_cam_003': DetectionEngine(yolo_path, lstm_path),
+    'demo_cam_001': DetectionEngine(yolo_path, lstm_path, use_lstm=_p['use_lstm'], enable_feature_denoise=_p['feature_denoise'], enable_frame_denoise=_p['frame_denoise'], enable_fusion=_p['fusion'], experiment_profile=EXPERIMENT_PROFILE),
+    'demo_cam_002': DetectionEngine(yolo_path, lstm_path, use_lstm=_p['use_lstm'], enable_feature_denoise=_p['feature_denoise'], enable_frame_denoise=_p['frame_denoise'], enable_fusion=_p['fusion'], experiment_profile=EXPERIMENT_PROFILE),
+    'demo_cam_003': DetectionEngine(yolo_path, lstm_path, use_lstm=_p['use_lstm'], enable_feature_denoise=_p['feature_denoise'], enable_frame_denoise=_p['frame_denoise'], enable_fusion=_p['fusion'], experiment_profile=EXPERIMENT_PROFILE),
 }
 
 
@@ -282,7 +297,7 @@ def demo_alarm_logs():
 
 @app.route('/')
 def demo_index():
-    return render_template('demo.html')
+    return render_template('demo.html', experiment_profile=EXPERIMENT_PROFILE, show_tech_details_default=SHOW_TECH_DETAILS_DEFAULT)
 
 
 @app.route('/demo/events')

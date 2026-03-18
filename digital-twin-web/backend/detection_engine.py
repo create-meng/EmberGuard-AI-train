@@ -4,6 +4,7 @@ AI检测引擎 - 集成YOLO+LSTM火灾检测模型
 import threading
 import time
 import cv2
+import numpy as np
 from typing import Optional
 from datetime import datetime
 import os
@@ -24,7 +25,20 @@ except ImportError as e:
 class DetectionEngine:
     """AI检测引擎 - 集成YOLO+LSTM火灾检测"""
     
-    def __init__(self, yolo_path, lstm_path, socketio=None, alert_manager=None, history_manager=None, video_recorder=None):
+    def __init__(
+        self,
+        yolo_path,
+        lstm_path,
+        socketio=None,
+        alert_manager=None,
+        history_manager=None,
+        video_recorder=None,
+        use_lstm: bool = True,
+        enable_feature_denoise: bool = True,
+        enable_frame_denoise: bool = True,
+        enable_fusion: bool = False,
+        experiment_profile: str = 'yolo_lstm_denoise_fusion',
+    ):
         """
         初始化检测引擎
         
@@ -39,18 +53,31 @@ class DetectionEngine:
         self.yolo_path = yolo_path
         self.lstm_path = lstm_path
 
-        # 推理节流：空闲/有人观看时不同频率，避免打开视频时 CPU 抢占导致 infer_ms 飙升
+        self.use_lstm = bool(use_lstm)
+        self.enable_feature_denoise = bool(enable_feature_denoise)
+
+        self.enable_fusion = bool(enable_fusion)
+        self.experiment_profile = str(experiment_profile) if experiment_profile is not None else 'yolo_lstm_denoise_fusion'
+
+        # 推理节流：空闲/有人观看时不同频率。
+        # 边缘设备更怕“打开网页后负载骤增”，因此 active 默认更保守。
         self.infer_interval_idle = 0.25
-        self.infer_interval_active = 0.10
+        self.infer_interval_active = 0.22
         self.infer_interval = self.infer_interval_idle
 
         # MJPEG 输出：没有观看者时不做 JPEG 编码（或极低频），大幅降低 CPU 开销
         self.stream_fps_idle = 0
-        self.stream_fps_active = 12
+        self.stream_fps_active = 6
         self.stream_fps = self.stream_fps_idle
+
+        self.stream_jpeg_quality_active = 72
 
         # CPU 加速：推理用更小尺寸，bbox 缩放回 640x480
         self.infer_size = (320, 240)
+
+        self.enable_frame_denoise = bool(enable_frame_denoise)
+        self.frame_denoise_alpha = 0.78
+        self._frame_denoise_state = None
 
         # 终端输出节流
         self.log_interval_sec = 1.0
@@ -72,6 +99,185 @@ class DetectionEngine:
         self._latest_jpeg_ts: Optional[str] = None
         self._last_detection = None
         self._stream_clients = 0
+
+        # fusion 状态（每个引擎/摄像头独立）
+        self._fusion_hist = []
+        self._fusion_alarm_state = 'normal'
+        self._fusion_alarm_since = 0
+
+        # fusion 参数（与前端 demo.js 对齐，保持最小可用）
+        self._fusion_window_size = 20
+        self._fusion_on_fire_ratio = 0.35
+        self._fusion_off_fire_ratio = 0.18
+        self._fusion_on_smoke_ratio = 0.45
+        self._fusion_off_smoke_ratio = 0.22
+        self._fusion_yolo_strong_conf = 0.7
+        self._fusion_yolo_strong_min_area = 0.008
+
+    def _yolo_evidence(self, dets, frame_w: int = 640, frame_h: int = 480):
+        fire = 0
+        smoke = 0
+        fire_strong = 0
+        smoke_strong = 0
+        if not isinstance(dets, list):
+            return {'fire': 0, 'smoke': 0, 'fire_strong': 0, 'smoke_strong': 0}
+        for d in dets:
+            if not isinstance(d, dict):
+                continue
+            cls = d.get('class_name')
+            conf = d.get('confidence')
+            try:
+                conf = float(conf)
+            except Exception:
+                conf = 0.0
+
+            area = 0.0
+            bb = d.get('bbox')
+            if isinstance(bb, (list, tuple)) and len(bb) == 4:
+                try:
+                    x1, y1, x2, y2 = [float(x) for x in bb]
+                    w = max(0.0, x2 - x1)
+                    h = max(0.0, y2 - y1)
+                    denom = float(max(1, frame_w * frame_h))
+                    area = (w * h) / denom
+                except Exception:
+                    area = 0.0
+
+            if cls == 'fire':
+                if conf >= 0.25:
+                    fire += 1
+                if conf >= self._fusion_yolo_strong_conf and area >= self._fusion_yolo_strong_min_area:
+                    fire_strong += 1
+            elif cls == 'smoke':
+                if conf >= 0.25:
+                    smoke += 1
+                if conf >= self._fusion_yolo_strong_conf and area >= 0.01:
+                    smoke_strong += 1
+        return {'fire': fire, 'smoke': smoke, 'fire_strong': fire_strong, 'smoke_strong': smoke_strong}
+
+    def _decide_without_fusion(self, yolo_dets, lstm_pred):
+        if not self.use_lstm:
+            has_fire = any(isinstance(x, dict) and x.get('class_name') == 'fire' for x in (yolo_dets or []))
+            has_smoke = any(isinstance(x, dict) and x.get('class_name') == 'smoke' for x in (yolo_dets or []))
+            level = 'fire' if has_fire else ('smoke' if has_smoke else 'normal')
+            reason = 'YOLO: 有框' if level != 'normal' else 'YOLO: 无框'
+            return level, reason, 'yolo'
+
+        has_lstm = lstm_pred is not None
+        if not has_lstm:
+            has_fire = any(isinstance(x, dict) and x.get('class_name') == 'fire' for x in (yolo_dets or []))
+            has_smoke = any(isinstance(x, dict) and x.get('class_name') == 'smoke' for x in (yolo_dets or []))
+            level = 'fire' if has_fire else ('smoke' if has_smoke else 'normal')
+            return level, 'LSTM未就绪: YOLO兜底', 'yolo_fallback'
+
+        try:
+            pred = int(lstm_pred)
+        except Exception:
+            pred = -1
+        if pred == 2:
+            return 'fire', 'LSTM: 直接输出', 'lstm'
+        if pred == 1:
+            return 'smoke', 'LSTM: 直接输出', 'lstm'
+        return 'normal', 'LSTM: 直接输出', 'lstm'
+
+    def _decide_with_fusion(self, yolo_dets, lstm_pred, lstm_confidence):
+        now = int(time.time() * 1000)
+        y = self._yolo_evidence(yolo_dets)
+
+        if y.get('fire_strong', 0) > 0:
+            self._fusion_alarm_state = 'fire'
+            self._fusion_alarm_since = now
+            return 'fire', f"YOLO 强证据({int(y.get('fire_strong', 0))})", 'yolo_strong'
+
+        has_lstm = lstm_pred is not None
+        src = 'yolo'
+        vote_fire = 0
+        vote_smoke = 0
+        if has_lstm:
+            src = 'lstm'
+            try:
+                pred = int(lstm_pred)
+            except Exception:
+                pred = -1
+            vote_fire = 1 if pred == 2 else 0
+            vote_smoke = 1 if pred == 1 else 0
+        else:
+            vote_fire = 1 if y.get('fire', 0) > 0 else 0
+            vote_smoke = 1 if y.get('smoke', 0) > 0 else 0
+
+        self._fusion_hist.append({
+            'fire': vote_fire,
+            'smoke': vote_smoke,
+            'src': src,
+            't': now,
+            'conf': float(lstm_confidence) if isinstance(lstm_confidence, (int, float)) else None,
+        })
+        if len(self._fusion_hist) > int(self._fusion_window_size):
+            self._fusion_hist = self._fusion_hist[-int(self._fusion_window_size):]
+
+        n = len(self._fusion_hist)
+        fire_votes = sum(1 for x in self._fusion_hist if x.get('fire'))
+        smoke_votes = sum(1 for x in self._fusion_hist if x.get('smoke'))
+        fire_ratio = (fire_votes / n) if n else 0.0
+        smoke_ratio = (smoke_votes / n) if n else 0.0
+
+        next_state = self._fusion_alarm_state or 'normal'
+        reason = ''
+        if next_state == 'fire':
+            if fire_ratio <= self._fusion_off_fire_ratio:
+                next_state = 'normal'
+                reason = f"解除fire: ratio={fire_ratio:.2f} src={src.upper()}"
+            else:
+                reason = f"保持fire: ratio={fire_ratio:.2f} src={src.upper()}"
+        elif next_state == 'smoke':
+            if fire_ratio >= self._fusion_on_fire_ratio:
+                next_state = 'fire'
+                reason = f"升级fire: ratio={fire_ratio:.2f} src={src.upper()}"
+            elif smoke_ratio <= self._fusion_off_smoke_ratio:
+                next_state = 'normal'
+                reason = f"解除smoke: ratio={smoke_ratio:.2f} src={src.upper()}"
+            else:
+                reason = f"保持smoke: ratio={smoke_ratio:.2f} src={src.upper()}"
+        else:
+            if fire_ratio >= self._fusion_on_fire_ratio:
+                next_state = 'fire'
+                reason = f"触发fire: ratio={fire_ratio:.2f} src={src.upper()}"
+            elif smoke_ratio >= self._fusion_on_smoke_ratio:
+                next_state = 'smoke'
+                reason = f"触发smoke: ratio={smoke_ratio:.2f} src={src.upper()}"
+            else:
+                reason = f"normal: fire={fire_ratio:.2f} smoke={smoke_ratio:.2f} src={src.upper()}"
+
+        self._fusion_alarm_state = next_state
+        if next_state == 'normal':
+            self._fusion_alarm_since = 0
+        else:
+            self._fusion_alarm_since = self._fusion_alarm_since or now
+
+        return next_state, reason, 'fusion'
+
+    def _denoise_frame_for_infer(self, frame_small):
+        if not self.enable_frame_denoise:
+            return frame_small
+        if frame_small is None:
+            return frame_small
+        try:
+            a = float(self.frame_denoise_alpha)
+            if a < 0.0:
+                a = 0.0
+            elif a > 1.0:
+                a = 1.0
+
+            if self._frame_denoise_state is None:
+                self._frame_denoise_state = frame_small.astype(np.float32)
+            else:
+                if self._frame_denoise_state.shape[:2] != frame_small.shape[:2]:
+                    self._frame_denoise_state = frame_small.astype(np.float32)
+                cv2.accumulateWeighted(frame_small, self._frame_denoise_state, a)
+            out = np.clip(self._frame_denoise_state, 0, 255).astype(np.uint8)
+            return out
+        except Exception:
+            return frame_small
 
     def add_stream_client(self):
         with self._lock:
@@ -99,8 +305,9 @@ class DetectionEngine:
         try:
             self._pipeline = FireDetectionPipeline(
                 yolo_model_path=self.yolo_path,
-                lstm_model_path=self.lstm_path,
+                lstm_model_path=(self.lstm_path if self.use_lstm else None),
                 sequence_length=30,
+                enable_feature_denoise=self.enable_feature_denoise,
             )
         except Exception as e:
             print(f"✗ 模型加载失败: {e}")
@@ -200,6 +407,8 @@ class DetectionEngine:
                             frame_for_infer = frame_resized.copy()
                             sx, sy = 1.0, 1.0
 
+                        frame_for_infer = self._denoise_frame_for_infer(frame_for_infer)
+
                         def _infer_job():
                             try:
                                 _t0 = time.time()
@@ -245,7 +454,8 @@ class DetectionEngine:
                 if int(self.stream_fps) > 0:
                     stream_interval = 1.0 / max(1, int(self.stream_fps))
                     if (current_time - last_frame_time) >= stream_interval:
-                        latest_jpeg = self._encode_jpeg_bytes(frame_resized, quality=78)
+                        q = self.stream_jpeg_quality_active
+                        latest_jpeg = self._encode_jpeg_bytes(frame_resized, quality=q)
                         with self._lock:
                             if latest_jpeg is not None:
                                 self._latest_jpeg = latest_jpeg
@@ -304,16 +514,31 @@ class DetectionEngine:
             # 使用YOLO+LSTM检测
             result = pipeline.detect_frame(frame, conf_threshold=0.25)
 
+            yolo_dets = result.get('yolo_detections', [])
+            lstm_pred = result.get('lstm_prediction')
+            lstm_conf = result.get('lstm_confidence')
+
+            with self._lock:
+                if self.enable_fusion:
+                    final_alarm, final_reason, final_source = self._decide_with_fusion(yolo_dets, lstm_pred, lstm_conf)
+                else:
+                    final_alarm, final_reason, final_source = self._decide_without_fusion(yolo_dets, lstm_pred)
+
             # 格式化结果
             return {
                 'timestamp': datetime.now().strftime('%H:%M:%S'),
-                'yolo_detections': result.get('yolo_detections', []),
+                'yolo_detections': yolo_dets,
                 'has_detection': result.get('has_detection', False),
                 'lstm_prediction': result.get('lstm_prediction'),
                 'lstm_class_name': result.get('lstm_class_name'),
                 'lstm_confidence': result.get('lstm_confidence'),
                 'lstm_probabilities': result.get('lstm_probabilities', {}),
-                'buffer_size': result.get('buffer_size', 0)
+                'buffer_size': result.get('buffer_size', 0),
+                'final_alarm': final_alarm,
+                'final_reason': final_reason,
+                'final_source': final_source,
+                'experiment_profile': self.experiment_profile,
+                'fusion_enabled': bool(self.enable_fusion),
             }
         except Exception as e:
             print(f"检测异常: {e}")
@@ -342,6 +567,8 @@ class DetectionEngine:
                 'pipeline_available': bool(self.pipeline_available),
                 'stream_fps': int(self.stream_fps) if self.stream_fps else 0,
                 'infer_interval': float(self.infer_interval) if self.infer_interval else None,
+                'experiment_profile': self.experiment_profile,
+                'fusion_enabled': bool(self.enable_fusion),
                 'last_detection': self._last_detection,
             }
     
