@@ -130,6 +130,47 @@ python scripts/test_pipeline.py
 
 详细使用说明请参考：`emberguard/README.md`
 
+### 4.1 数字孪生Demo对比测试（digital-twin-web，新增）
+
+项目包含一个轻量的Web演示端，用于在同一套前端UI下快速对比不同推理/降噪/融合策略。
+
+**启动后端**
+```bash
+python digital-twin-web/backend/app.py
+```
+
+浏览器访问：
+
+- **http://127.0.0.1:5000/**
+
+**实验档位切换（用于对比试验）**
+
+在 `digital-twin-web/backend/app.py` 修改：
+
+```py
+EXPERIMENT_PROFILE = 'yolo_lstm_denoise_fusion'
+```
+
+可选值：
+
+- **`yolo`**：纯YOLO（最终告警=YOLO是否检出 fire/smoke）
+- **`yolo_lstm`**：YOLO + LSTM（最终告警=LSTM；LSTM未就绪/前30帧用YOLO兜底）
+- **`yolo_lstm_denoise`**：YOLO + LSTM + 降噪（最终告警=LSTM；LSTM未就绪用YOLO兜底；特征级+帧级降噪均开启）
+- **`yolo_lstm_fusion`**：YOLO + LSTM + 告警融合（最终告警=时间窗投票/占比 + 迟滞；YOLO强证据可快速触发 fire；LSTM未就绪时用YOLO投票）
+- **`yolo_lstm_denoise_fusion`**：YOLO + LSTM + 降噪 + 告警融合（最终告警=时间窗投票/占比 + 迟滞；同时开启两层降噪）
+
+融合策略（方案A）参数含义：
+
+- `windowSize`：滑动时间窗长度（帧数）
+- `onFireRatio/offFireRatio`：触发/解除 fire 的占比阈值（迟滞）
+- `onSmokeRatio/offSmokeRatio`：触发/解除 smoke 的占比阈值（迟滞）
+
+改完后需要：
+
+- 重启后端（Ctrl+C 后重新运行）
+- 浏览器强刷（Ctrl+F5）
+
+
 ### 5. GUI界面使用
 运行GUI后可以：
 - 选择检测源（图片/视频/摄像头）
