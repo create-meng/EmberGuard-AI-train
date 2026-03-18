@@ -42,7 +42,7 @@ EmberGuard AI 是一款基于YOLOv8的智能火灾检测训练系统，专注于
 - ✅ **YOLO+LSTM检测管道**（新增）
 
 ### 开发中
-- 🚧 LSTM模型训练（数据准备中）
+- 🚧 LSTM训练数据扩充与标注完善
 - 🚧 GUI界面LSTM集成
 - 🚧 热红外特征融合
 - 🚧 多传感器数据融合
@@ -67,7 +67,7 @@ cd EmberGuard-AI-train
 
 2. **安装依赖**
 ```bash
-pip install ultralytics opencv-python pillow
+pip install ultralytics opencv-python pillow flask numpy
 ```
 
 3. **准备数据集**
@@ -77,58 +77,64 @@ pip install ultralytics opencv-python pillow
 
 4. **运行GUI界面**
 ```bash
-python scripts/run_gui.py
+python scripts/5_run_gui.py
 ```
 
 ---
-
 ## 📚 使用说明
-
+ 
+ 本项目脚本按执行顺序以编号命名，完整说明见 `scripts/README.md`。
+ 
 ### 1. 训练YOLOv8模型
 ```bash
-python scripts/train_model.py
+python scripts/1_train_yolo.py
 ```
 
 ### 2. 验证模型
 ```bash
-python scripts/validate_model.py
+python scripts/2_validate_yolo.py
 ```
 
 ### 3. 测试检测
 
+推荐使用 `scripts/8_detect_with_lstm.py`（支持仅YOLO或YOLO+LSTM，自动降级）。
+
 **图片检测**
 ```bash
-python scripts/test_model.py --source image.jpg
+python scripts/8_detect_with_lstm.py --source image.jpg
 ```
 
 **视频检测**
 ```bash
-python scripts/test_model.py --source video.mp4
+python scripts/8_detect_with_lstm.py --source video.mp4
 ```
 
 **摄像头实时检测**
 ```bash
-python scripts/test_model.py --source 0
+python scripts/8_detect_with_lstm.py --source 0
 ```
 
 ### 4. LSTM时序分析（新增）
 
 **准备训练数据**
 ```bash
-python scripts/prepare_lstm_data.py
+python scripts/3_prepare_lstm_data.py
 ```
 
 **训练LSTM模型**
 ```bash
-python scripts/train_lstm.py --data_dir datasets/lstm_data --epochs 50
+python scripts/4_train_lstm.py --data_dir datasets/lstm_data --epochs 50
 ```
 
-**测试YOLO+LSTM管道**
+**测试/对比（可选）**
 ```bash
-python scripts/test_pipeline.py
+python scripts/6_test_lstm.py
+python scripts/9_compare_yolo_lstm.py
 ```
 
-详细使用说明请参考：`emberguard/README.md`
+详细使用说明请参考：
+- `emberguard/README.md`
+- `scripts/README.md`
 
 ### 4.1 数字孪生Demo对比测试（digital-twin-web，新增）
 
@@ -138,6 +144,10 @@ python scripts/test_pipeline.py
 ```bash
 python digital-twin-web/backend/app.py
 ```
+
+首次运行前建议确认 Demo 视频路径：
+
+- `digital-twin-web/backend/app.py` 中 `_start_demo_devices()` 的 `demo_video` 默认是本机绝对路径，需要按你的机器修改为可用的视频文件路径。
 
 浏览器访问：
 
@@ -170,7 +180,6 @@ EXPERIMENT_PROFILE = 'yolo_lstm_denoise_fusion'
 - 重启后端（Ctrl+C 后重新运行）
 - 浏览器强刷（Ctrl+F5）
 
-
 ### 5. GUI界面使用
 运行GUI后可以：
 - 选择检测源（图片/视频/摄像头）
@@ -179,7 +188,6 @@ EXPERIMENT_PROFILE = 'yolo_lstm_denoise_fusion'
 - 保存检测结果
 
 ---
-
 ## 📁 项目结构
 
 ```
@@ -201,17 +209,20 @@ EmberGuard-AI-train/
 ├── models/                     # 预训练模型
 │   ├── yolov8n.pt
 │   └── yolo11n.pt
+│   └── lstm/                  # LSTM模型产物
 ├── runs/                       # 训练结果
 │   └── detect/train2/weights/
 │       └── best.pt            # 最佳YOLOv8模型
 ├── scripts/                    # 脚本文件
-│   ├── run_gui.py             # GUI启动脚本
-│   ├── train_model.py         # YOLO训练脚本
-│   ├── validate_model.py      # 验证脚本
-│   ├── test_model.py          # 测试脚本
-│   ├── prepare_lstm_data.py   # LSTM数据准备 ⭐新增
-│   ├── train_lstm.py          # LSTM训练脚本 ⭐新增
-│   └── test_pipeline.py       # 管道测试 ⭐新增
+│   ├── 1_train_yolo.py        # YOLO训练脚本
+│   ├── 2_validate_yolo.py     # 验证脚本
+│   ├── 3_prepare_lstm_data.py # LSTM数据准备 ⭐新增
+│   ├── 4_train_lstm.py        # LSTM训练脚本 ⭐新增
+│   ├── 5_run_gui.py           # GUI启动脚本
+│   ├── 6_test_lstm.py         # LSTM测试脚本
+│   ├── 8_detect_with_lstm.py  # YOLO/YOLO+LSTM 推理脚本
+│   ├── 9_compare_yolo_lstm.py # YOLO vs YOLO+LSTM 对比
+│   └── README.md              # 脚本说明（推荐先读）
 ├── UI/                         # GUI界面模块
 │   ├── gui_main.py            # 主界面
 │   ├── detection_processor.py # 检测处理器
@@ -230,14 +241,13 @@ EmberGuard-AI-train/
 - [x] GUI界面开发
 - [x] 基础检测功能
 
-### Phase 2: LSTM时序分析 🚧 (80%完成)
+### Phase 2: LSTM时序分析 🚧 (100%完成)
 - [x] 8维特征提取器
 - [x] LSTM模型架构（2层，211K参数）
 - [x] YOLO+LSTM检测管道
 - [x] 数据准备工具
 - [x] 训练脚本
-- [ ] 视频数据收集与标注
-- [ ] LSTM模型训练
+- [x] LSTM模型训练（模型产物见 `models/lstm/`）
 - [ ] GUI集成
 - [ ] 炊烟vs火灾烟雾区分测试
 
