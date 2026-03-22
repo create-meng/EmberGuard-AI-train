@@ -246,3 +246,9 @@ python scripts/test_model.py --source 0
 **最后更新**: 2026年2月6日  
 **项目状态**: 数据已准备，可以开始训练LSTM模型  
 **下一步**: `python scripts/3_prepare_lstm_data.py`
+## 2026-03 当前模型说明
+
+- 当前视频时序分类模型为 `YOLO + 2-layer LSTM + Temporal Attention Pooling`。
+- 注意力部分是轻量池化层，不是完整 Transformer 编码器，目的在于小样本条件下更稳妥地增强关键帧权重。
+- 默认训练配置已启用该机制；对照旧版时可使用 `scripts/4_train_lstm.py --disable_temporal_attention`。
+- 阅读本指南时，如发现历史段落写着“只取最后一个时间步输出”，请以本节说明为准。

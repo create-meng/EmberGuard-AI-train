@@ -156,6 +156,7 @@ def train_lstm_model(
     hidden_size=128,
     num_layers=2,
     dropout=0.3,
+    use_temporal_attention=True,
     batch_size=32,
     epochs=50,
     learning_rate=0.001,
@@ -235,7 +236,8 @@ def train_lstm_model(
         hidden_size=hidden_size,
         num_layers=num_layers,
         num_classes=metadata['num_classes'],
-        dropout=dropout
+        dropout=dropout,
+        use_temporal_attention=use_temporal_attention
     )
     
     print(f"模型参数: {sum(p.numel() for p in model.parameters())} 个")
@@ -490,6 +492,7 @@ def train_lstm_model(
         'hidden_size': hidden_size,
         'num_layers': num_layers,
         'dropout': dropout,
+        'use_temporal_attention': use_temporal_attention,
         'batch_size': batch_size,
         'epochs': epochs,
         'learning_rate': learning_rate,
@@ -523,6 +526,8 @@ def main():
                        help='LSTM层数')
     parser.add_argument('--dropout', type=float, default=0.3,
                        help='Dropout比例')
+    parser.add_argument('--disable_temporal_attention', action='store_true',
+                       help='Disable lightweight Temporal Attention Pooling and use last-timestep output only')
     parser.add_argument('--batch_size', type=int, default=32,
                        help='批次大小')
     parser.add_argument('--epochs', type=int, default=50,
@@ -611,6 +616,7 @@ def main():
         hidden_size=args.hidden_size,
         num_layers=args.num_layers,
         dropout=args.dropout,
+        use_temporal_attention=not args.disable_temporal_attention,
         batch_size=args.batch_size,
         epochs=args.epochs,
         learning_rate=args.lr,

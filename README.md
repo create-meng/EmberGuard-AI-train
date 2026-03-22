@@ -315,3 +315,10 @@ EmberGuard-AI-train/
 Made with ❤️ by EmberGuard Team
 
 </div>
+## 2026-03 架构更新
+
+- 当前时序分类头已从“只使用最后一个时间步的 LSTM 输出”升级为“LSTM + 轻量 Temporal Attention Pooling”。
+- 设计目标是更适合小样本视频场景：保留 LSTM 的时序建模能力，同时用极少参数对 30 帧序列做时间加权，增强对中间帧短暂火苗、闪现烟雾的关注。
+- 这不是 Transformer 式重注意力结构，新增参数仅为一个时间打分线性层，主要用于替代 `lstm_out[:, -1, :]` 的硬截取方式。
+- 新训练默认启用该机制；如需与旧版本做对照实验，可在训练时使用 `--disable_temporal_attention` 回退到旧版“最后时间步分类”。
+- 模型 checkpoint 与 `config.json` 已记录 `use_temporal_attention` 配置；旧 checkpoint 仍可兼容加载。

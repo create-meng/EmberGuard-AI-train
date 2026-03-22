@@ -2087,3 +2087,9 @@ python scripts/4_train_lstm.py --output_dir models/lstm/train2 --resume --epochs
 **项目状态**: ✅ 第一轮训练完成，准备第二轮优化训练  
 **代码质量**: 生产就绪  
 **下一步**: 开始第二轮训练，验证Fire识别率改进
+## 2026-03-22 - 文档同步说明
+
+- 当前生效的 LSTM 分类头已更新为：`2-layer LSTM + Temporal Attention Pooling + FC`。
+- 本次更新属于在原 YOLO+LSTM 主干上的轻量增强，不是引入重型注意力架构。
+- 训练脚本 `scripts/4_train_lstm.py` 默认启用该池化，并支持 `--disable_temporal_attention` 做消融对照。
+- 为避免改写历史记录，日志中较早阶段关于“最后时间步输出”或旧参数量的描述保留原样；请以本说明及最新代码为准。

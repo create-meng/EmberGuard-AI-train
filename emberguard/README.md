@@ -222,3 +222,10 @@ pipeline = FireDetectionPipeline(
 - 技术研究: `docs/TECHNICAL_RESEARCH.md`
 - 开发日志: `DEVELOPMENT_LOG.md`
 - 项目文档: `README.md`
+## 2026-03 当前有效架构说明
+
+- 当前 `LSTMFireClassifier` 采用 `2-layer LSTM + Temporal Attention Pooling + FC`。
+- 输入仍为 `(batch, 30, 8)`，输出仍为 3 分类：`[normal, smoke, fire]`。
+- 与旧版不同的是，模型不再只取最后一个时间步输出做分类，而是对全部时间步输出学习一组注意力权重，再做加权汇聚。
+- 这样更适合火焰/烟雾短时出现、主要发生在序列中段的样本，同时比重注意力架构更克制，更适合当前小样本数据规模。
+- 若需复现实验旧版行为，可在训练脚本中关闭该池化：`--disable_temporal_attention`。

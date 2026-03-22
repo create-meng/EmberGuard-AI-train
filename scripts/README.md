@@ -217,3 +217,9 @@ python scripts/5_run_gui.py
 - 开发日志: `../DEVELOPMENT_LOG.md`
 - LSTM模块: `../emberguard/README.md`
 - 技术研究: `../docs/TECHNICAL_RESEARCH.md`
+## 2026-03 训练脚本更新
+
+- `scripts/4_train_lstm.py` 现在默认启用轻量 `Temporal Attention Pooling`。
+- 该机制用于替代旧版“只使用最后一个时间步输出”的做法，适合小样本下提升对中间帧短暂火焰/烟雾特征的关注。
+- 如需做消融或回退旧结构，请添加参数：`--disable_temporal_attention`。
+- 训练产生的 `config.json` 会额外保存 `use_temporal_attention` 配置，便于复现实验。

@@ -87,7 +87,15 @@ class LSTMFireClassifier(nn.Module):
     输出: (batch, 3) - [无火, 烟雾, 火焰]
     """
     
-    def __init__(self, input_size=8, hidden_size=128, num_layers=2, num_classes=3, dropout=0.3):
+    def __init__(
+        self,
+        input_size=8,
+        hidden_size=128,
+        num_layers=2,
+        num_classes=3,
+        dropout=0.3,
+        use_temporal_attention=False,
+    ):
         """
         初始化LSTM模型
         
@@ -104,6 +112,7 @@ class LSTMFireClassifier(nn.Module):
         self.hidden_size = hidden_size
         self.num_layers = num_layers
         self.num_classes = num_classes
+        self.use_temporal_attention = use_temporal_attention
         
         # LSTM层
         self.lstm = nn.LSTM(
@@ -116,6 +125,11 @@ class LSTMFireClassifier(nn.Module):
         
         # Dropout层
         self.dropout = nn.Dropout(dropout)
+
+        # Lightweight temporal pooling: keep parameters small for low-data regimes.
+        self.temporal_attention = None
+        if self.use_temporal_attention:
+            self.temporal_attention = nn.Linear(hidden_size, 1)
         
         # 全连接层
         self.fc1 = nn.Linear(hidden_size, 64)
@@ -135,11 +149,16 @@ class LSTMFireClassifier(nn.Module):
         # LSTM
         lstm_out, (h_n, c_n) = self.lstm(x)
         
-        # 取最后一个时间步的输出
-        last_output = lstm_out[:, -1, :]
-        
+        if self.use_temporal_attention:
+            attn_scores = self.temporal_attention(lstm_out).squeeze(-1)
+            attn_weights = torch.softmax(attn_scores, dim=1)
+            pooled_output = torch.sum(lstm_out * attn_weights.unsqueeze(-1), dim=1)
+        else:
+            # Fallback for old checkpoints trained with last-timestep classification.
+            pooled_output = lstm_out[:, -1, :]
+
         # Dropout
-        out = self.dropout(last_output)
+        out = self.dropout(pooled_output)
         
         # 全连接层
         out = self.fc1(out)
@@ -339,7 +358,8 @@ class LSTMTrainer:
                 'input_size': self.model.input_size,
                 'hidden_size': self.model.hidden_size,
                 'num_layers': self.model.num_layers,
-                'num_classes': self.model.num_classes
+                'num_classes': self.model.num_classes,
+                'use_temporal_attention': self.model.use_temporal_attention
             }
         }, path)
         print(f"模型已保存到: {path}")
@@ -363,7 +383,8 @@ class LSTMTrainer:
             input_size=config['input_size'],
             hidden_size=config['hidden_size'],
             num_layers=config['num_layers'],
-            num_classes=config['num_classes']
+            num_classes=config['num_classes'],
+            use_temporal_attention=config.get('use_temporal_attention', False)
         )
         
         model.load_state_dict(checkpoint['model_state_dict'])
@@ -384,7 +405,8 @@ if __name__ == "__main__":
         input_size=8,
         hidden_size=128,
         num_layers=2,
-        num_classes=3
+        num_classes=3,
+        use_temporal_attention=True
     )
     
     print(f"模型参数: {sum(p.numel() for p in model.parameters())} 个")
