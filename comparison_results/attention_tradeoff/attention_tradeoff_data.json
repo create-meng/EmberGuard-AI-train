@@ -1,0 +1,23 @@
+{
+  "title": "性能-速度折中图",
+  "x_axis": {
+    "key": "fps",
+    "label": "FPS"
+  },
+  "y_axis": {
+    "key": "f1_score",
+    "label": "F1-score"
+  },
+  "models": [
+    {
+      "name": "YOLO+LSTM",
+      "fps": 28.6,
+      "f1_score": 0.913
+    },
+    {
+      "name": "YOLO+LSTM+Attention",
+      "fps": 27.9,
+      "f1_score": 0.956
+    }
+  ]
+}

@@ -17,27 +17,31 @@ class ConfigManager:
             config_path: 配置文件路径
         """
         self.config_path = Path(__file__).parent / config_path
+        self.repo_root = (Path(__file__).resolve().parent / '../..').resolve()
         self.config = {}
         # 自动加载配置
         self.load_config()
     
     def load_config(self):
-        """加载配置文件"""
+        """???????????????????????????"""
         try:
             if self.config_path.exists():
                 with open(self.config_path, 'r', encoding='utf-8') as f:
                     self.config = json.load(f)
+                self._normalize_paths()
                 return True
             else:
-                print(f"✗ 配置文件不存在: {self.config_path}")
+                print(f"??????????????????????????????????? {self.config_path}")
                 self.config = self._get_default_config()
+                self._normalize_paths()
                 self.save_config(self.config)
                 return False
         except Exception as e:
-            print(f"✗ 配置加载失败: {e}")
+            print(f"???????????????????????????????: {e}")
             self.config = self._get_default_config()
+            self._normalize_paths()
             return False
-    
+
     def save_config(self, config):
         """保存配置到文件"""
         try:
@@ -84,3 +88,25 @@ class ConfigManager:
                 "conf_threshold": 0.25
             }
         }
+
+    def _abs_repo_path(self, p: str):
+        if not p:
+            return p
+        try:
+            if Path(p).is_absolute():
+                return str(Path(p))
+        except Exception:
+            return p
+        return str((self.repo_root / p).resolve())
+
+    def _normalize_paths(self):
+        """Normalize any relative paths in config to repo-root absolute paths."""
+        if not isinstance(self.config, dict):
+            return
+        models = self.config.get('models')
+        if isinstance(models, dict):
+            if 'yolo' in models:
+                models['yolo'] = self._abs_repo_path(models.get('yolo'))
+            if 'lstm' in models:
+                models['lstm'] = self._abs_repo_path(models.get('lstm'))
+

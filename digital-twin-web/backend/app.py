@@ -11,8 +11,21 @@ import cv2
 import numpy as np
 
 
-ALARM_LOG_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), 'alarm_logs.json'))
-ALARM_TREND_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), 'alarm_trend.json'))
+_HERE = os.path.abspath(os.path.dirname(__file__))
+_REPO_ROOT = os.path.abspath(os.path.join(_HERE, '../..'))
+
+
+def _abs_repo_path(p: str) -> str:
+    """Resolve a path relative to repo root when a relative path is given."""
+    if not p:
+        return p
+    if os.path.isabs(p):
+        return p
+    return os.path.abspath(os.path.join(_REPO_ROOT, p))
+
+
+ALARM_LOG_PATH = os.path.abspath(os.path.join(_HERE, 'alarm_logs.json'))
+ALARM_TREND_PATH = os.path.abspath(os.path.join(_HERE, 'alarm_trend.json'))
 _JSON_FILE_LOCK = threading.Lock()
 ALARM_LOG_MAX_ITEMS = 20
 ALARM_TREND_MAX_POINTS = 120
@@ -50,8 +63,8 @@ sensor_manager = SensorManager(socketio=None, app=app)
 # 获取模型路径
 config = config_manager.get_config()
 models = config.get('models', {})
-yolo_path = models.get('yolo', 'runs/detect/train2/weights/best.pt')
-lstm_path = models.get('lstm', 'models/lstm/best.pt')
+yolo_path = _abs_repo_path(models.get('yolo', 'runs/detect/train2/weights/best.pt'))
+lstm_path = _abs_repo_path(models.get('lstm', 'models/lstm/best.pt'))
 
 # 是否显示技术字段（即如何得到最终告警）
 SHOW_TECH_DETAILS_DEFAULT = False
@@ -78,8 +91,7 @@ detection_engines = {
 
 def _start_demo_devices():
     # 多路演示：3个独立的视频源 + 单个传感器
-    demo_video = r"D:\a安建大\大二\下学期\比赛\挑战杯\院赛\AI消防\ultralytics-main\datasets\fire_videos_organized\fire\archive_fire2.mp4"
-
+    demo_video = _abs_repo_path(os.path.join('datasets', 'fire_videos_organized', 'fire', 'archive_fire2.mp4'))
     # 启动3个独立的摄像头
     camera_configs = [
         {'id': 'demo_cam_001', 'name': '摄像头01', 'point_id': 'CAM-01'},
@@ -336,14 +348,6 @@ def demo_events():
 
 
 def _mjpeg_response(camera_id=None):
-    # 立即输出的占位帧：保证浏览器能立刻拿到首字节
-    try:
-        _placeholder_img = np.zeros((1, 1, 3), dtype=np.uint8)
-        _ok, _buf = cv2.imencode('.jpg', _placeholder_img, [int(cv2.IMWRITE_JPEG_QUALITY), 60])
-        placeholder_jpeg = _buf.tobytes() if _ok else b''
-    except Exception:
-        placeholder_jpeg = b''
-
     # 根据camera_id选择对应的检测引擎
     engine = None
     if camera_id and camera_id in detection_engines:
@@ -359,10 +363,6 @@ def _mjpeg_response(camera_id=None):
             except Exception:
                 pass
         try:
-            if placeholder_jpeg:
-                yield (b'--frame\r\n'
-                       b'Content-Type: image/jpeg\r\n\r\n' + placeholder_jpeg + b'\r\n')
-
             while True:
                 try:
                     if engine:
@@ -371,7 +371,7 @@ def _mjpeg_response(camera_id=None):
                             yield (b'--frame\r\n'
                                    b'Content-Type: image/jpeg\r\n\r\n' + jpeg + b'\r\n')
                         else:
-                            time.sleep(0.05)
+                            time.sleep(0.01)
                     else:
                         time.sleep(0.1)
                 except GeneratorExit:

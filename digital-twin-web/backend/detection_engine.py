@@ -61,26 +61,26 @@ class DetectionEngine:
 
         # 推理节流：空闲/有人观看时不同频率。
         # 边缘设备更怕“打开网页后负载骤增”，因此 active 默认更保守。
-        self.infer_interval_idle = 0.25
-        self.infer_interval_active = 0.22
+        self.infer_interval_idle = 0.3
+        self.infer_interval_active = 0.3  # 保持一致，避免浏览器打开时突然加速
         self.infer_interval = self.infer_interval_idle
 
         # MJPEG 输出：没有观看者时不做 JPEG 编码（或极低频），大幅降低 CPU 开销
         self.stream_fps_idle = 0
-        self.stream_fps_active = 6
+        self.stream_fps_active = 10  # 提升帧率保证流畅
         self.stream_fps = self.stream_fps_idle
 
-        self.stream_jpeg_quality_active = 72
+        self.stream_jpeg_quality_active = 60  # 降低质量减少编码时间
 
         # CPU 加速：推理用更小尺寸，bbox 缩放回 640x480
-        self.infer_size = (320, 240)
+        self.infer_size = (256, 192)  # 进一步降低分辨率，减少推理时间
 
         self.enable_frame_denoise = bool(enable_frame_denoise)
         self.frame_denoise_alpha = 0.78
         self._frame_denoise_state = None
 
         # 终端输出节流
-        self.log_interval_sec = 1.0
+        self.log_interval_sec = 3.0  # 进一步降低日志频率
 
         self.pipeline_available = bool(PIPELINE_AVAILABLE)
         if not self.pipeline_available and not os.environ.get('SILENT_MODE'):

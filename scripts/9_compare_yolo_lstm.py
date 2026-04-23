@@ -558,14 +558,73 @@ class ComparisonTester:
         
         x = np.arange(len(cat_names))
         width = 0.35
-        ax.bar(x - width/2, yolo_confs, width, label='YOLO', color='#3498db', alpha=0.8)
-        ax.bar(x + width/2, lstm_confs, width, label='YOLO+LSTM', color='#e74c3c', alpha=0.8)
-        ax.set_ylabel('Average Confidence', fontsize=12)
+        
+        # 使用现代配色方案
+        from matplotlib.patches import Patch
+        import matplotlib.patches as mpatches
+        n_cats = len(cat_names)
+        
+        # 定义渐变色 - 每个柱子从深到浅
+        # YOLO: 蓝色渐变
+        yolo_colors_bottom = ['#2471A3', '#1F618D', '#1A5276'][:n_cats]  # 深蓝
+        yolo_colors_top = ['#5DADE2', '#85C1E9', '#AED6F1'][:n_cats]     # 浅蓝
+        
+        # YOLO+LSTM: 橙色渐变
+        lstm_colors_bottom = ['#D35400', '#CA6F1E', '#BA4A00'][:n_cats]  # 深橙
+        lstm_colors_top = ['#F39C12', '#F8B739', '#FAD7A0'][:n_cats]     # 浅橙
+        
+        # 绘制带渐变效果的柱状图
+        for i in range(n_cats):
+            # YOLO柱子
+            bar1 = ax.bar(x[i] - width/2, yolo_confs[i], width, 
+                         color=yolo_colors_bottom[i], edgecolor='#1B4F72', 
+                         linewidth=1.5, alpha=0.95)
+            # 添加渐变效果
+            for rect in bar1:
+                height = rect.get_height()
+                gradient = ax.imshow([[0, 1]], cmap=plt.cm.Blues, 
+                                   extent=[rect.get_x(), rect.get_x() + rect.get_width(),
+                                          rect.get_y(), rect.get_y() + height],
+                                   aspect='auto', zorder=0, alpha=0.6,
+                                   vmin=0.3, vmax=0.9)
+            
+            # YOLO+LSTM柱子
+            bar2 = ax.bar(x[i] + width/2, lstm_confs[i], width, 
+                         color=lstm_colors_bottom[i], edgecolor='#7E5109', 
+                         linewidth=1.5, alpha=0.95)
+            # 添加渐变效果
+            for rect in bar2:
+                height = rect.get_height()
+                gradient = ax.imshow([[0, 1]], cmap=plt.cm.Oranges, 
+                                   extent=[rect.get_x(), rect.get_x() + rect.get_width(),
+                                          rect.get_y(), rect.get_y() + height],
+                                   aspect='auto', zorder=0, alpha=0.6,
+                                   vmin=0.3, vmax=0.9)
+        
+        # 添加数值标签
+        for i in range(n_cats):
+            if yolo_confs[i] > 0:
+                ax.text(x[i] - width/2, yolo_confs[i] + 0.02,
+                       f'{yolo_confs[i]:.2f}', ha='center', va='bottom', 
+                       fontsize=9, fontweight='bold', color='#1B4F72')
+            if lstm_confs[i] > 0:
+                ax.text(x[i] + width/2, lstm_confs[i] + 0.02,
+                       f'{lstm_confs[i]:.2f}', ha='center', va='bottom', 
+                       fontsize=9, fontweight='bold', color='#7E5109')
+        
+        # 图例
+        legend_elements = [
+            Patch(facecolor='#5DADE2', edgecolor='#1B4F72', linewidth=1.5, label='YOLO'),
+            Patch(facecolor='#F39C12', edgecolor='#7E5109', linewidth=1.5, label='YOLO+LSTM')
+        ]
+        ax.legend(handles=legend_elements, loc='upper left', framealpha=0.9)
+        
+        ax.set_ylabel('Average Confidence', fontsize=12, fontweight='bold')
         ax.set_title('Average Confidence by Category', fontsize=14, fontweight='bold')
         ax.set_xticks(x)
-        ax.set_xticklabels(cat_names)
-        ax.legend()
-        ax.grid(axis='y', alpha=0.3)
+        ax.set_xticklabels(cat_names, fontsize=10)
+        ax.set_ylim(0, max(max(yolo_confs), max(lstm_confs)) * 1.15)
+        ax.grid(axis='y', alpha=0.3, linestyle='--', linewidth=0.7, zorder=1)
         
         # 2. 检测帧数统计
         ax = axes[0, 1]
@@ -605,15 +664,85 @@ class ComparisonTester:
             lstm_correct_by_cat.append(100 * lstm_c / lstm_t if lstm_t > 0 else 0)
         
         x = np.arange(len(cat_names))
-        ax.bar(x - width/2, yolo_correct_by_cat, width, label='YOLO', color='#3498db', alpha=0.8)
-        ax.bar(x + width/2, lstm_correct_by_cat, width, label='YOLO+LSTM', color='#e74c3c', alpha=0.8)
-        ax.set_ylabel('Accuracy (%)', fontsize=12)
+        
+        # 淡色系配色方案
+        for i in range(n_cats):
+            # YOLO柱子 - 淡绿渐变（从淡绿到极淡绿）
+            if yolo_correct_by_cat[i] > 0:
+                bar_x = x[i] - width/2
+                bar_height = yolo_correct_by_cat[i]
+                
+                n_segments = 50
+                for j in range(n_segments):
+                    y_start = j * bar_height / n_segments
+                    segment_height = bar_height / n_segments
+                    ratio = j / n_segments
+                    # 从 #81C784 (淡绿) 到 #E8F5E9 (极淡绿)
+                    r = int(129 + (232 - 129) * ratio)
+                    g = int(199 + (245 - 199) * ratio)
+                    b = int(132 + (233 - 132) * ratio)
+                    color = f'#{r:02x}{g:02x}{b:02x}'
+                    
+                    segment = Rectangle((bar_x, y_start), width, segment_height,
+                                      facecolor=color, edgecolor='none', zorder=1)
+                    ax.add_patch(segment)
+                
+                rect = Rectangle((bar_x, 0), width, bar_height, 
+                               linewidth=1.2, edgecolor='#66BB6A', 
+                               facecolor='none', zorder=2)
+                ax.add_patch(rect)
+            
+            # YOLO+LSTM柱子 - 淡粉渐变（从淡粉到极淡粉）
+            if lstm_correct_by_cat[i] > 0:
+                bar_x = x[i] + width/2
+                bar_height = lstm_correct_by_cat[i]
+                
+                n_segments = 50
+                for j in range(n_segments):
+                    y_start = j * bar_height / n_segments
+                    segment_height = bar_height / n_segments
+                    ratio = j / n_segments
+                    # 从 #F48FB1 (淡粉) 到 #FCE4EC (极淡粉)
+                    r = int(244 + (252 - 244) * ratio)
+                    g = int(143 + (228 - 143) * ratio)
+                    b = int(177 + (236 - 177) * ratio)
+                    color = f'#{r:02x}{g:02x}{b:02x}'
+                    
+                    segment = Rectangle((bar_x, y_start), width, segment_height,
+                                      facecolor=color, edgecolor='none', zorder=1)
+                    ax.add_patch(segment)
+                
+                rect = Rectangle((bar_x, 0), width, bar_height, 
+                               linewidth=1.2, edgecolor='#EC407A', 
+                               facecolor='none', zorder=2)
+                ax.add_patch(rect)
+        
+        # 添加数值标签
+        for i in range(n_cats):
+            if yolo_correct_by_cat[i] > 0:
+                ax.text(x[i] - width/2, yolo_correct_by_cat[i] + 2,
+                       f'{yolo_correct_by_cat[i]:.0f}%', ha='center', va='bottom', 
+                       fontsize=9, fontweight='bold', color='#4CAF50')
+            if lstm_correct_by_cat[i] > 0:
+                ax.text(x[i] + width/2, lstm_correct_by_cat[i] + 2,
+                       f'{lstm_correct_by_cat[i]:.0f}%', ha='center', va='bottom', 
+                       fontsize=9, fontweight='bold', color='#E91E63')
+        
+        # 图例
+        from matplotlib.patches import Patch
+        legend_elements = [
+            Patch(facecolor='#A5D6A7', edgecolor='#66BB6A', linewidth=1.2, label='YOLO'),
+            Patch(facecolor='#F8BBD0', edgecolor='#EC407A', linewidth=1.2, label='YOLO+LSTM')
+        ]
+        ax.legend(handles=legend_elements, loc='lower left', framealpha=0.9)
+        
+        ax.set_ylabel('Accuracy (%)', fontsize=12, fontweight='bold')
         ax.set_title('Accuracy by Category', fontsize=14, fontweight='bold')
         ax.set_xticks(x)
-        ax.set_xticklabels(cat_names)
-        ax.legend()
-        ax.set_ylim(0, 100)
-        ax.grid(axis='y', alpha=0.3)
+        ax.set_xticklabels(cat_names, fontsize=10)
+        ax.set_xlim(-0.5, len(cat_names) - 0.5)
+        ax.set_ylim(0, 110)
+        ax.grid(axis='y', alpha=0.3, linestyle='--', linewidth=0.7, zorder=0)
         
         # 4. 处理速度对比
         ax = axes[1, 1]

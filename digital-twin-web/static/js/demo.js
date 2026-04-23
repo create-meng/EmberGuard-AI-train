@@ -511,11 +511,24 @@
     }
 
     if (ui.camLayer) {
+      // 捕获阶段阻断冒泡，避免与地图区域其它逻辑冲突；便于触控优先响应点位
+      ui.camLayer.addEventListener(
+        'pointerdown',
+        (e) => {
+          const btn = e.target?.closest?.('.dt-cam-point');
+          if (!btn) return;
+          e.stopPropagation();
+        },
+        true
+      );
+
       ui.camLayer.addEventListener('click', (e) => {
         const btn = e.target?.closest?.('.dt-cam-point');
         if (!btn) return;
+        e.stopPropagation();
         const cameraId = btn.getAttribute('data-camera-id') || null;
-        // 点位互不关联：点击即切换当前通道
+        if (!cameraId) return;
+        // 与同点位重复点击：仍须打开弹窗并刷新流（setActiveCamera 会因相同 id 提前返回）
         setActiveCamera(cameraId);
         openVideoModal(cameraId);
       });

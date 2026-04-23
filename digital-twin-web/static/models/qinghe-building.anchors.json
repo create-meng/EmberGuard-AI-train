@@ -1,0 +1,24 @@
+{
+  "version": 1,
+  "_generatedBy": "scripts/compute-qinghe-cam-anchors.mjs",
+  "anchors": {
+    "CAM-01": {
+      "bind": "modelLocal",
+      "x": -37.39994,
+      "y": 0.60648,
+      "z": -11.26121
+    },
+    "CAM-02": {
+      "bind": "modelLocal",
+      "x": -8.85454,
+      "y": 15.17443,
+      "z": -4.88859
+    },
+    "CAM-03": {
+      "bind": "modelLocal",
+      "x": 25.39993,
+      "y": 5.90648,
+      "z": -9.98669
+    }
+  }
+}
