@@ -7,11 +7,13 @@ from queue import Queue
 import os
 import cv2
 import sys
+import numpy as np
+import torch
 
 # 处理相对导入和绝对导入
 try:
     # 尝试相对导入（当作为包的一部分运行时）
-    from .config import MODEL_PATH, WINDOW_TITLE, WINDOW_SIZE, DND_AVAILABLE, DND_FILES
+    from .config import MODEL_PATH, WINDOW_TITLE, WINDOW_SIZE, DND_AVAILABLE, DND_FILES, GUI_QUEUE_INTERVAL, LIVE_DETECTION_IMGSZ, LIVE_PLOT_LABELS, LIVE_PLOT_CONF, LIVE_PLOT_LINE_WIDTH, LIVE_SAVE_QUEUE_SIZE
     from .detection_ui import DetectionUI
     from .gui_utils import ThreadSafeGUIUpdater
     from .detection_processor import DetectionProcessor
@@ -20,7 +22,7 @@ except ImportError:
     # 如果相对导入失败，使用绝对导入（直接运行时）
     # 添加父目录到路径
     sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-    from hys.config import MODEL_PATH, WINDOW_TITLE, WINDOW_SIZE, DND_AVAILABLE, DND_FILES
+    from hys.config import MODEL_PATH, WINDOW_TITLE, WINDOW_SIZE, DND_AVAILABLE, DND_FILES, GUI_QUEUE_INTERVAL, LIVE_DETECTION_IMGSZ, LIVE_PLOT_LABELS, LIVE_PLOT_CONF, LIVE_PLOT_LINE_WIDTH, LIVE_SAVE_QUEUE_SIZE
     from hys.detection_ui import DetectionUI
     from hys.gui_utils import ThreadSafeGUIUpdater
     from hys.detection_processor import DetectionProcessor
@@ -41,6 +43,7 @@ class YOLODetectionGUI:
         self.model_path = MODEL_PATH
         self.yolo = None
         self.model_loaded = False
+        self.runtime_config = {}
         
         # 加载YOLO模型
         self.load_model(self.model_path)
@@ -75,7 +78,7 @@ class YOLODetectionGUI:
         # 线程安全的GUI更新队列
         self.gui_queue = Queue()
         self.gui_updater = ThreadSafeGUIUpdater(self.root, self.gui_queue)
-        self.root.after(100, self.gui_updater.process_gui_queue)
+        self.root.after(GUI_QUEUE_INTERVAL, self.gui_updater.process_gui_queue)
         
         # UI组件引用
         self.ui_components = {}
@@ -92,12 +95,46 @@ class YOLODetectionGUI:
         """加载YOLO模型"""
         try:
             self.yolo = YOLO(model_path, task="detect")
+            self.runtime_config = self._build_runtime_config()
+
+            try:
+                self.yolo.fuse()
+            except Exception:
+                pass
+
+            try:
+                dummy = np.zeros((LIVE_DETECTION_IMGSZ, LIVE_DETECTION_IMGSZ, 3), dtype=np.uint8)
+                self.yolo.predict(
+                    dummy,
+                    verbose=False,
+                    conf=0.25,
+                    device=self.runtime_config.get('device'),
+                    imgsz=self.runtime_config.get('imgsz'),
+                    half=self.runtime_config.get('half', False)
+                )
+            except Exception:
+                pass
+
             self.model_path = model_path
             self.model_loaded = True
             return True
         except Exception as e:
             self.model_loaded = False
             messagebox.showerror("错误", f"无法加载YOLO模型: {str(e)}")
+
+    def _build_runtime_config(self):
+        """构建实时检测运行参数。"""
+        device = 0 if torch.cuda.is_available() else 'cpu'
+        return {
+            'device': device,
+            'imgsz': LIVE_DETECTION_IMGSZ,
+            'half': bool(torch.cuda.is_available()),
+            'stream_buffer': False,
+            'plot_labels': LIVE_PLOT_LABELS,
+            'plot_conf': LIVE_PLOT_CONF,
+            'plot_line_width': LIVE_PLOT_LINE_WIDTH,
+            'save_queue_size': LIVE_SAVE_QUEUE_SIZE,
+        }
     
     def select_model(self):
         """选择模型文件"""
@@ -338,7 +375,8 @@ class YOLODetectionGUI:
             self.buttons,
             ui_dict['status_label'],
             ui_dict['info_text'],
-            ui_dict['video_label']
+            ui_dict['video_label'],
+            runtime_config=self.runtime_config
         )
         
         # 设置保存文件夹（仅在屏幕和摄像头检测模式下）
@@ -606,4 +644,3 @@ class YOLODetectionGUI:
         if self.is_running:
             self.stop_detection()
         self.root.destroy()
-

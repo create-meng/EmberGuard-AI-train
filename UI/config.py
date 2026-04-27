@@ -31,7 +31,14 @@ MAX_DISPLAY_HEIGHT = 600
 MAX_INFO_LINES = 50
 
 # GUI更新队列处理间隔（毫秒）
-GUI_QUEUE_INTERVAL = 100
+GUI_QUEUE_INTERVAL = 15
+
+# 实时检测性能配置
+LIVE_DETECTION_IMGSZ = 256
+LIVE_PLOT_LABELS = False
+LIVE_PLOT_CONF = False
+LIVE_PLOT_LINE_WIDTH = 1
+LIVE_SAVE_QUEUE_SIZE = 8
 
 # 默认检测参数
 DEFAULT_CONF = 0.25  # 默认置信度阈值 (0-1)
@@ -39,4 +46,3 @@ DEFAULT_IOU = 0.45   # 默认IoU阈值 (0-1)
 
 # 默认保存文件夹
 DEFAULT_SAVE_DIR = "detection_saves"  # 默认检测结果保存文件夹
-

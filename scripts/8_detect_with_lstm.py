@@ -15,7 +15,7 @@ sys.path.insert(0, str(Path(__file__).parent.parent))
 from emberguard.pipeline import FireDetectionPipeline
 
 
-def detect_image(pipeline, image_path, output_path=None, show=True):
+def detect_image(pipeline, image_path, output_path=None, show=True, conf_threshold=0.25):
     """
     检测单张图片
     
@@ -40,7 +40,7 @@ def detect_image(pipeline, image_path, output_path=None, show=True):
     
     # 检测（重复30次填充缓冲区）
     for _ in range(30):
-        result = pipeline.detect_frame(img)
+        result = pipeline.detect_frame(img, conf_threshold=conf_threshold)
     
     # 打印结果
     print(f"\n🔥 检测结果:")
@@ -81,7 +81,7 @@ def detect_image(pipeline, image_path, output_path=None, show=True):
         cv2.destroyAllWindows()
 
 
-def detect_video(pipeline, video_path, output_path=None, show=True):
+def detect_video(pipeline, video_path, output_path=None, show=True, conf_threshold=0.25):
     """
     检测视频
     
@@ -135,7 +135,7 @@ def detect_video(pipeline, video_path, output_path=None, show=True):
             break
         
         # 检测
-        result = pipeline.detect_frame(frame)
+        result = pipeline.detect_frame(frame, conf_threshold=conf_threshold)
         
         # 统计LSTM预测
         if 'lstm_prediction' in result:
@@ -218,7 +218,7 @@ def detect_video(pipeline, video_path, output_path=None, show=True):
         print(f"\n💾 结果已保存: {output_path}")
 
 
-def detect_camera(pipeline, camera_id=0):
+def detect_camera(pipeline, camera_id=0, conf_threshold=0.25):
     """
     检测摄像头
     
@@ -261,7 +261,7 @@ def detect_camera(pipeline, camera_id=0):
             break
         
         # 检测
-        result = pipeline.detect_frame(frame)
+        result = pipeline.detect_frame(frame, conf_threshold=conf_threshold)
         
         # 绘制结果
         frame_vis = pipeline._draw_results(frame, result)
@@ -343,21 +343,21 @@ def main():
     
     # 摄像头
     if source.isdigit():
-        detect_camera(pipeline, int(source))
+        detect_camera(pipeline, int(source), conf_threshold=args.conf)
     
     # 图片
     elif source.lower().endswith(('.jpg', '.jpeg', '.png', '.bmp', '.webp')):
         if not Path(source).exists():
             print(f"\n❌ 图片不存在: {source}")
             return
-        detect_image(pipeline, source, args.output, not args.no_show)
+        detect_image(pipeline, source, args.output, not args.no_show, conf_threshold=args.conf)
     
     # 视频
     elif source.lower().endswith(('.mp4', '.avi', '.mov', '.mkv', '.flv')):
         if not Path(source).exists():
             print(f"\n❌ 视频不存在: {source}")
             return
-        detect_video(pipeline, source, args.output, not args.no_show)
+        detect_video(pipeline, source, args.output, not args.no_show, conf_threshold=args.conf)
     
     else:
         print(f"\n❌ 不支持的输入格式: {source}")

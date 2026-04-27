@@ -1,31 +1,56 @@
-(() => {
-  const EXPERIMENT_PROFILE = (typeof window !== 'undefined' && window.EXPERIMENT_PROFILE) ? window.EXPERIMENT_PROFILE : 'yolo_lstm_denoise_fusion';
+﻿(() => {
+  const EXPERIMENT_PROFILE = (typeof window !== 'undefined' && window.EXPERIMENT_PROFILE)
+    ? window.EXPERIMENT_PROFILE
+    : 'yolo_lstm_denoise_fusion';
 
-  const PROFILE_CFG = {
-    yolo: { fusion: false, source: 'yolo' },
-    yolo_lstm: { fusion: false, source: 'lstm' },
-    yolo_lstm_denoise: { fusion: false, source: 'lstm' },
-    yolo_lstm_fusion: { fusion: true, source: 'fusion' },
-    yolo_lstm_denoise_fusion: { fusion: true, source: 'fusion' },
-  };
-
-  const _profile = PROFILE_CFG[EXPERIMENT_PROFILE] || PROFILE_CFG.yolo_lstm_denoise_fusion;
   const els = {
-    videoImg: document.getElementById('videoImg'),
-    overlay: document.getElementById('overlay'),
-    siteIntroText: document.getElementById('siteIntroText'),
-    sensorList: document.getElementById('sensorList'),
     headerTime: document.getElementById('headerTime'),
-    finalStatus: document.getElementById('finalStatus'),
-    finalReason: document.getElementById('finalReason'),
+    headerOnlineCount: document.getElementById('headerOnlineCount'),
+    headerAlertCount: document.getElementById('headerAlertCount'),
+    headerRiskLevel: document.getElementById('headerRiskLevel'),
     envTemp: document.getElementById('envTemp'),
     envHum: document.getElementById('envHum'),
     metricYoloLatency: document.getElementById('metricYoloLatency'),
     metricFps: document.getElementById('metricFps'),
     metricLstm: document.getElementById('metricLstm'),
+    metricAlarmFire: document.getElementById('metricAlarmFire'),
+    metricAlarmSmoke: document.getElementById('metricAlarmSmoke'),
+    metricAlarmTotal: document.getElementById('metricAlarmTotal'),
+    currentViewTitle: document.getElementById('currentViewTitle'),
+    currentViewHint: document.getElementById('currentViewHint'),
+    detailPanelTitle: document.getElementById('detailPanelTitle'),
+    btnBackToOverview: document.getElementById('btnBackToOverview'),
+    overviewLayer: document.getElementById('overviewLayer'),
+    overviewViewport: document.getElementById('overviewViewport'),
+    mapBaseGrid: document.getElementById('mapBaseGrid'),
+    overviewWorld: document.getElementById('overviewWorld'),
+    detailFloatPanel: document.getElementById('detailFloatPanel'),
+    detailLayer: document.getElementById('detailLayer'),
+    camLayer: document.getElementById('camLayer'),
+    alarmList: document.getElementById('alarmList'),
+    buildingArchiveName: document.getElementById('buildingArchiveName'),
+    archiveYear: document.getElementById('archiveYear'),
+    archiveProtectionLevel: document.getElementById('archiveProtectionLevel'),
+    archiveStructureType: document.getElementById('archiveStructureType'),
+    archiveArea: document.getElementById('archiveArea'),
+    archiveKeyParts: document.getElementById('archiveKeyParts'),
+    aiRiskPanel: document.getElementById('aiRiskPanel'),
+    aiRiskScore: document.getElementById('aiRiskScore'),
+    aiRiskLevel: document.getElementById('aiRiskLevel'),
+    aiRiskSource: document.getElementById('aiRiskSource'),
+    aiRiskReason: document.getElementById('aiRiskReason'),
+    aiRiskTrend: document.getElementById('aiRiskTrend'),
+    videoModal: document.getElementById('videoModal'),
+    videoModalClose: document.getElementById('videoModalClose'),
+    videoModalTitle: document.getElementById('videoModalTitle'),
+    videoModalContent: document.getElementById('videoModalContent'),
+    videoModalDragHandle: document.getElementById('videoModalDragHandle'),
+    videoImg: document.getElementById('videoImg'),
+    overlay: document.getElementById('overlay'),
+    finalStatus: document.getElementById('finalStatus'),
+    finalReason: document.getElementById('finalReason'),
+    siteIntroText: document.getElementById('siteIntroText'),
   };
-
-  const showTechDetails = !!(typeof window !== 'undefined' && window.SHOW_TECH_DETAILS_DEFAULT);
 
   const dom = {
     gaugeArcs: document.querySelectorAll('.dt-gauge__arc'),
@@ -33,10 +58,6 @@
     sparkLine: null,
     sparkFill: null,
     sparkHint: null,
-    donutShell: document.querySelector('.dt-donut-shell'),
-    donutArc: null,
-    donutValue: null,
-    donutLabel: null,
   };
 
   if (dom.sparkSvg) {
@@ -44,64 +65,31 @@
     dom.sparkFill = dom.sparkSvg.querySelector('.dt-sparkline__fill');
     dom.sparkHint = dom.sparkSvg.querySelector('.dt-sparkline__hint');
   }
-  if (dom.donutShell) {
-    dom.donutArc = dom.donutShell.querySelector('.dt-donut__glow');
-    dom.donutValue = dom.donutShell.querySelector('.dt-donut__value');
-    dom.donutLabel = dom.donutShell.querySelector('.dt-donut__label');
-  }
 
-  const ALARM_CFG = {
-    windowSize: 20,
-    onFireRatio: 0.35,
-    offFireRatio: 0.18,
-    onSmokeRatio: 0.45,
-    offSmokeRatio: 0.22,
-    yoloFireMinConf: 0.25,
-    yoloFireStrongConf: 0.7,
-    yoloFireStrongMinArea: 0.008,
-    yoloSmokeMinConf: 0.25,
-    yoloSmokeStrongConf: 0.7,
-    yoloSmokeStrongMinArea: 0.01,
+  const state = {
+    currentView: 'overview',
+    selectedBuildingId: null,
+    selectedCameraId: null,
+    overviewConfig: null,
+    payload: null,
+    eventSource: null,
+    trendPoints: [],
+    trendEwma: 0,
+    lastTrendPersistMs: 0,
+    alarmLogCache: [],
+    cameraStates: {},
+    streamRetryTimer: null,
+    streamRetryMs: 400,
+    streamRefreshTimer: null,
+    lastDetection: null,
+    lastModelKey: '',
+    mapView: { scale: 1, offsetX: 0, offsetY: 0, dragging: false, startX: 0, startY: 0, baseX: 0, baseY: 0 },
   };
 
-  let eventSource = null;
-  let lastDetectionSig = '';
-  let lastDetection = null;
-
-  let streamRetryTimer = null;
-  let streamRetryMs = 400;
-  let streamRefreshTimer = null;
-
-  // 为每个摄像头维护独立的状态
-  const cameraStates = {}; // key: cameraId, value: { alarmState, alarmSince, hist, ewmaFire, ewmaSmoke, lastDecisionReason, lastDetectionSig }
-
-  // 当前选中摄像头的状态（用于UI显示）
-  let alarmState = 'normal';
-  let alarmSince = 0;
-  let hist = [];
-  let ewmaFire = 0;
-  let ewmaSmoke = 0;
-  let lastDecisionReason = '-';
-
-  const ui = {
-    videoModal: document.getElementById('videoModal'),
-    videoModalClose: document.getElementById('videoModalClose'),
-    videoModalTitle: document.getElementById('videoModalTitle'),
-    videoModalContent: document.getElementById('videoModalContent'),
-    videoModalDragHandle: document.getElementById('videoModalDragHandle'),
-    camLayer: document.getElementById('camLayer'),
-    alarmList: document.getElementById('alarmList'),
+  const ALARM_LOG_CFG = {
+    maxItems: 20,
+    visibleMax: 6,
   };
-
-  const elsExtra = {
-    metricAlarmFire: document.getElementById('metricAlarmFire'),
-    metricAlarmSmoke: document.getElementById('metricAlarmSmoke'),
-    metricAlarmTotal: document.getElementById('metricAlarmTotal'),
-  };
-
-  let selectedCameraId = null;
-  let lastUiAlarm = null;
-  let currentAlarmLevel = 'normal';
 
   const TREND_CFG = {
     windowSize: 140,
@@ -110,55 +98,74 @@
     ewmaAlpha: 0.22,
   };
 
-  let trendSeries = [];
+  const STATIC_BUILDINGS = [
+    {
+      building_id: 'building_jingxiu',
+      name: '敬修堂',
+      model_url: '/static/models/qinghe-building.glb',
+      anchors_url: '/static/models/qinghe-building.anchors.json',
+      archive: { year: '清代', protection_level: '县级文物保护单位', structure_type: '砖木结构', area: '862.3㎡', key_parts: '屋顶、梁架、正厅明间' },
+      camera_ids: ['demo_cam_001'],
+      sensor_ids: []
+    },
+    {
+      building_id: 'building_zhenxing',
+      name: '振兴堂',
+      model_url: '/static/models/qinghe-building.glb',
+      anchors_url: '/static/models/qinghe-building.anchors.json',
+      archive: { year: '民国', protection_level: '一般保护建筑', structure_type: '穿斗式木构', area: '745.6㎡', key_parts: '戏台、厢房、木柱节点' },
+      camera_ids: ['demo_cam_002'],
+      sensor_ids: []
+    },
+    {
+      building_id: 'building_wenchang',
+      name: '文昌阁',
+      model_url: '/static/models/qinghe-building.glb',
+      anchors_url: '/static/models/qinghe-building.anchors.json',
+      archive: { year: '清末', protection_level: '历史建筑', structure_type: '木结构', area: '512.4㎡', key_parts: '阁楼、斗拱、檐口部位' },
+      camera_ids: ['demo_cam_003'],
+      sensor_ids: []
+    }
+  ];
 
-  const UI_TICK_MS = 500;
-  let lastUiTick = 0;
-  let lastHeavyRenderMs = 0;
+  const STATIC_OVERVIEW = { canvas: { width: 1400, height: 920 } };
 
-  let trendPoints = [];
-  let trendEwma = 0;
-  let lastTrendPersistMs = 0;
-
-  async function fetchTrendPoints() {
-    try {
-      const r = await fetch('/demo/alarm_trend', { cache: 'no-store' });
-      const j = await r.json();
-      const arr = Array.isArray(j?.points) ? j.points : [];
-      trendPoints = arr.map(x => Number(x)).filter(x => Number.isFinite(x));
-      if (trendPoints.length > TREND_CFG.windowSize) trendPoints = trendPoints.slice(-TREND_CFG.windowSize);
-      // 使用最后一点做 ewma 初值，避免刚启动突兀
-      if (trendPoints.length > 0) {
-        trendEwma = Number(trendPoints[trendPoints.length - 1]) || 0;
-      }
-      renderTrendSparkline();
-    } catch (e) {}
-  }
-
-  async function persistTrendPoints() {
-    try {
-      // 覆盖旧数据：只保留最新窗口点位（后端也会截断）
-      const windowPoints = trendPoints.slice(-TREND_CFG.visiblePoints);
-      await fetch('/demo/alarm_trend', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ mode: 'replace', points: windowPoints }),
-      });
-    } catch (e) {}
-  }
-
-  async function clearTrendPoints() {
-    try {
-      await fetch('/demo/alarm_trend', { method: 'DELETE' });
-    } catch (e) {}
-    trendPoints = [];
-    trendEwma = 0;
-    renderTrendSparkline();
+  function safeText(v, fallback = '-') {
+    if (v === undefined || v === null || v === '') return fallback;
+    return String(v);
   }
 
   function clamp(n, a, b) {
     const x = typeof n === 'number' ? n : 0;
     return Math.max(a, Math.min(b, x));
+  }
+
+  function normalizeCameraId(cameraId) {
+    const raw = safeText(cameraId, '').trim();
+    if (!raw) return null;
+    if (/^demo_cam_\d{3}$/i.test(raw)) return raw.toLowerCase();
+    const m = raw.match(/(\d{1,3})\s*$/);
+    if (!m) return raw;
+    return `demo_cam_${String(Number(m[1])).padStart(3, '0')}`;
+  }
+
+  function shortCameraId(cameraId) {
+    const raw = normalizeCameraId(cameraId) || '';
+    const m = raw.match(/(\d{1,3})$/);
+    if (!m) return raw || '-';
+    return `CAM-${String(Number(m[1])).padStart(2, '0')}`;
+  }
+
+  function getCameraState(cameraId) {
+    const id = normalizeCameraId(cameraId);
+    if (!id) return null;
+    if (!state.cameraStates[id]) {
+      state.cameraStates[id] = {
+        alarmState: 'normal',
+        finalReason: '-',
+      };
+    }
+    return state.cameraStates[id];
   }
 
   function setSvgDash(el, ratio, totalDash = 320) {
@@ -168,15 +175,420 @@
     el.style.strokeDasharray = `${filled} ${Math.max(0, totalDash - filled)}`;
   }
 
-  function renderEnvGauges(sensors) {
-    if (!Array.isArray(sensors)) sensors = [];
-    const temp = sensors.find(s => s?.type === 'temperature_sensor') || null;
-    const hum = sensors.find(s => s?.type === 'humidity_sensor') || null;
+  function localDateISO() {
+    const d = new Date();
+    const y = d.getFullYear();
+    const m = String(d.getMonth() + 1).padStart(2, '0');
+    const dd = String(d.getDate()).padStart(2, '0');
+    return `${y}-${m}-${dd}`;
+  }
 
+  function buildingList() {
+    return STATIC_BUILDINGS;
+  }
+
+  function getBuilding(buildingId) {
+    return STATIC_BUILDINGS.find((b) => b.building_id === buildingId) || null;
+  }
+
+  function cameraSnapshotsMap() {
+    const result = new Map();
+    const cameras = Array.isArray(state.payload?.cameras) ? state.payload.cameras : [];
+    for (const cam of cameras) {
+      const id = normalizeCameraId(cam?.camera_id);
+      if (!id) continue;
+      result.set(id, cam);
+    }
+    return result;
+  }
+
+  function sensorSnapshots() {
+    return Array.isArray(state.payload?.sensors) ? state.payload.sensors : [];
+  }
+
+  function sensorMap() {
+    const map = new Map();
+    for (const sensor of sensorSnapshots()) {
+      if (sensor?.id) map.set(sensor.id, sensor);
+    }
+    return map;
+  }
+
+  function buildingSnapshot(building) {
+    const cams = cameraSnapshotsMap();
+    const sensors = sensorMap();
+    const cameraSnapshots = (building?.camera_ids || [])
+      .map((id) => cams.get(normalizeCameraId(id)))
+      .filter(Boolean);
+    const sensorSnapshotsList = (building?.sensor_ids || [])
+      .map((id) => sensors.get(id))
+      .filter(Boolean);
+    return { building, cameraSnapshots, sensorSnapshots: sensorSnapshotsList };
+  }
+
+  function deriveCameraAlarmLevel(cameraSnapshot) {
+    const det = cameraSnapshot?.last_detection || null;
+    const level = safeText(det?.final_alarm, '').toLowerCase();
+    if (level === 'fire') return 'fire';
+    if (level === 'smoke') return 'smoke';
+    return 'normal';
+  }
+
+  function aggregateBuildingStatus(building) {
+    const snap = buildingSnapshot(building);
+    let primarySource = 'Sensor';
+    let primaryReason = '无异常';
+
+    for (const cam of snap.cameraSnapshots) {
+      const level = deriveCameraAlarmLevel(cam);
+      const camState = getCameraState(cam.camera_id);
+      if (camState) {
+        camState.alarmState = level;
+        camState.finalReason = safeText(cam?.last_detection?.final_reason, '-');
+      }
+      if (level === 'fire') {
+        return {
+          status: 'alarm',
+          primarySource: shortCameraId(cam.camera_id),
+          primaryReason: 'Fusion / ' + safeText(cam?.last_detection?.final_reason, 'YOLO 视觉识别'),
+        };
+      }
+      if (level === 'smoke') {
+        primarySource = shortCameraId(cam.camera_id);
+        primaryReason = 'Fusion / ' + safeText(cam?.last_detection?.final_reason, 'LSTM 趋势判定');
+      }
+    }
+
+    if (primarySource !== 'Sensor') {
+      return {
+        status: 'warning',
+        primarySource,
+        primaryReason,
+      };
+    }
+
+    const sensorAlert = snap.sensorSnapshots.find((sensor) => sensor?.status === 'alert');
+    if (sensorAlert) {
+      return {
+        status: 'attention',
+        primarySource: safeText(sensorAlert.name, 'Sensor'),
+        primaryReason: safeText(sensorAlert.type, 'sensor') + ' 超过阈值',
+      };
+    }
+
+    return {
+      status: 'normal',
+      primarySource: '多源数据',
+      primaryReason: 'YOLO / LSTM / Sensor 均正常',
+    };
+  }
+
+  function statusLabel(status) {
+    if (status === 'alarm') return '高风险';
+    if (status === 'warning') return '中高风险';
+    if (status === 'attention') return '中风险';
+    if (status === 'handling') return '处理中';
+    return '低风险';
+  }
+
+  function statusScore(status) {
+    if (status === 'alarm') return 92;
+    if (status === 'warning') return 72;
+    if (status === 'attention') return 48;
+    if (status === 'handling') return 80;
+    return 18;
+  }
+
+  function markerTone(status) {
+    if (status === 'alarm') return 'alarm';
+    if (status === 'warning') return 'warning';
+    if (status === 'attention') return 'attention';
+    return 'normal';
+  }
+
+  function updateMapViewport(reset = false) {
+    if (!els.overviewViewport || !els.overviewWorld) return;
+    const viewportRect = els.overviewViewport.getBoundingClientRect();
+    const worldWidth = els.overviewWorld.offsetWidth || viewportRect.width;
+    const worldHeight = els.overviewWorld.offsetHeight || viewportRect.height;
+
+    if (reset || !state.mapView.scale) {
+      state.mapView.scale = 1;
+      state.mapView.offsetX = 0;
+      state.mapView.offsetY = 0;
+    }
+
+    const scaledWidth = worldWidth * state.mapView.scale;
+    const scaledHeight = worldHeight * state.mapView.scale;
+    const limitX = Math.max(0, (scaledWidth - viewportRect.width) / 2);
+    const limitY = Math.max(0, (scaledHeight - viewportRect.height) / 2);
+
+    state.mapView.offsetX = Math.max(-limitX, Math.min(limitX, state.mapView.offsetX));
+    state.mapView.offsetY = Math.max(-limitY, Math.min(limitY, state.mapView.offsetY));
+
+    els.overviewWorld.style.transform = `translate(${state.mapView.offsetX}px, ${state.mapView.offsetY}px) scale(${state.mapView.scale})`;
+  }
+
+  function bindMapViewportDrag() {
+    if (!els.overviewViewport || !els.overviewWorld) return;
+    const onMove = (ev) => {
+      if (!state.mapView.dragging) return;
+      const dx = ev.clientX - state.mapView.startX;
+      const dy = ev.clientY - state.mapView.startY;
+      state.mapView.offsetX = state.mapView.baseX + dx;
+      state.mapView.offsetY = state.mapView.baseY + dy;
+      updateMapViewport(false);
+    };
+
+    const stopDrag = () => {
+      state.mapView.dragging = false;
+      els.overviewViewport.classList.remove('is-dragging');
+      window.removeEventListener('mousemove', onMove);
+      window.removeEventListener('mouseup', stopDrag);
+    };
+
+    els.overviewViewport.addEventListener('mousedown', (ev) => {
+      if (ev.target.closest('.simple-building')) return;
+      ev.preventDefault();
+      state.mapView.dragging = true;
+      state.mapView.startX = ev.clientX;
+      state.mapView.startY = ev.clientY;
+      state.mapView.baseX = state.mapView.offsetX;
+      state.mapView.baseY = state.mapView.offsetY;
+      els.overviewViewport.classList.add('is-dragging');
+      window.addEventListener('mousemove', onMove);
+      window.addEventListener('mouseup', stopDrag);
+    });
+
+    els.overviewViewport.addEventListener('wheel', (ev) => {
+      ev.preventDefault();
+      const nextScale = ev.deltaY < 0 ? state.mapView.scale * 1.12 : state.mapView.scale / 1.12;
+      state.mapView.scale = Math.max(1, Math.min(2.8, nextScale));
+      updateMapViewport(false);
+    }, { passive: false });
+  }
+
+  function renderOverview() {
+    return;
+    if (!els.overviewLayer || !state.overviewConfig) return;
+    const cfg = state.overviewConfig;
+    els.overviewLayer.innerHTML = '';
+    if (els.overviewWorld) {
+      els.overviewWorld.style.setProperty('--overview-width', `${cfg.canvas?.width || 1400}px`);
+      els.overviewWorld.style.setProperty('--overview-height', `${cfg.canvas?.height || 920}px`);
+    }
+
+    for (const road of (cfg.roads || [])) {
+      const el = document.createElement('div');
+      el.className = 'dt-overview-road';
+      el.style.left = `${road.x}px`;
+      el.style.top = `${road.y}px`;
+      el.style.width = `${road.width}px`;
+      el.style.height = `${road.height}px`;
+      el.style.transform = `rotate(${Number(road.rotation) || 0}deg)`;
+      el.innerHTML = `<span>${safeText(road.name, '消防通道')}</span>`;
+      els.overviewLayer.appendChild(el);
+    }
+
+    for (const source of (cfg.water_sources || [])) {
+      const el = document.createElement('button');
+      el.type = 'button';
+      el.className = 'dt-overview-water';
+      el.style.left = `${source.x}px`;
+      el.style.top = `${source.y}px`;
+      el.innerHTML = `<span class="dt-overview-water__dot"></span><span>${safeText(source.name, '水源点')}</span>`;
+      els.overviewLayer.appendChild(el);
+    }
+
+    for (const area of (cfg.key_areas || [])) {
+      const el = document.createElement('div');
+      el.className = 'dt-overview-keyarea';
+      el.style.left = `${area.x}px`;
+      el.style.top = `${area.y}px`;
+      el.style.width = `${area.width}px`;
+      el.style.height = `${area.height}px`;
+      el.innerHTML = `<span>${safeText(area.name, '重点保护区域')}</span>`;
+      els.overviewLayer.appendChild(el);
+    }
+
+    for (const building of buildingList()) {
+      const aggregate = aggregateBuildingStatus(building);
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'dt-overview-building';
+      btn.dataset.buildingId = building.building_id;
+      btn.dataset.status = aggregate.status;
+      if (building.building_id === state.selectedBuildingId) btn.classList.add('is-selected');
+      btn.style.left = `${building.x}px`;
+      btn.style.top = `${building.y}px`;
+      btn.style.width = `${building.width}px`;
+      btn.style.height = `${building.height}px`;
+      btn.innerHTML = `
+        <span class="dt-overview-building__name">${safeText(building.name, '未命名建筑')}</span>
+        <span class="dt-overview-building__status">${statusLabel(aggregate.status)}</span>
+        <span class="dt-overview-building__meta">${safeText(building.archive?.protection_level, '-')}</span>
+      `;
+      els.overviewLayer.appendChild(btn);
+    }
+  }
+
+  function syncSimpleBuildingStates() {
+    document.querySelectorAll('.simple-building[data-building-id]').forEach((btn) => {
+      const buildingId = btn.getAttribute('data-building-id');
+      const building = getBuilding(buildingId);
+      const status = aggregateBuildingStatus(building).status;
+      btn.dataset.status = status;
+      btn.dataset.tone = markerTone(status);
+    });
+  }
+
+  function renderBuildingArchive(building) {
+    const archive = building?.archive || {};
+    if (els.buildingArchiveName) els.buildingArchiveName.textContent = safeText(building?.name, '--');
+    const archiveBuildingNameMirror = document.getElementById('archiveBuildingNameMirror');
+    if (archiveBuildingNameMirror) archiveBuildingNameMirror.textContent = safeText(building?.name, '--');
+    if (els.archiveYear) els.archiveYear.textContent = safeText(archive.year, '--');
+    if (els.archiveProtectionLevel) els.archiveProtectionLevel.textContent = safeText(archive.protection_level, '--');
+    if (els.archiveStructureType) els.archiveStructureType.textContent = safeText(archive.structure_type, '--');
+    if (els.archiveArea) els.archiveArea.textContent = safeText(archive.area, '--');
+    if (els.archiveKeyParts) els.archiveKeyParts.textContent = safeText(archive.key_parts, '--');
+  }
+
+  function renderCamLayer(building) {
+    if (!els.camLayer) return;
+    const cameraIds = Array.isArray(building?.camera_ids) ? building.camera_ids : [];
+    const cameraAnchorMap = building?.camera_anchor_map && typeof building.camera_anchor_map === 'object'
+      ? building.camera_anchor_map
+      : {};
+    els.camLayer.innerHTML = '';
+
+    cameraIds.forEach((cameraId, index) => {
+      const normalizedCameraId = normalizeCameraId(cameraId);
+      const shortId = shortCameraId(cameraId);
+      const snap = cameraSnapshotsMap().get(normalizedCameraId);
+      const level = deriveCameraAlarmLevel(snap);
+      const anchorKey = safeText(cameraAnchorMap[normalizedCameraId], shortId);
+      const btn = document.createElement('button');
+      btn.className = 'dt-cam-point';
+      btn.type = 'button';
+      btn.setAttribute('data-camera-id', normalizedCameraId);
+      btn.setAttribute('data-short-camera-id', shortId);
+      btn.setAttribute('data-anchor-key', anchorKey);
+      if (level === 'fire' || level === 'smoke') btn.setAttribute('data-state', level);
+      btn.title = `${shortId} 监控点位`;
+      btn.style.left = `${36 + index * 14}%`;
+      btn.style.top = `${42 + index * 7}%`;
+      btn.innerHTML = `
+        <span class="dt-cam-dot"></span>
+        <span class="dt-cam-label">${shortId}</span>
+      `;
+      els.camLayer.appendChild(btn);
+    });
+  }
+
+  async function loadBuildingModel(building) {
+    if (!building) return;
+    const modelKey = `${building.model_url || ''}|${building.anchors_url || ''}`;
+    if (state.lastModelKey === modelKey) return;
+    if (els.detailLayer) els.detailLayer.classList.remove('is-model-ready');
+    if (window.TwinModelViewer && typeof window.TwinModelViewer.load === 'function') {
+      await window.TwinModelViewer.load({
+        modelUrl: building.model_url,
+        anchorsUrl: building.anchors_url || '',
+      });
+      if (els.detailLayer) els.detailLayer.classList.add('is-model-ready');
+      state.lastModelKey = modelKey;
+    }
+  }
+
+  function renderDetailView(building) {
+    if (!building) return;
+    renderBuildingArchive(building);
+    renderCamLayer(building);
+    if (state.currentView === 'building_detail') {
+      loadBuildingModel(building).catch(() => {});
+    }
+  }
+
+  function riskTrendText(score) {
+    if (score >= 90) return '未来 5 分钟内仍处高位';
+    if (score >= 70) return '短时间内有升级风险';
+    if (score >= 45) return '存在轻度波动';
+    return '整体保持稳定';
+  }
+
+  function renderAiRisk(building) {
+    if (!building) return;
+    const aggregate = aggregateBuildingStatus(building);
+    const score = statusScore(aggregate.status);
+    if (els.aiRiskScore) els.aiRiskScore.textContent = `${score}/100`;
+    if (els.aiRiskLevel) els.aiRiskLevel.textContent = statusLabel(aggregate.status);
+    if (els.aiRiskSource) els.aiRiskSource.textContent = safeText(aggregate.primarySource, '--');
+    if (els.aiRiskReason) els.aiRiskReason.textContent = safeText(aggregate.primaryReason, '--');
+    if (els.aiRiskTrend) els.aiRiskTrend.textContent = riskTrendText(score);
+    if (els.aiRiskPanel) els.aiRiskPanel.setAttribute('data-risk-level', aggregate.status);
+  }
+
+  function renderCurrentSelection() {
+    const building = getBuilding(state.selectedBuildingId) || buildingList()[0] || null;
+    if (!building) return;
+    if (!state.selectedBuildingId) state.selectedBuildingId = building.building_id;
+    syncSimpleBuildingStates();
+    renderBuildingArchive(building);
+    renderAiRisk(building);
+    renderDetailView(building);
+  }
+
+  function renderViewState() {
+    const isOverview = state.currentView === 'overview';
+    const detailFloatPanel = document.getElementById('detailFloatPanel');
+    if (els.overviewLayer) els.overviewLayer.classList.remove('hidden');
+    if (els.detailLayer) els.detailLayer.classList.toggle('hidden', isOverview);
+    if (detailFloatPanel) detailFloatPanel.classList.toggle('hidden', isOverview);
+    if (els.btnBackToOverview) els.btnBackToOverview.classList.toggle('hidden', isOverview);
+    if (document.body) document.body.setAttribute('data-platform-view', state.currentView);
+
+    const building = getBuilding(state.selectedBuildingId) || buildingList()[0] || null;
+    if (els.detailPanelTitle) {
+      els.detailPanelTitle.textContent = safeText(building?.name, '建筑');
+    }
+    if (els.currentViewTitle) {
+      els.currentViewTitle.textContent = '古村落总览（GIS数字孪生）';
+    }
+    if (els.currentViewHint) {
+      els.currentViewHint.textContent = isOverview
+        ? '点击建筑块后，在右上角显示 BIM 数字孪生悬浮窗。'
+        : `${safeText(building?.name, '当前建筑')} 的 BIM 数字孪生悬浮窗已打开，可点击监控点位查看实时画面。`;
+    }
+
+    document.querySelectorAll('.dt-nav-btn').forEach((btn) => {
+      const view = btn.getAttribute('data-nav-view') || 'overview';
+      const active = view === state.currentView || (view === 'building_detail' && state.currentView === 'building_detail');
+      btn.classList.toggle('is-active', active);
+    });
+  }
+
+  function setCurrentView(nextView) {
+    if (nextView === 'building_detail' && !state.selectedBuildingId) {
+      const first = buildingList()[0];
+      if (first) state.selectedBuildingId = first.building_id;
+    }
+    state.currentView = nextView === 'building_detail' ? 'building_detail' : 'overview';
+    renderViewState();
+    renderCurrentSelection();
+  }
+
+  function selectBuilding(buildingId, nextView = 'building_detail') {
+    state.selectedBuildingId = buildingId;
+    state.lastModelKey = '';
+    setCurrentView(nextView);
+  }
+
+  function renderEnvGauges(sensors) {
+    const temp = (sensors || []).find((s) => s?.type === 'temperature_sensor') || null;
+    const hum = (sensors || []).find((s) => s?.type === 'humidity_sensor') || null;
     if (els.envTemp) els.envTemp.textContent = safeText(temp?.current_value, '--');
     if (els.envHum) els.envHum.textContent = safeText(hum?.current_value, '--');
-
-    // 更新圆弧进度：温度 0-80℃，湿度 0-100%
     const arcs = dom.gaugeArcs;
     const tRatio = temp ? clamp((Number(temp.current_value) || 0) / 80, 0, 1) : 0;
     const hRatio = hum ? clamp((Number(hum.current_value) || 0) / 100, 0, 1) : 0;
@@ -186,51 +598,150 @@
     }
   }
 
-  function renderOverallKpis({ cameras, sensors }) {
-    const camArr = Array.isArray(cameras) ? cameras : [];
-    const senArr = Array.isArray(sensors) ? sensors : [];
+  function renderOverallKpis() {
+    const cameras = Array.isArray(state.payload?.cameras) ? state.payload.cameras : [];
+    const sensors = sensorSnapshots();
+    const online = cameras.filter((cam) => cam?.status === 'online').length;
+    const currentAlerts = buildingList().filter((building) => {
+      const status = aggregateBuildingStatus(building).status;
+      return status === 'warning' || status === 'alarm';
+    }).length;
+    const sensorAlerts = sensors.filter((sensor) => sensor?.status === 'alert').length;
+    const highestStatus = buildingList().reduce((best, building) => {
+      const status = aggregateBuildingStatus(building).status;
+      const order = { normal: 1, attention: 2, warning: 3, alarm: 4, handling: 5 };
+      return order[status] > order[best] ? status : best;
+    }, 'normal');
 
-    let online = 0;
-    let alarms = 0;
-    for (const cam of camArr) {
-      const cameraId = cam?.camera_id || null;
-      if (!cameraId) continue;
-      if (cam?.status === 'online') online += 1;
-      const st = getCameraState(cameraId);
-      if (st?.alarmState === 'fire' || st?.alarmState === 'smoke') alarms += 1;
-    }
-
-    let sensorAlerts = 0;
-    for (const s of senArr) {
-      if (s?.status === 'alert') sensorAlerts += 1;
-    }
-
-    if (els.metricYoloLatency) els.metricYoloLatency.textContent = camArr.length ? `${online}/${camArr.length}` : '--';
-    if (els.metricFps) els.metricFps.textContent = String(alarms);
+    if (els.metricYoloLatency) els.metricYoloLatency.textContent = `${online}/${cameras.length || 0}`;
+    if (els.metricFps) els.metricFps.textContent = String(currentAlerts);
     if (els.metricLstm) els.metricLstm.textContent = String(sensorAlerts);
+    if (els.headerOnlineCount) els.headerOnlineCount.textContent = String(online + sensors.length);
+    if (els.headerAlertCount) els.headerAlertCount.textContent = String(currentAlerts);
+    if (els.headerRiskLevel) els.headerRiskLevel.textContent = statusLabel(highestStatus);
   }
 
-  function updateTrendPoints(cameras) {
-    const arr = Array.isArray(cameras) ? cameras : [];
-    let fire = 0;
-    let smoke = 0;
-    for (const cam of arr) {
-      const cameraId = cam?.camera_id || null;
-      if (!cameraId) continue;
-      const st = getCameraState(cameraId);
-      const level = st?.alarmState;
-      if (level === 'fire') fire += 1;
-      else if (level === 'smoke') smoke += 1;
+  async function fetchAlarmLogs() {
+    try {
+      const r = await fetch('/demo/alarm_logs', { cache: 'no-store' });
+      const j = await r.json();
+      state.alarmLogCache = Array.isArray(j?.items) ? j.items.slice(0, ALARM_LOG_CFG.maxItems) : [];
+      renderAlarmList();
+      renderTodayAlarmSummary();
+    } catch (e) {}
+  }
+
+  function renderAlarmList() {
+    if (!els.alarmList) return;
+    els.alarmList.innerHTML = '';
+    if (!state.alarmLogCache.length) {
+      const empty = document.createElement('div');
+      empty.className = 'empty-state';
+      empty.textContent = '暂无告警';
+      els.alarmList.appendChild(empty);
+      return;
     }
 
-    const severityRaw = Math.min(TREND_CFG.yMax, fire * 2 + smoke);
-    trendEwma = TREND_CFG.ewmaAlpha * severityRaw + (1 - TREND_CFG.ewmaAlpha) * trendEwma;
-    trendPoints.push(trendEwma);
-    if (trendPoints.length > TREND_CFG.windowSize) trendPoints = trendPoints.slice(-TREND_CFG.windowSize);
+    for (const item of state.alarmLogCache.slice(0, ALARM_LOG_CFG.visibleMax)) {
+      const row = document.createElement('div');
+      row.className = 'dt-alarm-row';
+      row.setAttribute('data-level', safeText(item.level, 'placeholder'));
+      row.innerHTML = `
+        <div class="dt-alarm-row__time">${safeText(item.ts, '--:--:--')}</div>
+        <div class="dt-alarm-row__cam" title="${safeText(item.cameraId, '-')}">${safeText(item.cameraId, '-')}</div>
+        <div class="dt-alarm-row__level">${item.level === 'fire' ? '??' : (item.level === 'smoke' ? '??' : '-')}</div>
+      `;
+      els.alarmList.appendChild(row);
+    }
+  }
 
+  function renderTodayAlarmSummary() {
+    const today = localDateISO();
+    let fire = 0;
+    let smoke = 0;
+    for (const item of state.alarmLogCache) {
+      const day = typeof item?.date === 'string' ? item.date : today;
+      if (day !== today) continue;
+      if (item?.level === 'fire') fire += 1;
+      else if (item?.level === 'smoke') smoke += 1;
+    }
+    if (els.metricAlarmFire) els.metricAlarmFire.textContent = String(fire);
+    if (els.metricAlarmSmoke) els.metricAlarmSmoke.textContent = String(smoke);
+    if (els.metricAlarmTotal) els.metricAlarmTotal.textContent = String(fire + smoke);
+  }
+
+  async function postAlarmLog({ ts, cameraId, level }) {
+    try {
+      await fetch('/demo/alarm_logs', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ ts, date: localDateISO(), cameraId, level }),
+      });
+    } catch (e) {}
+  }
+
+  function maybeAppendAlarmLog(payload, cameras) {
+    const ts = safeText(payload?.ts, '--:--:--');
+    for (const cam of cameras) {
+      const cameraId = normalizeCameraId(cam?.camera_id);
+      if (!cameraId) continue;
+      const level = deriveCameraAlarmLevel(cam);
+      const camState = getCameraState(cameraId);
+      if (!camState) continue;
+      if (level !== camState.alarmState && (level === 'fire' || level === 'smoke')) {
+        camState.alarmState = level;
+        state.alarmLogCache.unshift({ date: localDateISO(), ts, cameraId: shortCameraId(cameraId), level });
+        state.alarmLogCache = state.alarmLogCache.slice(0, ALARM_LOG_CFG.maxItems);
+        renderAlarmList();
+        renderTodayAlarmSummary();
+        postAlarmLog({ ts, cameraId: shortCameraId(cameraId), level });
+      } else {
+        camState.alarmState = level;
+      }
+      camState.finalReason = safeText(cam?.last_detection?.final_reason, '-');
+    }
+  }
+
+  async function fetchTrendPoints() {
+    try {
+      const r = await fetch('/demo/alarm_trend', { cache: 'no-store' });
+      const j = await r.json();
+      const arr = Array.isArray(j?.points) ? j.points : [];
+      state.trendPoints = arr.map((x) => Number(x)).filter((x) => Number.isFinite(x));
+      if (state.trendPoints.length > TREND_CFG.windowSize) state.trendPoints = state.trendPoints.slice(-TREND_CFG.windowSize);
+      if (state.trendPoints.length > 0) {
+        state.trendEwma = Number(state.trendPoints[state.trendPoints.length - 1]) || 0;
+      }
+      renderTrendSparkline();
+    } catch (e) {}
+  }
+
+  async function persistTrendPoints() {
+    try {
+      const windowPoints = state.trendPoints.slice(-TREND_CFG.visiblePoints);
+      await fetch('/demo/alarm_trend', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ mode: 'replace', points: windowPoints }),
+      });
+    } catch (e) {}
+  }
+
+  function updateTrendPoints() {
+    let fire = 0;
+    let warning = 0;
+    for (const building of buildingList()) {
+      const status = aggregateBuildingStatus(building).status;
+      if (status === 'alarm') fire += 1;
+      else if (status === 'warning') warning += 1;
+    }
+    const severityRaw = Math.min(TREND_CFG.yMax, fire * 2 + warning);
+    state.trendEwma = TREND_CFG.ewmaAlpha * severityRaw + (1 - TREND_CFG.ewmaAlpha) * state.trendEwma;
+    state.trendPoints.push(state.trendEwma);
+    if (state.trendPoints.length > TREND_CFG.windowSize) state.trendPoints = state.trendPoints.slice(-TREND_CFG.windowSize);
     const now = Date.now();
-    if ((now - lastTrendPersistMs) >= 5000) {
-      lastTrendPersistMs = now;
+    if ((now - state.lastTrendPersistMs) >= 5000) {
+      state.lastTrendPersistMs = now;
       persistTrendPoints();
     }
   }
@@ -242,15 +753,13 @@
     if (!line || !fill || !hint) return;
 
     const dotsG = dom.sparkSvg ? dom.sparkSvg.querySelector('.dt-sparkline__dots') : null;
-
-    const series = trendPoints.slice(-TREND_CFG.visiblePoints);
-    if (!series || series.length < 2) {
-      if (hint) hint.textContent = '暂无数据';
+    const series = state.trendPoints.slice(-TREND_CFG.visiblePoints);
+    if (series.length < 2) {
+      hint.textContent = '暂无数据';
       if (dotsG) dotsG.innerHTML = '';
       return;
     }
-
-    if (hint) hint.textContent = '';
+    hint.textContent = '';
 
     const x0 = 20;
     const x1 = 300;
@@ -258,284 +767,285 @@
     const yBot = 110;
     const spanX = x1 - x0;
     const spanY = yBot - yTop;
-    const n = series.length;
 
-    const pts = series.map((v, i) => {
-      const x = x0 + (n === 1 ? 0 : (i * spanX) / (n - 1));
-      const norm = clamp(v / TREND_CFG.yMax, 0, 1);
-      const y = yBot - norm * spanY;
-      return { x, y };
+    const points = series.map((value, idx) => {
+      const x = x0 + (spanX * idx) / Math.max(1, series.length - 1);
+      const y = yBot - (clamp(value, 0, TREND_CFG.yMax) / TREND_CFG.yMax) * spanY;
+      return [x, y];
     });
 
-    const dLine = pts.map((p, i) => `${i === 0 ? 'M' : 'L'}${p.x.toFixed(1)} ${p.y.toFixed(1)}`).join(' ');
-    if (line) line.setAttribute('d', dLine);
-
-    const dFill = `${dLine} L${pts[pts.length - 1].x.toFixed(1)} 120 L${pts[0].x.toFixed(1)} 120 Z`;
-    if (fill) fill.setAttribute('d', dFill);
+    const linePath = points.map((p, idx) => `${idx === 0 ? 'M' : 'L'}${p[0].toFixed(1)} ${p[1].toFixed(1)}`).join(' ');
+    const fillPath = `${linePath} L${points[points.length - 1][0].toFixed(1)} ${yBot} L${points[0][0].toFixed(1)} ${yBot} Z`;
+    line.setAttribute('d', linePath);
+    fill.setAttribute('d', fillPath);
 
     if (dotsG) {
-      let html = '';
-      for (const p of pts) {
-        html += `<circle cx="${p.x.toFixed(1)}" cy="${p.y.toFixed(1)}" r="1.6" fill="rgba(var(--color-accent-rgb), 0.55)" />`;
-      }
+      const html = points.slice(-4).map((p) => `<circle cx="${p[0].toFixed(1)}" cy="${p[1].toFixed(1)}" r="3.2" fill="rgba(var(--color-accent-rgb),0.82)" />`).join('');
       dotsG.innerHTML = html;
     }
   }
 
-  function renderAreaSafetyDonut(cameras) {
-    const valueEl = dom.donutValue;
-    const labelEl = dom.donutLabel;
-    const arc = dom.donutArc;
-    if (!valueEl || !labelEl || !arc) return;
-    const arr = Array.isArray(cameras) ? cameras : [];
+  function renderDetection(det) {
+    state.lastDetection = det || null;
+    const alarmName = det?.final_alarm === 'fire'
+      ? '火焰告警'
+      : det?.final_alarm === 'smoke'
+        ? '烟雾告警'
+        : '正常';
 
-    if (!arr || arr.length === 0) {
-      if (valueEl) valueEl.textContent = '--';
-      if (labelEl) labelEl.textContent = '暂无数据';
-      setSvgDash(arc, 0, 320);
-      return;
+    if (els.finalStatus) {
+      els.finalStatus.textContent = alarmName;
+      els.finalStatus.className = `lstm-status ${det?.final_alarm || 'normal'}`;
+    }
+    if (els.finalReason) {
+      const source = safeText(det?.final_source, '-');
+      const reason = safeText(det?.final_reason, '暂无判定');
+      els.finalReason.textContent = `${source} 路 ${reason}`;
     }
 
-    let safe = 0;
-    for (const cam of arr) {
-      const cameraId = cam?.camera_id || null;
-      if (!cameraId) continue;
-      const st = getCameraState(cameraId);
-      if (st?.alarmState === 'normal') safe += 1;
-    }
-    const ratio = safe / Math.max(1, arr.length);
-    if (valueEl) valueEl.textContent = `${Math.round(ratio * 100)}%`;
-    if (labelEl) labelEl.textContent = '安全区域占比';
-    setSvgDash(arc, ratio, 320);
+    drawBoxes(det);
+    updateSiteIntro();
   }
 
-  // 获取或初始化摄像头状态
-  function getCameraState(cameraId) {
+  function drawBoxes(det) {
+    if (!els.overlay || !els.videoImg) return;
+    const canvas = els.overlay;
+    const rect = els.videoImg.getBoundingClientRect();
+    canvas.width = Math.max(1, Math.round(rect.width));
+    canvas.height = Math.max(1, Math.round(rect.height));
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    if (!det || !Array.isArray(det?.yolo_detections)) return;
+
+    const scaleX = canvas.width / 640;
+    const scaleY = canvas.height / 480;
+    ctx.font = '12px Inter';
+    ctx.lineWidth = 2;
+
+    for (const item of det.yolo_detections) {
+      if (!Array.isArray(item?.bbox) || item.bbox.length !== 4) continue;
+      const [x1, y1, x2, y2] = item.bbox;
+      const cls = safeText(item.class_name, 'obj');
+      const conf = Number(item.confidence || 0);
+      const color = cls === 'fire' ? '#ff5252' : (cls === 'smoke' ? '#ffb300' : '#4fc3f7');
+      const rx = x1 * scaleX;
+      const ry = y1 * scaleY;
+      const rw = Math.max(1, (x2 - x1) * scaleX);
+      const rh = Math.max(1, (y2 - y1) * scaleY);
+
+      ctx.strokeStyle = color;
+      ctx.strokeRect(rx, ry, rw, rh);
+
+      const text = `${cls} ${Math.round(conf * 100)}%`;
+      const metrics = ctx.measureText(text);
+      const labelW = metrics.width + 10;
+      const labelH = 18;
+      ctx.fillStyle = color;
+      ctx.fillRect(rx, Math.max(0, ry - labelH), labelW, labelH);
+      ctx.fillStyle = '#fff';
+      ctx.fillText(text, rx + 5, Math.max(12, ry - 5));
+    }
+  }
+
+  function updateSiteIntro() {
+    if (!els.siteIntroText) return;
+    const building = getBuilding(state.selectedBuildingId);
+    const currentCam = selectedCameraSnapshot();
+    const level = safeText(currentCam?.last_detection?.final_alarm, 'normal');
+    const label = level === 'fire' ? '火焰告警' : (level === 'smoke' ? '烟雾告警' : '正常');
+    const inferMs = safeText(currentCam?.last_detection?.infer_ms, '--');
+    const source = safeText(currentCam?.last_detection?.final_source, '-');
+    els.siteIntroText.textContent = `${safeText(building?.name, '当前建筑')} · ${shortCameraId(state.selectedCameraId)} 当前处于 ${label} 状态，综合判定来源 ${source}，最近一次推理耗时 ${inferMs} ms。`;
+  }
+
+  function selectedCameraSnapshot() {
+    const cameraId = normalizeCameraId(state.selectedCameraId);
     if (!cameraId) return null;
-    if (!cameraStates[cameraId]) {
-      cameraStates[cameraId] = {
-        alarmState: 'normal',
-        alarmSince: 0,
-        hist: [],
-        ewmaFire: 0,
-        ewmaSmoke: 0,
-        lastDecisionReason: '-',
-        lastDetectionSig: '',
-        lastUiAlarm: null, // 记录上次的告警级别，用于日志去重
-      };
-    }
-    return cameraStates[cameraId];
+    return cameraSnapshotsMap().get(cameraId) || null;
   }
 
-  const DEMO_ALARM_POINT_ID = 'CAM-03';
-
-  const ROOM_IDS = {
-    east: 'room-east',
-    hall: 'room-hall',
-    west: 'room-west',
-    kitchen: 'room-kitchen',
-    store: 'room-store',
-  };
-
-  const CAMERA_TO_ROOM = {
-    'CAM-01': ROOM_IDS.east,
-    'CAM-02': ROOM_IDS.hall,
-    'CAM-03': ROOM_IDS.store,
-  };
-
-  function setRoomAlarmByCameraPoint(pointId, level) {
-    const normLevel = (level === 'fire' || level === 'smoke') ? level : 'normal';
-    const roomId = CAMERA_TO_ROOM[pointId];
-    if (!roomId) return;
-    const el = document.getElementById(roomId);
-    if (!el) return;
-    if (normLevel === 'normal') el.removeAttribute('data-alarm');
-    else el.setAttribute('data-alarm', normLevel);
-  }
-
-  function hasCameraPoint(cameraId) {
-    if (!ui.camLayer || !cameraId) return false;
-    const sel = `.dt-cam-point[data-camera-id="${cameraId}"]`;
-    return Boolean(ui.camLayer.querySelector(sel));
-  }
-
-  function pickFallbackCameraPointId() {
-    if (!ui.camLayer) return null;
-    if (hasCameraPoint(DEMO_ALARM_POINT_ID)) return DEMO_ALARM_POINT_ID;
-    const first = ui.camLayer.querySelector('.dt-cam-point');
-    return first ? (first.getAttribute('data-camera-id') || null) : null;
-  }
-
-  function resolvePointIdFromCameraId(cameraId) {
-    const raw = safeText(cameraId, '').trim();
-    if (!raw) return null;
-    if (hasCameraPoint(raw)) return raw;
-
-    // 兼容后端使用 demo_cam_001 / cam03 / camera-2 等格式：抽取末尾数字并映射到 CAM-XX
-    const m = raw.match(/(\d{1,3})\s*$/);
-    if (m) {
-      const n = Number(m[1]);
-      if (Number.isFinite(n) && n > 0) {
-        const id = `CAM-${String(n).padStart(2, '0')}`;
-        if (hasCameraPoint(id)) return id;
-      }
-    }
-
-    return null;
-  }
-
-  function updateCameraPointsOnAlarm(cameraId, level) {
-    if (!ui.camLayer) return;
-
-    const normLevel = (level === 'fire' || level === 'smoke') ? level : 'normal';
-
-    // 直接更新指定摄像头的状态，不清空其他摄像头
-    if (!cameraId) return;
-
-    const target = resolvePointIdFromCameraId(cameraId) || pickFallbackCameraPointId();
-    if (target) {
-      setCameraPointState(target, normLevel);
-      setRoomAlarmByCameraPoint(target, normLevel);
-    }
-  }
-
-  const ALARM_LOG_CFG = {
-    maxItems: 20,
-    visibleMax: 6,
-  };
-
-  let alarmLogCache = [];
-
-  async function fetchAlarmLogs() {
-    try {
-      const r = await fetch('/demo/alarm_logs', { cache: 'no-store' });
-      const j = await r.json();
-      const arr = Array.isArray(j?.items) ? j.items : [];
-      alarmLogCache = arr.slice(0, ALARM_LOG_CFG.maxItems);
-      renderAlarmList();
-      renderTodayAlarmSummary();
-    } catch (e) {}
-  }
-
-  function localDateISO() {
-    const d = new Date();
-    const y = d.getFullYear();
-    const m = String(d.getMonth() + 1).padStart(2, '0');
-    const dd = String(d.getDate()).padStart(2, '0');
-    return `${y}-${m}-${dd}`;
-  }
-
-  function renderTodayAlarmSummary() {
-    if (!elsExtra.metricAlarmFire && !elsExtra.metricAlarmSmoke && !elsExtra.metricAlarmTotal) return;
-    const today = localDateISO();
-    let fire = 0;
-    let smoke = 0;
-    for (const it of (alarmLogCache || [])) {
-      const day = typeof it?.date === 'string' ? it.date : today;
-      if (day !== today) continue;
-      if (it?.level === 'fire') fire += 1;
-      else if (it?.level === 'smoke') smoke += 1;
-    }
-    const total = fire + smoke;
-    if (elsExtra.metricAlarmFire) elsExtra.metricAlarmFire.textContent = String(fire);
-    if (elsExtra.metricAlarmSmoke) elsExtra.metricAlarmSmoke.textContent = String(smoke);
-    if (elsExtra.metricAlarmTotal) elsExtra.metricAlarmTotal.textContent = String(total);
-  }
-
-  async function postAlarmLog({ ts, cameraId, level }) {
-    try {
-      const date = localDateISO();
-      await fetch('/demo/alarm_logs', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ ts, date, cameraId, level }),
-      });
-    } catch (e) {}
-  }
-
-  async function clearAlarmLogs() {
-    try {
-      await fetch('/demo/alarm_logs', { method: 'DELETE' });
-    } catch (e) {}
-    alarmLogCache = [];
-    renderAlarmList();
-    renderTodayAlarmSummary();
-  }
-
-  function setBadge(level) {
-    // 徽章已删除，此函数保留用于兼容性
+  function renderSelectedDetectionFromPayload() {
+    const snap = selectedCameraSnapshot();
+    renderDetection(snap?.last_detection || null);
   }
 
   function openVideoModal(cameraId) {
-    setActiveCamera(cameraId || selectedCameraId);
-    if (!ui.videoModal) return;
-    ui.videoModal.classList.remove('hidden');
-    ui.videoModal.setAttribute('aria-hidden', 'false');
-    if (ui.videoModalTitle) {
-      ui.videoModalTitle.textContent = selectedCameraId ? `${selectedCameraId} 实时监控画面` : '实时监控画面';
+    state.selectedCameraId = normalizeCameraId(cameraId);
+    if (els.videoModal) {
+      els.videoModal.classList.remove('hidden');
+      els.videoModal.setAttribute('aria-hidden', 'false');
     }
-
-    updateSiteIntro();
-
-    // 弹窗打开时才拉流，减少后台无意义刷新
-    refreshStream({ immediate: true });
-
-    // 弹窗打开后延迟一次绘制（等 img/canvas 布局稳定）
-    setTimeout(() => {
-      if (!ui.videoModal || ui.videoModal.classList.contains('hidden')) return;
-      if (lastDetection) drawBoxes(lastDetection);
-      else drawBoxes(null);
-    }, 80);
+    if (els.videoModalTitle) {
+      els.videoModalTitle.textContent = `${shortCameraId(cameraId)} 实时监控画面`;
+    }
+    refreshStream(true);
+    renderSelectedDetectionFromPayload();
+    setTimeout(() => drawBoxes(state.lastDetection), 80);
   }
 
   function closeVideoModal() {
-    if (!ui.videoModal) return;
-    ui.videoModal.classList.add('hidden');
-    ui.videoModal.setAttribute('aria-hidden', 'true');
-
-    // 弹窗关闭后停止画面更新，减少卡顿
+    if (!els.videoModal) return;
+    els.videoModal.classList.add('hidden');
+    els.videoModal.setAttribute('aria-hidden', 'true');
     if (els.videoImg) {
       try { els.videoImg.src = ''; } catch (e) {}
     }
   }
 
-  function bindUiEvents() {
-    if (ui.videoModalClose) {
-      ui.videoModalClose.addEventListener('click', closeVideoModal);
-    }
+  function refreshStream(immediate = false) {
+    if (!els.videoImg || !state.selectedCameraId || els.videoModal?.classList.contains('hidden')) return;
+    const apply = () => {
+      const url = `/demo/stream?camera_id=${encodeURIComponent(state.selectedCameraId)}&_t=${Date.now()}`;
+      try { els.videoImg.src = url; } catch (e) {}
+    };
+    if (immediate) apply();
+    else setTimeout(apply, 60);
+  }
 
-    if (ui.videoModal) {
-      ui.videoModal.addEventListener('click', (e) => {
-        if (e.target === ui.videoModal) closeVideoModal();
+  function scheduleStreamRetry() {
+    if (state.streamRetryTimer) return;
+    const delay = Math.min(6000, state.streamRetryMs);
+    state.streamRetryTimer = setTimeout(() => {
+      state.streamRetryTimer = null;
+      refreshStream(true);
+      state.streamRetryMs = Math.min(8000, Math.round(state.streamRetryMs * 1.6));
+    }, delay);
+  }
+
+  function startStreamWatchdog() {
+    if (state.streamRefreshTimer) clearInterval(state.streamRefreshTimer);
+    state.streamRefreshTimer = setInterval(() => refreshStream(true), 60000);
+  }
+
+  function initStreamHandlers() {
+    if (!els.videoImg) return;
+    els.videoImg.addEventListener('error', () => scheduleStreamRetry());
+    els.videoImg.addEventListener('load', () => {
+      state.streamRetryMs = 400;
+    });
+  }
+
+  function stopEvents() {
+    if (state.eventSource) {
+      state.eventSource.close();
+      state.eventSource = null;
+    }
+  }
+
+  function startEvents() {
+    stopEvents();
+    const url = `/demo/events?_t=${Date.now()}`;
+    state.eventSource = new EventSource(url);
+    state.eventSource.onopen = () => {
+      state.streamRetryMs = 400;
+    };
+    state.eventSource.onerror = () => {
+      stopEvents();
+      scheduleStreamRetry();
+      setTimeout(startEvents, 1000);
+    };
+    state.eventSource.onmessage = (evt) => {
+      if (!evt?.data) return;
+      let payload = null;
+      try {
+        payload = JSON.parse(evt.data);
+      } catch (e) {
+        return;
+      }
+      state.payload = payload;
+      const cameras = Array.isArray(payload?.cameras) ? payload.cameras : [];
+
+      maybeAppendAlarmLog(payload, cameras);
+      renderEnvGauges(sensorSnapshots());
+      renderOverview();
+      renderCurrentSelection();
+      renderOverallKpis();
+      renderSelectedDetectionFromPayload();
+      updateTrendPoints();
+      renderTrendSparkline();
+    };
+  }
+
+  async function fetchOverviewConfig() {
+    const r = await fetch('/demo/overview_config', { cache: 'no-store' });
+    const j = await r.json();
+    state.overviewConfig = j;
+    if (!state.selectedBuildingId && Array.isArray(j?.buildings) && j.buildings.length) {
+      state.selectedBuildingId = j.buildings[0].building_id;
+    }
+    renderOverview();
+    renderCurrentSelection();
+    renderViewState();
+  }
+
+  function focusAiPanel() {
+    if (!els.aiRiskPanel) return;
+    els.aiRiskPanel.classList.add('is-focused');
+    setTimeout(() => els.aiRiskPanel?.classList.remove('is-focused'), 1400);
+  }
+
+  function bindUiEvents() {
+    document.querySelectorAll('.dt-nav-btn').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const nextView = btn.getAttribute('data-nav-view') || 'overview';
+        setCurrentView(nextView);
+        if (btn.getAttribute('data-nav-focus') === 'ai') {
+          focusAiPanel();
+        }
+      });
+    });
+
+    if (els.btnBackToOverview) {
+      els.btnBackToOverview.addEventListener('click', () => {
+        setCurrentView('overview');
       });
     }
 
-    if (ui.camLayer) {
-      // 捕获阶段阻断冒泡，避免与地图区域其它逻辑冲突；便于触控优先响应点位
-      ui.camLayer.addEventListener(
-        'pointerdown',
-        (e) => {
-          const btn = e.target?.closest?.('.dt-cam-point');
-          if (!btn) return;
-          e.stopPropagation();
-        },
-        true
-      );
+    if (els.overviewLayer) {
+      els.overviewLayer.addEventListener('click', (e) => {
+        const btn = e.target?.closest?.('.dt-overview-building');
+        if (!btn) return;
+        const buildingId = btn.getAttribute('data-building-id');
+        if (!buildingId) return;
+        selectBuilding(buildingId, 'building_detail');
+      });
+    }
 
-      ui.camLayer.addEventListener('click', (e) => {
+    document.addEventListener('pointerdown', (e) => {
+      if (state.currentView !== 'building_detail') return;
+      if (!els.detailFloatPanel || els.detailFloatPanel.classList.contains('hidden')) return;
+      const target = e.target;
+      if (!(target instanceof Element)) return;
+      if (target.closest('#detailFloatPanel')) return;
+      if (target.closest('#videoModalContent')) return;
+      if (target.closest('.simple-building')) return;
+      if (target.closest('.dt-overview-building')) return;
+      setCurrentView('overview');
+    });
+
+    if (els.camLayer) {
+      els.camLayer.addEventListener('click', (e) => {
         const btn = e.target?.closest?.('.dt-cam-point');
         if (!btn) return;
-        e.stopPropagation();
-        const cameraId = btn.getAttribute('data-camera-id') || null;
+        const cameraId = btn.getAttribute('data-camera-id');
         if (!cameraId) return;
-        // 与同点位重复点击：仍须打开弹窗并刷新流（setActiveCamera 会因相同 id 提前返回）
-        setActiveCamera(cameraId);
         openVideoModal(cameraId);
       });
     }
 
-    // 悬浮窗拖拽：仅改变 UI 容器的位置，不触碰视频流逻辑
-    if (ui.videoModalDragHandle && ui.videoModalContent) {
+    if (els.videoModalClose) {
+      els.videoModalClose.addEventListener('click', closeVideoModal);
+    }
+
+    if (els.videoModal) {
+      els.videoModal.addEventListener('click', (e) => {
+        if (e.target === els.videoModal) closeVideoModal();
+      });
+    }
+
+    if (els.videoModalDragHandle && els.videoModalContent) {
       let dragging = false;
       let startX = 0;
       let startY = 0;
@@ -546,24 +1056,15 @@
         if (!dragging) return;
         const dx = ev.clientX - startX;
         const dy = ev.clientY - startY;
-
         const nextLeft = startLeft + dx;
         const nextTop = startTop + dy;
-
-        const rect = ui.videoModalContent.getBoundingClientRect();
-        const w = rect.width;
-        const h = rect.height;
-
+        const rect = els.videoModalContent.getBoundingClientRect();
         const minLeft = 8;
         const minTop = 8;
-        const maxLeft = Math.max(minLeft, window.innerWidth - w - 8);
-        const maxTop = Math.max(minTop, window.innerHeight - h - 8);
-
-        const clampedLeft = Math.min(maxLeft, Math.max(minLeft, nextLeft));
-        const clampedTop = Math.min(maxTop, Math.max(minTop, nextTop));
-
-        ui.videoModalContent.style.left = `${clampedLeft}px`;
-        ui.videoModalContent.style.top = `${clampedTop}px`;
+        const maxLeft = Math.max(minLeft, window.innerWidth - rect.width - 8);
+        const maxTop = Math.max(minTop, window.innerHeight - rect.height - 8);
+        els.videoModalContent.style.left = `${Math.min(maxLeft, Math.max(minLeft, nextLeft))}px`;
+        els.videoModalContent.style.top = `${Math.min(maxTop, Math.max(minTop, nextTop))}px`;
       };
 
       const stopDrag = () => {
@@ -572,781 +1073,86 @@
         window.removeEventListener('mouseup', stopDrag);
       };
 
-      ui.videoModalDragHandle.addEventListener('mousedown', (ev) => {
-        // 避免点击关闭按钮触发拖拽
+      els.videoModalDragHandle.addEventListener('mousedown', (ev) => {
         if (ev.target?.closest?.('#videoModalClose')) return;
         ev.preventDefault();
-
-        const rect = ui.videoModalContent.getBoundingClientRect();
+        const rect = els.videoModalContent.getBoundingClientRect();
         dragging = true;
         startX = ev.clientX;
         startY = ev.clientY;
         startLeft = rect.left;
         startTop = rect.top;
-
-        // 一旦用户拖拽，切换到绝对像素定位并移除 transform
-        ui.videoModalContent.style.transform = 'none';
-        ui.videoModalContent.style.left = `${startLeft}px`;
-        ui.videoModalContent.style.top = `${startTop}px`;
-
+        els.videoModalContent.style.transform = 'none';
+        els.videoModalContent.style.left = `${startLeft}px`;
+        els.videoModalContent.style.top = `${startTop}px`;
         window.addEventListener('mousemove', onMove);
         window.addEventListener('mouseup', stopDrag);
       });
     }
   }
 
-  function setCameraPointState(cameraId, level) {
-    if (!ui.camLayer) return;
-    const normLevel = (level === 'fire' || level === 'smoke') ? level : 'normal';
-
-    const apply = (el) => {
-      if (!el) return;
-      if (normLevel === 'normal') el.removeAttribute('data-state');
-      else el.setAttribute('data-state', normLevel);
-    };
-
-    if (!cameraId || cameraId === '*') {
-      const els = ui.camLayer.querySelectorAll('.dt-cam-point');
-      for (const el of els) apply(el);
-
-      // 同步清空房间告警态
-      for (const k of Object.keys(ROOM_IDS)) {
-        const roomEl = document.getElementById(ROOM_IDS[k]);
-        if (roomEl) roomEl.removeAttribute('data-alarm');
-      }
-      return;
-    }
-
-    const sel = `.dt-cam-point[data-camera-id="${cameraId}"]`;
-    apply(ui.camLayer.querySelector(sel));
-  }
-
-  function loadAlarmLogs() {
-    alarmLogCache = [];
-    fetchAlarmLogs();
-  }
-
-  function renderAlarmList() {
-    if (!ui.alarmList) return;
-    ui.alarmList.innerHTML = '';
-
-    if (!alarmLogCache || alarmLogCache.length === 0) {
-      const empty = document.createElement('div');
-      empty.className = 'empty-state';
-      empty.textContent = '暂无告警';
-      ui.alarmList.appendChild(empty);
-      return;
-    }
-
-    for (const it of alarmLogCache.slice(0, ALARM_LOG_CFG.visibleMax)) {
-      const row = document.createElement('div');
-      row.className = 'dt-alarm-row';
-      row.setAttribute('data-level', it.level || 'placeholder');
-      row.innerHTML = `
-        <div class="dt-alarm-row__time">${safeText(it.ts, '--:--:--')}</div>
-        <div class="dt-alarm-row__cam" title="${safeText(it.cameraId, '-')}">${safeText(it.cameraId, '-')}</div>
-        <div class="dt-alarm-row__level">${it.level === 'fire' ? '火焰' : (it.level === 'smoke' ? '烟雾' : '-')}</div>
-      `;
-      ui.alarmList.appendChild(row);
-    }
-  }
-
-  function ensureAlarmListEmptyCleared() {
-    if (!ui.alarmList) return;
-    const empty = ui.alarmList.querySelector('.empty-state');
-    if (empty) empty.remove();
-  }
-
-  function appendAlarmLog({ ts, cameraId, level }) {
-    if (!ui.alarmList) return;
-    if (level !== 'fire' && level !== 'smoke') return;
-
-    const date = localDateISO();
-    alarmLogCache.unshift({ date, ts: safeText(ts, '--:--:--'), cameraId: safeText(cameraId, '-'), level });
-    if (alarmLogCache.length > ALARM_LOG_CFG.maxItems) alarmLogCache = alarmLogCache.slice(0, ALARM_LOG_CFG.maxItems);
-    renderAlarmList();
-    renderTodayAlarmSummary();
-
-    // 异步落盘到本地 JSON（便于清空/测试）
-    postAlarmLog({ ts, cameraId, level });
-  }
-
-  function alarmName(level) {
-    if (level === 'fire') return '火焰告警';
-    if (level === 'smoke') return '烟雾告警';
-    return '正常';
-  }
-
-  function fmtDuration(ms) {
-    const sec = Math.max(0, Math.floor(ms / 1000));
-    const m = Math.floor(sec / 60);
-    const s = sec % 60;
-    if (m <= 0) return `${s}s`;
-    return `${m}m ${s}s`;
-  }
-
-  function extinguishMethod(level) {
-    if (level === 'fire') return '高压细雾喷雾';
-    if (level === 'smoke') return '气溶胶';
-    return '';
-  }
-
-  function updateSiteIntro() {
-    if (!els.siteIntroText) return;
-    const cam = safeText(selectedCameraId, '--');
-    const level = safeText(currentAlarmLevel, 'normal');
-    const status = alarmName(level);
-    const since = alarmSince ? fmtDuration(Date.now() - alarmSince) : '-';
-    const temp = els.envTemp ? safeText(els.envTemp.textContent, '--') : '--';
-    const hum = els.envHum ? safeText(els.envHum.textContent, '--') : '--';
-
-    const nowText = new Date().toLocaleString();
-
-    let suggestion = '建议：继续观察，保持通风与通道畅通。';
-    if (level === 'fire') suggestion = '建议：立即核查现场火源，启动应急预案并联动处置。';
-    else if (level === 'smoke') suggestion = '建议：优先排查烟雾来源（厨房/电气/扬尘），必要时进行现场确认。';
-
-    els.siteIntroText.textContent =
-      `时间：${nowText}\n` +
-      `摄像头：${cam}\n` +
-      `状态：${status}${alarmSince ? `（已持续 ${since}）` : ''}\n` +
-      `环境：温度 ${temp}℃｜湿度 ${hum}%\n` +
-      `${suggestion}`;
-  }
-
-  function normalizeLstmName(name) {
-    const s = safeText(name, '');
-    if (!s) return '正常';
-    if (s === '无火') return '正常';
-    if (s.toLowerCase?.() === 'normal') return '正常';
-    return s;
-  }
-
-  function yoloEvidence(det) {
-    // 优先对齐 LSTM 的真实输入：后端 features 是 get_best_detection() 的 8 维向量
-    // features: [cx, cy, w, h, area, ratio, conf, cls]
-    const feat = det?.features;
-    if (Array.isArray(feat) && feat.length === 8) {
-      const conf = typeof feat[6] === 'number' ? feat[6] : 0;
-      const cls = typeof feat[7] === 'number' ? feat[7] : -1;
-      const areaNorm = typeof feat[4] === 'number' ? feat[4] : 0;
-      const isSmoke = cls === 0;
-      const isFire = cls === 1;
-      const fire = (isFire && conf >= ALARM_CFG.yoloFireMinConf) ? 1 : 0;
-      const fireStrong = (isFire && conf >= ALARM_CFG.yoloFireStrongConf && areaNorm >= ALARM_CFG.yoloFireStrongMinArea) ? 1 : 0;
-      const smoke = (isSmoke && conf >= ALARM_CFG.yoloSmokeMinConf) ? 1 : 0;
-      const smokeStrong = (isSmoke && conf >= ALARM_CFG.yoloSmokeStrongConf && areaNorm >= ALARM_CFG.yoloSmokeStrongMinArea) ? 1 : 0;
-      return { fire, fireStrong, smoke, smokeStrong };
-    }
-
-    // fallback：使用 yolo_detections（用于兼容没有 features 的情况）
-    const arr = Array.isArray(det?.yolo_detections) ? det.yolo_detections : [];
-    let fire = 0;
-    let fireStrong = 0;
-    let smoke = 0;
-    let smokeStrong = 0;
-    for (const d of arr) {
-      const cls = d?.class_name;
-      const conf = typeof d?.confidence === 'number' ? d.confidence : 0;
-      const bb = d?.bbox;
-      let area = 0;
-      if (Array.isArray(bb) && bb.length === 4) {
-        const [x1, y1, x2, y2] = bb;
-        const w = Math.max(0, x2 - x1);
-        const h = Math.max(0, y2 - y1);
-        area = (w * h) / (640 * 480);
-      }
-
-      if (cls === 'fire') {
-        if (conf >= ALARM_CFG.yoloFireMinConf) fire += 1;
-        if (conf >= ALARM_CFG.yoloFireStrongConf && area >= ALARM_CFG.yoloFireStrongMinArea) fireStrong += 1;
-      }
-      if (cls === 'smoke') {
-        if (conf >= ALARM_CFG.yoloSmokeMinConf) smoke += 1;
-        if (conf >= ALARM_CFG.yoloSmokeStrongConf && area >= ALARM_CFG.yoloSmokeStrongMinArea) smokeStrong += 1;
-      }
-    }
-    return { fire, fireStrong, smoke, smokeStrong };
-  }
-
-  function countYoloFire(det) {
-    return yoloEvidence(det).fire;
-  }
-
-  function resetAlarm(cameraState = null) {
-    const state = cameraState || { alarmState, alarmSince, hist, ewmaFire, ewmaSmoke };
-    state.alarmState = 'normal';
-    state.alarmSince = 0;
-    state.hist = [];
-    state.ewmaFire = 0;
-    state.ewmaSmoke = 0;
-    if (!cameraState) {
-      alarmState = state.alarmState;
-      alarmSince = state.alarmSince;
-      hist = state.hist;
-      ewmaFire = state.ewmaFire;
-      ewmaSmoke = state.ewmaSmoke;
-    }
-  }
-
-  function updateAlarmFromDetection(det, cameraState = null) {
-    // Prefer backend decision if provided (ensures UI matches server-side EXPERIMENT_PROFILE)
-    if (det && (det.final_alarm !== null && det.final_alarm !== undefined)) {
-      const state = cameraState || { alarmState, alarmSince, hist, ewmaFire, ewmaSmoke, lastDecisionReason };
-      const now = Date.now();
-      const level = String(det.final_alarm || 'normal');
-      state.lastDecisionReason = (det.final_reason !== null && det.final_reason !== undefined) ? String(det.final_reason) : '-';
-      state.alarmState = level;
-      state.alarmSince = (level === 'normal') ? 0 : (state.alarmSince || now);
-
-      if (!cameraState) {
-        alarmState = state.alarmState;
-        alarmSince = state.alarmSince;
-        lastDecisionReason = state.lastDecisionReason;
-      }
-      return level;
-    }
-
-    if (!_profile.fusion) {
-      const state = cameraState || { alarmState, alarmSince, hist, ewmaFire, ewmaSmoke, lastDecisionReason };
-      const now = Date.now();
-      if (!det) {
-        resetAlarm(state);
-        state.lastDecisionReason = '-';
-        if (!cameraState) {
-          lastDecisionReason = state.lastDecisionReason;
-        }
-        return 'normal';
-      }
-
-      let level = 'normal';
-      if (_profile.source === 'yolo') {
-        const yolo = Array.isArray(det?.yolo_detections) ? det.yolo_detections : [];
-        const hasFire = yolo.some(x => x && x.class_name === 'fire');
-        const hasSmoke = yolo.some(x => x && x.class_name === 'smoke');
-        level = hasFire ? 'fire' : (hasSmoke ? 'smoke' : 'normal');
-        state.lastDecisionReason = level === 'normal' ? 'YOLO: 无框' : 'YOLO: 有框';
-      } else {
-        const hasLstm = det != null && det.lstm_prediction !== null && det.lstm_prediction !== undefined;
-        if (!hasLstm) {
-          const yolo = Array.isArray(det?.yolo_detections) ? det.yolo_detections : [];
-          const hasFire = yolo.some(x => x && x.class_name === 'fire');
-          const hasSmoke = yolo.some(x => x && x.class_name === 'smoke');
-          level = hasFire ? 'fire' : (hasSmoke ? 'smoke' : 'normal');
-          state.lastDecisionReason = 'LSTM未就绪: YOLO兜底';
-        } else {
-          const pred = Number(det?.lstm_prediction);
-          if (pred === 2) level = 'fire';
-          else if (pred === 1) level = 'smoke';
-          else level = 'normal';
-          state.lastDecisionReason = 'LSTM: 直接输出';
-        }
-      }
-
-      state.alarmState = level;
-      state.alarmSince = (level === 'normal') ? 0 : (state.alarmSince || now);
-
-      if (!cameraState) {
-        alarmState = state.alarmState;
-        alarmSince = state.alarmSince;
-        lastDecisionReason = state.lastDecisionReason;
-      }
-      return level;
-    }
-
-    // 如果提供了cameraState，使用它；否则使用全局状态（当前选中摄像头）
-    const state = cameraState || { alarmState, alarmSince, hist, ewmaFire, ewmaSmoke, lastDecisionReason };
-    
-    if (!det) {
-      resetAlarm(state);
-      state.lastDecisionReason = '-';
-      if (!cameraState) {
-        lastDecisionReason = state.lastDecisionReason;
-      }
-      return 'normal';
-    }
-
-    const now = Date.now();
-    const pred = det?.lstm_prediction;
-    const conf = typeof det?.lstm_confidence === 'number' ? det.lstm_confidence : 0;
-    const y = yoloEvidence(det);
-
-    // Scheme A: sliding window vote ratio + hysteresis
-    // - vote source: LSTM if ready, otherwise YOLO
-    // - fast trigger: YOLO strong fire evidence
-
-    if (y.fireStrong > 0) {
-      state.alarmState = 'fire';
-      state.alarmSince = now;
-      state.lastDecisionReason = `YOLO 强证据(${y.fireStrong})`;
-      if (!cameraState) {
-        alarmState = state.alarmState;
-        alarmSince = state.alarmSince;
-        lastDecisionReason = state.lastDecisionReason;
-      }
-      return 'fire';
-    }
-
-    const hasLstm = pred !== null && pred !== undefined;
-    let voteFire = 0;
-    let voteSmoke = 0;
-    let src = 'YOLO';
-    if (hasLstm) {
-      src = 'LSTM';
-      voteFire = Number(pred) === 2 ? 1 : 0;
-      voteSmoke = Number(pred) === 1 ? 1 : 0;
-    } else {
-      voteFire = y.fire > 0 ? 1 : 0;
-      voteSmoke = y.smoke > 0 ? 1 : 0;
-    }
-
-    state.hist.push({ fire: voteFire, smoke: voteSmoke, src, t: now, conf: hasLstm ? conf : null });
-    if (state.hist.length > ALARM_CFG.windowSize) state.hist.shift();
-
-    const n = state.hist.length;
-    let fireVotes = 0;
-    let smokeVotes = 0;
-    for (const x of state.hist) {
-      fireVotes += x?.fire ? 1 : 0;
-      smokeVotes += x?.smoke ? 1 : 0;
-    }
-    const fireRatio = n ? (fireVotes / n) : 0;
-    const smokeRatio = n ? (smokeVotes / n) : 0;
-
-    // Decision with hysteresis
-    let next = state.alarmState || 'normal';
-    if (next === 'fire') {
-      if (fireRatio <= ALARM_CFG.offFireRatio) {
-        next = 'normal';
-        state.lastDecisionReason = `解除fire: ratio=${fireRatio.toFixed(2)} src=${src}`;
-      } else {
-        state.lastDecisionReason = `保持fire: ratio=${fireRatio.toFixed(2)} src=${src}`;
-      }
-    } else if (next === 'smoke') {
-      // smoke -> fire upgrade if fire rises
-      if (fireRatio >= ALARM_CFG.onFireRatio) {
-        next = 'fire';
-        state.lastDecisionReason = `升级fire: ratio=${fireRatio.toFixed(2)} src=${src}`;
-      } else if (smokeRatio <= ALARM_CFG.offSmokeRatio) {
-        next = 'normal';
-        state.lastDecisionReason = `解除smoke: ratio=${smokeRatio.toFixed(2)} src=${src}`;
-      } else {
-        state.lastDecisionReason = `保持smoke: ratio=${smokeRatio.toFixed(2)} src=${src}`;
-      }
-    } else {
-      if (fireRatio >= ALARM_CFG.onFireRatio) {
-        next = 'fire';
-        state.lastDecisionReason = `触发fire: ratio=${fireRatio.toFixed(2)} src=${src}`;
-      } else if (smokeRatio >= ALARM_CFG.onSmokeRatio) {
-        next = 'smoke';
-        state.lastDecisionReason = `触发smoke: ratio=${smokeRatio.toFixed(2)} src=${src}`;
-      } else {
-        state.lastDecisionReason = `normal: fire=${fireRatio.toFixed(2)} smoke=${smokeRatio.toFixed(2)} src=${src}`;
-      }
-    }
-
-    state.alarmState = next;
-    if (next === 'normal') state.alarmSince = 0;
-    else state.alarmSince = state.alarmSince || now;
-
-    if (!cameraState) {
-      alarmState = state.alarmState;
-      alarmSince = state.alarmSince;
-      lastDecisionReason = state.lastDecisionReason;
-    }
-    return next;
-  }
-
-  // Backward-compatible wrapper (renderDetection still calls this)
-  function pickAlarmFromDetection(det) {
-    return updateAlarmFromDetection(det);
-  }
-
-  function safeText(v, fallback = '-') {
-    if (v === null || v === undefined || v === '') return fallback;
-    return String(v);
-  }
-
-  function fmtPercent(x) {
-    if (typeof x !== 'number' || Number.isNaN(x)) return '-';
-    return `${Math.round(x * 100)}%`;
-  }
-
-  function ensureCanvasSize() {
-    const rect = els.videoImg.getBoundingClientRect();
-    const w = Math.max(1, Math.floor(rect.width));
-    const h = Math.max(1, Math.floor(rect.height));
-    if (els.overlay.width !== w) els.overlay.width = w;
-    if (els.overlay.height !== h) els.overlay.height = h;
-    return { w, h };
-  }
-
-  function drawBoxes(det) {
-    const ctx = els.overlay.getContext('2d');
-    if (!ctx) return;
-
-    const { w, h } = ensureCanvasSize();
-    ctx.clearRect(0, 0, w, h);
-
-    const boxes = det?.yolo_detections;
-    if (!Array.isArray(boxes) || boxes.length === 0) return;
-
-    const srcW = 640;
-    const srcH = 480;
-    const sx = w / srcW;
-    const sy = h / srcH;
-
-    ctx.lineWidth = 2;
-    ctx.font = '12px Inter, system-ui, sans-serif';
-    ctx.textBaseline = 'top';
-
-    for (const b of boxes) {
-      const bb = b?.bbox;
-      if (!bb || bb.length !== 4) continue;
-      const [x1, y1, x2, y2] = bb;
-      const x = x1 * sx;
-      const y = y1 * sy;
-      const bw = (x2 - x1) * sx;
-      const bh = (y2 - y1) * sy;
-
-      const cls = b?.class_name || '';
-      const conf = typeof b?.confidence === 'number' ? b.confidence : null;
-      const label = conf === null ? cls : `${cls} ${Math.round(conf * 100)}%`;
-
-      const color = cls === 'fire' ? '#ff3b30' : '#ffcc00';
-      ctx.strokeStyle = color;
-      ctx.fillStyle = color;
-      ctx.strokeRect(x, y, bw, bh);
-
-      if (label) {
-        const pad = 3;
-        const metrics = ctx.measureText(label);
-        const th = 14;
-        const tw = Math.ceil(metrics.width) + pad * 2;
-        const tx = Math.max(0, Math.min(w - tw, x));
-        const ty = Math.max(0, y - th);
-        ctx.fillRect(tx, ty, tw, th);
-        ctx.fillStyle = '#000';
-        ctx.fillText(label, tx + pad, ty + 1);
-      }
-    }
-  }
-
-  function renderSensors(sensors) {
-    if (!els.sensorList) return;
-    if (!Array.isArray(sensors)) sensors = [];
-
-    els.sensorList.innerHTML = '';
-
-    for (const s of sensors) {
-      const row = document.createElement('div');
-      const status = safeText(s?.status, 'normal');
-      row.className = status === 'alert' ? 'sensor-item alert' : 'sensor-item';
-
-      const name = safeText(s?.name || s?.id);
-      const unit = safeText(s?.unit, '');
-      const value = (s?.current_value ?? s?.value ?? 0);
-      const ts = safeText(s?.timestamp, '');
-
-      row.innerHTML = `
-        <div class="sensor-info">
-          <h4>${name}</h4>
-          <p>${ts}</p>
-        </div>
-        <div class="sensor-value" style="color: ${status === 'alert' ? 'var(--color-error)' : 'var(--color-success)'}">
-          ${safeText(value)}${unit}
-        </div>
-      `;
-
-      els.sensorList.appendChild(row);
-    }
-
-    if (sensors.length === 0) {
-      const empty = document.createElement('div');
-      empty.className = 'sensor-item';
-      empty.innerHTML = '<div class="k">暂无传感器数据</div>';
-      els.sensorList.appendChild(empty);
-    }
-  }
-
-  function renderDetection(det) {
-    if (!det) {
-      lastDetection = null;
-      currentAlarmLevel = 'normal';
-      setBadge('normal');
-      if (els.finalStatus) els.finalStatus.textContent = '-';
-      if (els.finalReason) els.finalReason.textContent = '-';
-      updateSiteIntro();
-      drawBoxes(null);
-      return;
-    }
-
-    lastDetection = det;
-
-    const alarm = pickAlarmFromDetection(det);
-    currentAlarmLevel = alarm;
-    setBadge(alarm);
-
-    if (els.finalStatus) {
-      els.finalStatus.textContent = alarmName(alarm);
-      els.finalStatus.classList.remove('normal', 'smoke', 'fire');
-      if (alarm === 'fire') els.finalStatus.classList.add('fire');
-      else if (alarm === 'smoke') els.finalStatus.classList.add('smoke');
-      else els.finalStatus.classList.add('normal');
-    }
-    if (els.finalReason) {
-      const method = extinguishMethod(alarm);
-      if (!showTechDetails) {
-        els.finalReason.textContent = method ? `最终灭火方式：${method}` : '-';
-      } else {
-        els.finalReason.textContent = method
-          ? `${safeText(lastDecisionReason, '-')}` + `\n最终灭火方式：${method}`
-          : `${safeText(lastDecisionReason, '-')}`;
-      }
-    }
-
-    updateSiteIntro();
-
-    // 只有弹窗打开时才绘制 bbox，避免后台无意义重绘
-    if (ui.videoModal && !ui.videoModal.classList.contains('hidden')) {
-      drawBoxes(det);
-    }
-  }
-
-  function stopEvents() {
-    try { eventSource.close(); } catch (e) {}
-    eventSource = null;
-  }
-
-  function refreshStream({ immediate = true } = {}) {
-    if (!els.videoImg) return;
-
-    // 仅弹窗打开时刷新流
-    if (ui.videoModal?.classList?.contains('hidden')) return;
-
-    const apply = () => {
-      const cam = selectedCameraId ? `&camera_id=${encodeURIComponent(selectedCameraId)}` : '';
-      const url = `/demo/stream?_t=${Date.now()}${cam}`;
-      els.videoImg.src = url;
-    };
-
-    if (immediate) apply();
-    else setTimeout(apply, 60);
-  }
-
-  function scheduleStreamRetry() {
-    if (streamRetryTimer) return;
-    const delay = Math.min(6000, streamRetryMs);
-    streamRetryTimer = setTimeout(() => {
-      streamRetryTimer = null;
-      refreshStream({ immediate: true });
-      streamRetryMs = Math.min(8000, Math.round(streamRetryMs * 1.6));
-    }, delay);
-  }
-
-  function startStreamWatchdog() {
-    // 部分浏览器在后端重启后 MJPEG 不一定触发 onerror；定期轻量刷新一次避免“卡住”。
-    if (streamRefreshTimer) clearInterval(streamRefreshTimer);
-    streamRefreshTimer = setInterval(() => {
-      refreshStream({ immediate: true });
-    }, 60000);
-  }
-
-  function initStreamHandlers() {
-    if (!els.videoImg) return;
-
-    els.videoImg.addEventListener('error', () => {
-      scheduleStreamRetry();
-    });
-
-    els.videoImg.addEventListener('load', () => {
-      streamRetryMs = 400;
+  
+  function bindSimpleBuildings() {
+    document.querySelectorAll('.simple-building[data-building-id]').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const buildingId = btn.getAttribute('data-building-id');
+        if (buildingId) selectBuilding(buildingId, 'building_detail');
+      });
     });
   }
-
-  function startEvents() {
-    stopEvents();
-    const cam = selectedCameraId ? `&camera_id=${encodeURIComponent(selectedCameraId)}` : '';
-    const url = `/demo/events?_t=${Date.now()}${cam}`;
-    eventSource = new EventSource(url);
-    
-    eventSource.onopen = () => {
-      // SSE 恢复时，顺便刷新一下 MJPEG（避免需要手动刷新页面）
-      streamRetryMs = 400;
-      refreshStream({ immediate: false });
-    };
-
-    eventSource.onerror = () => {
-      stopEvents();
-
-      // 后端重启/断开时同时触发 stream 重试
-      scheduleStreamRetry();
-      setTimeout(startEvents, 1000);
-    };
-
-    eventSource.onmessage = (evt) => {
-      if (!evt?.data) return;
-      let payload;
-      try {
-        payload = JSON.parse(evt.data);
-      } catch (e) {
-        return;
-      }
-
-      const now = Date.now();
-      if ((now - lastUiTick) >= UI_TICK_MS) lastUiTick = now;
-
-      const shouldRenderHeavy = (now - lastHeavyRenderMs) >= UI_TICK_MS;
-      if (shouldRenderHeavy) lastHeavyRenderMs = now;
-
-      // 处理多个摄像头的数据
-      const cameras = Array.isArray(payload?.cameras) ? payload.cameras : [];
-      
-      // 处理当前选中摄像头的检测数据（用于UI显示）
-      const selectedCam = cameras.find(c => {
-        const camId = c?.camera_id || '';
-        const pointId = resolvePointIdFromCameraId(camId);
-        return pointId === selectedCameraId;
-      }) || (cameras.length > 0 ? cameras[0] : null);
-      
-      const det = selectedCam?.last_detection;
-      const sig = det ? `${safeText(det.timestamp, '')}|${safeText(det.infer_ms, '')}|${safeText(det.buffer_size, '')}|${safeText(det.lstm_prediction, '')}|${safeText(det.lstm_confidence, '')}|${Array.isArray(det.yolo_detections) ? det.yolo_detections.length : 0}` : '';
-      if (sig !== lastDetectionSig) {
-        lastDetectionSig = sig;
-        if (shouldRenderHeavy) renderDetection(det);
-      }
-
-      if (shouldRenderHeavy) {
-        renderSensors(payload?.sensors);
-        renderEnvGauges(payload?.sensors);
-      }
-
-      // 为每个摄像头独立计算告警状态并更新UI
-      for (const cam of cameras) {
-        const cameraId = cam?.camera_id || null;
-        if (!cameraId) continue;
-
-        // 获取该摄像头的独立状态
-        const camState = getCameraState(cameraId);
-        const camDet = cam?.last_detection || null;
-
-        // 为该摄像头独立计算告警级别
-        const level = updateAlarmFromDetection(camDet, camState);
-
-        // 更新该摄像头在主页面的状态显示
-        updateCameraPointsOnAlarm(cameraId, level);
-
-        // 记录告警日志：所有摄像头的告警状态变化都记录
-        const pointId = resolvePointIdFromCameraId(cameraId);
-        if (pointId && level !== camState.lastUiAlarm && level !== 'normal') {
-          camState.lastUiAlarm = level;
-          appendAlarmLog({ ts: payload?.ts, cameraId: pointId, level });
-        } else if (pointId && level === 'normal' && camState.lastUiAlarm !== 'normal') {
-          // 告警解除时也更新状态，但不记录日志（避免日志过多）
-          camState.lastUiAlarm = level;
-        }
-
-        // 如果是当前选中的摄像头，同步状态到全局变量
-        if (pointId === selectedCameraId) {
-          // 同步状态到全局变量（用于UI显示）
-          alarmState = camState.alarmState;
-          alarmSince = camState.alarmSince;
-          hist = camState.hist;
-          ewmaFire = camState.ewmaFire;
-          ewmaSmoke = camState.ewmaSmoke;
-          lastDecisionReason = camState.lastDecisionReason;
-          currentAlarmLevel = level;
-          lastUiAlarm = level; // 同步当前选中摄像头的告警状态
-        }
-      }
-
-      updateTrendPoints(cameras);
-
-      if (shouldRenderHeavy) {
-        renderOverallKpis({ cameras, sensors: payload?.sensors });
-        renderTrendSparkline();
-        renderAreaSafetyDonut(cameras);
-      }
-    };
-  }
-
-  function setActiveCamera(cameraId) {
-    if (!cameraId) return;
-    if (selectedCameraId === cameraId) return;
-    selectedCameraId = cameraId;
-    lastUiAlarm = null;
-    if (ui.videoModalTitle && !ui.videoModal?.classList?.contains('hidden')) {
-      ui.videoModalTitle.textContent = `${selectedCameraId} 实时监控画面`;
-    }
-    // 切换通道时，同步全局状态到当前选中摄像头的状态
-    const backendCamId = resolvePointIdFromCameraId(cameraId);
-    if (backendCamId) {
-      // 将CAM-01转换为demo_cam_001格式
-      const m = backendCamId.match(/CAM-(\d+)/);
-      if (m) {
-        const num = m[1];
-        const camId = `demo_cam_${num.padStart(3, '0')}`;
-        const camState = getCameraState(camId);
-        // 同步状态到全局变量（用于UI显示）
-        alarmState = camState.alarmState;
-        alarmSince = camState.alarmSince;
-        hist = camState.hist;
-        ewmaFire = camState.ewmaFire;
-        ewmaSmoke = camState.ewmaSmoke;
-        lastDecisionReason = camState.lastDecisionReason;
-      }
-    }
-    // 切换通道时重连（后端即使是单路也不会影响前端结构）
-    lastDetectionSig = '';
-    stopEvents();
-    refreshStream({ immediate: true });
-    startEvents();
-  }
-
-  function initSingleCamera() {
-    // 默认选中一个点位，避免告警落到兜底点位
-    if (!selectedCameraId && ui.camLayer) {
-      const first = ui.camLayer.querySelector('.dt-cam-point');
-      if (first) selectedCameraId = first.getAttribute('data-camera-id') || null;
-    }
-    loadAlarmLogs();
-    renderAlarmList();
-    initStreamHandlers();
-    // 默认不拉流，避免未打开弹窗也占用资源
-    startStreamWatchdog();
-    lastDetectionSig = '';
-    renderDetection(null);
-    startEvents();
-
-    fetchTrendPoints();
-  }
-
-  window.addEventListener('resize', () => {
-    // resize 时重画一次框
-    if (lastDetection) {
-      drawBoxes(lastDetection);
-    } else {
-      drawBoxes(null);
-    }
-  });
-
-  // 启动
-  bindUiEvents();
-  initSingleCamera();
-
-  // 方便你手动测试/清空：在控制台执行 window.clearAlarmLogs()
-  window.clearAlarmLogs = clearAlarmLogs;
-  window.clearTrendPoints = clearTrendPoints;
-
   function updateClock() {
     if (!els.headerTime) return;
     const now = new Date();
+    const yyyy = now.getFullYear();
+    const MM = String(now.getMonth() + 1).padStart(2, '0');
+    const dd = String(now.getDate()).padStart(2, '0');
     const hh = String(now.getHours()).padStart(2, '0');
     const mm = String(now.getMinutes()).padStart(2, '0');
     const ss = String(now.getSeconds()).padStart(2, '0');
-    els.headerTime.textContent = `${hh}:${mm}:${ss}`;
+    const weekdays = ['\u661f\u671f\u65e5', '\u661f\u671f\u4e00', '\u661f\u671f\u4e8c', '\u661f\u671f\u4e09', '\u661f\u671f\u56db', '\u661f\u671f\u4e94', '\u661f\u671f\u516d'];
+    const weekday = weekdays[now.getDay()];
+    els.headerTime.textContent = `${yyyy}-${MM}-${dd}  ${hh}:${mm}:${ss}  ${weekday}`;
   }
 
-  updateClock();
-  setInterval(updateClock, 1000);
+  window.addEventListener('resize', () => { drawBoxes(state.lastDetection); });
+  window.clearTrendPoints = async () => {
+    try {
+      await fetch('/demo/alarm_trend', { method: 'DELETE' });
+    } catch (e) {}
+    state.trendPoints = [];
+    state.trendEwma = 0;
+    renderTrendSparkline();
+  };
+  window.clearAlarmLogs = async () => {
+    try {
+      await fetch('/demo/alarm_logs', { method: 'DELETE' });
+    } catch (e) {}
+    state.alarmLogCache = [];
+    renderAlarmList();
+    renderTodayAlarmSummary();
+  };
+
+  async function init() {
+    bindUiEvents();
+    bindSimpleBuildings();
+    bindMapViewportDrag();
+    initStreamHandlers();
+    startStreamWatchdog();
+    updateClock();
+    setInterval(updateClock, 1000);
+    updateMapViewport(true);
+    state.overviewConfig = STATIC_OVERVIEW;
+    await Promise.all([fetchAlarmLogs(), fetchTrendPoints()]);
+    startEvents();
+  }
+
+  init().catch((error) => {
+    console.error('Failed to initialize demo platform:', error);
+  });
 })();
+
+
+
+
+
+

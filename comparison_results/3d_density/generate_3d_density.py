@@ -178,7 +178,7 @@ def plot_confidence_volatility_accuracy():
         lstm_vol_filtered,
         lstm_correct_filtered,
         'autumn',  # 红橙黄渐变
-        'YOLO+LSTM',
+        'YOLO+可学习权重特征融合',
         linewidth=0.8
     )
     
@@ -221,7 +221,7 @@ def plot_confidence_volatility_accuracy():
     from matplotlib.patches import Patch
     legend_elements = [
         Patch(facecolor='#8B4789', edgecolor='#8B4789', label='YOLO'),
-        Patch(facecolor='#FF8C42', edgecolor='#FF8C42', label='YOLO+LSTM')
+        Patch(facecolor='#FF8C42', edgecolor='#FF8C42', label='YOLO+可学习权重特征融合')
     ]
     ax.legend(handles=legend_elements, loc='upper left', fontsize=13, 
              framealpha=0.95, edgecolor='#E0E0E0', fancybox=True)

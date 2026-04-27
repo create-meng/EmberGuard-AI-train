@@ -1,4 +1,4 @@
-"""
+﻿"""
 检测处理逻辑 - 屏幕、摄像头、文件检测
 纯YOLO检测（LSTM功能请使用 scripts/8_detect_with_lstm.py）
 """
@@ -6,6 +6,7 @@ import threading
 import tkinter as tk
 import sys
 import os
+import queue
 from pathlib import Path
 from ultralytics import YOLO
 
@@ -20,19 +21,23 @@ except ImportError:
 class DetectionProcessor:
     """检测处理器 - 纯YOLO检测"""
     
-    def __init__(self, yolo_model, gui_updater, buttons, status_label, info_text, video_label):
+    def __init__(self, yolo_model, gui_updater, buttons, status_label, info_text, video_label, runtime_config=None):
         self.yolo = yolo_model
         self.gui_updater = gui_updater
         self.buttons = buttons
         self.status_label = status_label
         self.info_text = info_text
         self.video_label = video_label
+        self.runtime_config = runtime_config or {}
         self.is_running = False
         self.frame_count = 0
         self.conf = 0.25  # 默认置信度阈值
         self.iou = 0.45   # 默认IoU阈值
         self.save_dir = None  # 保存文件夹
         self.save_frame_count = 0  # 保存的帧计数
+        self._save_queue = queue.Queue(maxsize=int(self.runtime_config.get('save_queue_size', 8)))
+        self._save_worker_thread = threading.Thread(target=self._save_worker, daemon=True)
+        self._save_worker_thread.start()
         
         print(f"\n{'='*60}")
         print(f"DetectionProcessor 初始化 - 纯YOLO模式")
@@ -44,6 +49,78 @@ class DetectionProcessor:
         self.conf = conf
         self.iou = iou
     
+    def _get_predict_kwargs(self, realtime=False):
+        """获取推理参数。"""
+        kwargs = {
+            'conf': self.conf,
+            'iou': self.iou,
+        }
+
+        device = self.runtime_config.get('device')
+        if device is not None:
+            kwargs['device'] = device
+
+        imgsz = self.runtime_config.get('imgsz')
+        if imgsz:
+            kwargs['imgsz'] = imgsz
+
+        if self.runtime_config.get('half'):
+            kwargs['half'] = True
+
+        if realtime and 'stream_buffer' in self.runtime_config:
+            kwargs['stream_buffer'] = self.runtime_config['stream_buffer']
+
+        return kwargs
+
+    def _has_detections(self, result):
+        return result is not None and hasattr(result, 'boxes') and len(result.boxes) > 0
+
+    def _render_frame(self, result, realtime=False):
+        if result is None:
+            return None
+
+        if realtime and not self._has_detections(result) and hasattr(result, 'orig_img'):
+            frame = result.orig_img
+            return frame.copy() if hasattr(frame, 'copy') else frame
+
+        plot_kwargs = {}
+        if realtime:
+            plot_kwargs['labels'] = self.runtime_config.get('plot_labels', False)
+            plot_kwargs['conf'] = self.runtime_config.get('plot_conf', False)
+            plot_kwargs['line_width'] = self.runtime_config.get('plot_line_width', 1)
+
+        return result.plot(**plot_kwargs)
+
+    def _prepare_save_frame(self, result):
+        if not hasattr(result, 'orig_img'):
+            return None
+
+        frame = result.orig_img
+        if frame is None:
+            return None
+
+        return frame.copy() if hasattr(frame, 'copy') else frame
+
+    def _enqueue_save_frame(self, result):
+        if not self.save_dir or not self._has_detections(result):
+            return
+
+        try:
+            frame = self._prepare_save_frame(result)
+            if frame is None:
+                return
+            self._save_queue.put_nowait(frame)
+        except queue.Full:
+            pass
+
+    def _save_worker(self):
+        while True:
+            frame = self._save_queue.get()
+            try:
+                self.save_detected_frame(frame)
+            finally:
+                self._save_queue.task_done()
+
     def set_save_dir(self, save_dir):
         """设置保存文件夹"""
         self.save_dir = save_dir
@@ -51,41 +128,26 @@ class DetectionProcessor:
         import os
         os.makedirs(save_dir, exist_ok=True)
     
-    def save_detected_frame(self, result):
+    def save_detected_frame(self, frame):
         """保存检测到目标的帧"""
-        if not self.save_dir or len(result.boxes) == 0:
+        if not self.save_dir or frame is None:
             return
         
         try:
             import cv2
             import os
-            import numpy as np
             from datetime import datetime
-            
-            # 获取原始图像
-            if hasattr(result, 'orig_img'):
-                orig_img = result.orig_img
-                # YOLO返回的orig_img通常是RGB格式，需要转为BGR
-                if isinstance(orig_img, np.ndarray) and len(orig_img.shape) == 3:
-                    # 检查是否是RGB格式（通常YOLO返回RGB）
-                    # 转换为BGR格式用于OpenCV保存
-                    orig_img_bgr = cv2.cvtColor(orig_img, cv2.COLOR_RGB2BGR)
-                else:
-                    orig_img_bgr = orig_img
-                
-                # 生成文件名（时间戳 + 帧编号）
-                timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-                filename = f"detected_{timestamp}_{self.save_frame_count:06d}.jpg"
-                filepath = os.path.join(self.save_dir, filename)
-                
-                # 保存帧
-                cv2.imwrite(filepath, orig_img_bgr)
-                self.save_frame_count += 1
-                
-                # 每保存10帧提示一次（避免信息过多）
-                if self.save_frame_count % 10 == 0:
-                    self.gui_updater.add_info(self.info_text, 
-                                             f"已保存 {self.save_frame_count} 帧到: {os.path.basename(self.save_dir)}")
+
+            timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+            filename = f"detected_{timestamp}_{self.save_frame_count:06d}.jpg"
+            filepath = os.path.join(self.save_dir, filename)
+
+            cv2.imwrite(filepath, frame)
+            self.save_frame_count += 1
+
+            if self.save_frame_count % 10 == 0:
+                self.gui_updater.add_info(self.info_text, 
+                                         f"已保存 {self.save_frame_count} 帧到: {os.path.basename(self.save_dir)}")
         except Exception as e:
             # 保存失败时不中断检测，只记录错误
             pass
@@ -175,10 +237,10 @@ class DetectionProcessor:
                 print(f"使用纯YOLO检测...")
                 
                 # 纯YOLO检测
-                results = self.yolo(file_path, verbose=False, conf=self.conf, iou=self.iou)
+                results = self.yolo(file_path, verbose=False, **self._get_predict_kwargs())
                 
                 # 绘制检测结果
-                annotated_frame = results[0].plot()
+                annotated_frame = self._render_frame(results[0], realtime=False)
                 
                 # 保存检测结果
                 detection_results_callback(annotated_frame, results)
@@ -191,14 +253,14 @@ class DetectionProcessor:
                 detection_has_results_callback(has_detections)
                 
                 print(f"YOLO检测完成，检测到 {len(results[0].boxes)} 个目标")
-                    
-                    # 显示检测信息
-                    if has_detections:
-                        self.update_detection_info(results, show_all=True)
-                        self.gui_updater.add_info(self.info_text, "检测完成，可以点击'保存检测结果'保存")
-                    else:
-                        self.gui_updater.add_info(self.info_text, "未检测到目标")
-                        self.gui_updater.add_info(self.info_text, "检测完成，可以点击'保存检测结果'保存")
+
+                # 显示检测信息
+                if has_detections:
+                    self.update_detection_info(results, show_all=True)
+                    self.gui_updater.add_info(self.info_text, "检测完成，可以点击'保存检测结果'保存")
+                else:
+                    self.gui_updater.add_info(self.info_text, "未检测到目标")
+                    self.gui_updater.add_info(self.info_text, "检测完成，可以点击'保存检测结果'保存")
                 
                 # 启用保存按钮
                 if 'save' in self.buttons:
@@ -231,16 +293,16 @@ class DetectionProcessor:
         try:
             # source="screen" 会自动处理屏幕捕获
             for result in self.yolo(source="screen", stream=True, verbose=False, 
-                                   conf=self.conf, iou=self.iou):
+                                   **self._get_predict_kwargs(realtime=True)):
                 if not self.is_running:
                     break
                 
-                # 获取带标注的帧
-                annotated_frame = result.plot()
+                # 获取显示帧
+                annotated_frame = self._render_frame(result, realtime=True)
                 
-                # 如果检测到目标，保存原始帧（不带标注）
-                if len(result.boxes) > 0:
-                    self.save_detected_frame(result)
+                # 如果检测到目标，后台保存原始帧（不阻塞实时检测）
+                if self._has_detections(result):
+                    self._enqueue_save_frame(result)
                 
                 # 更新显示
                 self.gui_updater.update_frame(self.video_label, annotated_frame)
@@ -259,16 +321,16 @@ class DetectionProcessor:
         try:
             # 纯YOLO检测
             for result in self.yolo(source=0, stream=True, verbose=False,
-                                   conf=self.conf, iou=self.iou):
+                                   **self._get_predict_kwargs(realtime=True)):
                 if not self.is_running:
                     break
                 
-                # 获取带标注的帧
-                annotated_frame = result.plot()
+                # 获取显示帧
+                annotated_frame = self._render_frame(result, realtime=True)
                 
-                # 如果检测到目标，保存原始帧（不带标注）
-                if len(result.boxes) > 0:
-                    self.save_detected_frame(result)
+                # 如果检测到目标，后台保存原始帧（不阻塞实时检测）
+                if self._has_detections(result):
+                    self._enqueue_save_frame(result)
                 
                 # 更新显示
                 self.gui_updater.update_frame(self.video_label, annotated_frame)
@@ -303,16 +365,16 @@ class DetectionProcessor:
             
             # 纯YOLO检测
             for result in self.yolo(source=file_path, stream=True, verbose=False,
-                                   conf=self.conf, iou=self.iou):
+                                   **self._get_predict_kwargs()):
                 if not self.is_running:
                     break
                 
                 # 检查是否有检测结果
-                if len(result.boxes) > 0:
+                if self._has_detections(result):
                     has_detections = True
                 
                 # 获取带标注的帧
-                annotated_frame = result.plot()
+                annotated_frame = self._render_frame(result, realtime=False)
                 
                 # 保存帧到列表
                 video_frames.append(annotated_frame.copy())
@@ -358,7 +420,9 @@ class DetectionProcessor:
     
     def update_detection_info(self, results, show_all=False):
         """更新检测信息 - 纯YOLO"""
-        if len(results[0].boxes) > 0:
+        should_report = show_all or self.frame_count % 10 == 0
+
+        if len(results[0].boxes) > 0 and should_report:
             detections = []
             for box in results[0].boxes:
                 cls_id = int(box.cls[0])
@@ -366,12 +430,10 @@ class DetectionProcessor:
                 cls_name = self.yolo.names[cls_id]
                 detections.append(f"{cls_name}: {conf:.2f}")
             
-            # 对于图片检测，显示所有信息；对于实时检测，每10帧更新一次
-            if show_all or self.frame_count % 10 == 0:
-                info = f"检测到 {len(results[0].boxes)} 个目标: {', '.join(detections[:10])}"
-                if len(detections) > 10:
-                    info += f" ... (共{len(detections)}个)"
-                self.gui_updater.add_info(self.info_text, info)
+            info = f"检测到 {len(results[0].boxes)} 个目标: {', '.join(detections[:10])}"
+            if len(detections) > 10:
+                info += f" ... (共{len(detections)}个)"
+            self.gui_updater.add_info(self.info_text, info)
         elif show_all:
             # 文件检测模式下，如果没有检测到目标，显示提示
             self.gui_updater.add_info(self.info_text, "未检测到目标")

@@ -1,40 +1,94 @@
-import * as THREE from 'three';
-import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
-import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+import * as THREE from '/static/vendor/three/build/three.module.js?v=20260426b';
+import { OrbitControls } from '/static/vendor/three/examples/jsm/controls/OrbitControls.js?v=20260426b';
+import { GLTFLoader } from '/static/vendor/three/examples/jsm/loaders/GLTFLoader.js?v=20260426b';
 
 const viewport = document.getElementById('twinModelViewport');
 const loadingEl = document.getElementById('twinModelLoading');
 const statusEl = document.getElementById('twinModelStatus');
+const detailLayer = document.getElementById('detailLayer');
 
-// 水平：相对「主体抬高区域」包围盒的 xz（见 computeAnchorHorizonBox3），避免广场/道路把点拉到地面。
-// x 左–中–右；z 较小偏一侧檐廊，反了可调大 z（如 0.55–0.75）。
 const CAMERA_ANCHOR_LAYOUT = {
   'CAM-01': { x: 0.28, z: 0.42, y: 0.72 },
   'CAM-02': { x: 0.48, z: 0.52, y: 0.78 },
   'CAM-03': { x: 0.72, z: 0.44, y: 0.70 },
 };
 
-// 可选：与 GLB 同名的侧车 JSON（如 qinghe-building.anchors.json）优先；此处仅作无 JSON 时的备用节点名。
 const CAMERA_GLTF_NODE_NAME = {
   'CAM-01': '',
   'CAM-02': '',
   'CAM-03': '',
 };
 
+const TwinModelViewer = {
+  renderer: null,
+  scene: null,
+  camera: null,
+  controls: null,
+  loader: null,
+  floor: null,
+  ring: null,
+  resizeObserver: null,
+  modelRoot: null,
+  cameraAnchors: [],
+  rafId: 0,
+  clock: null,
+  activeKey: '',
+  loadingKey: '',
+  loadingPromise: null,
+  preparedKeys: new Set(),
+  renderFrame: () => {},
+};
+
+const MODEL_ASSET_CACHE = new Map();
+const FALLBACK_MODEL_MATERIAL = new THREE.MeshStandardMaterial({
+  color: 0xd7d0c8,
+  roughness: 0.82,
+  metalness: 0.02,
+});
+
+window.TwinModelViewer = {
+  load: async (config = {}) => {
+    if (!viewport) return;
+    await ensureViewer();
+    await loadModel(config);
+  },
+  release: () => {
+    releaseModelAssets();
+  },
+  setStatus,
+  debugState: () => ({
+    activeKey: TwinModelViewer.activeKey,
+    loadingKey: TwinModelViewer.loadingKey,
+    hasModel: Boolean(TwinModelViewer.modelRoot),
+    anchorCount: TwinModelViewer.cameraAnchors.length,
+    camera: TwinModelViewer.camera ? TwinModelViewer.camera.position.toArray() : null,
+    target: TwinModelViewer.controls ? TwinModelViewer.controls.target.toArray() : null,
+  }),
+};
+
 if (viewport) {
-  initTwinModel().catch((error) => {
-    console.error('Failed to initialize twin model:', error);
-    setStatus('三维模型加载失败，请检查模型文件或网络依赖。');
-    if (loadingEl) loadingEl.textContent = '三维模型加载失败';
+  const initialModelUrl = viewport.dataset.modelUrl || '';
+  ensureViewer()
+    .then(async () => {
+      if (initialModelUrl) preloadModelAsset(initialModelUrl);
+      await loadModel({
+        modelUrl: viewport.dataset.modelUrl,
+        anchorsUrl: viewport.dataset.anchorsUrl || '',
+      });
+    })
+    .catch((error) => {
+      console.error('Failed to initialize twin model:', error);
+      setStatus('三维模型加载失败，请检查模型文件或网络依赖。');
+      if (loadingEl) loadingEl.textContent = '三维模型加载失败';
+    });
+
+  window.addEventListener('beforeunload', () => {
+    releaseModelAssets();
   });
 }
 
-async function initTwinModel() {
-  const modelUrl = viewport.dataset.modelUrl;
-  if (!modelUrl) {
-    setStatus('未配置三维模型路径。');
-    return;
-  }
+async function ensureViewer() {
+  if (TwinModelViewer.renderer) return;
 
   const renderer = new THREE.WebGLRenderer({
     antialias: true,
@@ -42,7 +96,7 @@ async function initTwinModel() {
     powerPreference: 'high-performance',
   });
   renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
-  renderer.setSize(viewport.clientWidth, viewport.clientHeight);
+  renderer.setSize(Math.max(viewport.clientWidth, 1), Math.max(viewport.clientHeight, 1));
   renderer.outputColorSpace = THREE.SRGBColorSpace;
   renderer.toneMapping = THREE.ACESFilmicToneMapping;
   renderer.toneMappingExposure = 1.15;
@@ -114,92 +168,251 @@ async function initTwinModel() {
   scene.add(ring);
 
   const loader = new GLTFLoader();
-  const [gltf, anchorConfig] = await Promise.all([
-    loader.loadAsync(modelUrl),
-    fetchAnchorConfig(modelUrl),
-  ]);
-  const modelRoot = gltf.scene || gltf.scenes?.[0];
-  if (!modelRoot) throw new Error('GLB scene is empty');
-
-  modelRoot.traverse((child) => {
-    if (child.isMesh) {
-      child.castShadow = true;
-      child.receiveShadow = true;
-      if (child.material) {
-        child.material.needsUpdate = true;
-      }
-    }
-  });
-
-  fitModelToView(modelRoot, camera, controls);
-  scene.add(modelRoot);
-
-  const cameraPointButtons = Array.from(
-    document.querySelectorAll('#camLayer .dt-cam-point')
-  );
-  const cameraAnchors = createCameraAnchors(
-    modelRoot,
-    cameraPointButtons,
-    anchorConfig
-  );
-
-  if (loadingEl) loadingEl.classList.add('hidden');
-  setStatus('清河楼模型已加载：拖动旋转，滚轮缩放，右键拖曳平移（左右移动视点）。');
-
   const resizeObserver = new ResizeObserver(() => {
     const width = Math.max(viewport.clientWidth, 1);
     const height = Math.max(viewport.clientHeight, 1);
     camera.aspect = width / height;
     camera.updateProjectionMatrix();
     renderer.setSize(width, height);
+    TwinModelViewer.renderFrame();
   });
   resizeObserver.observe(viewport);
 
   controls.addEventListener('start', () => {
     controls.autoRotate = false;
   });
+  controls.addEventListener('change', () => {
+    TwinModelViewer.renderFrame();
+  });
 
-  const clock = new THREE.Clock();
+  TwinModelViewer.renderer = renderer;
+  TwinModelViewer.scene = scene;
+  TwinModelViewer.camera = camera;
+  TwinModelViewer.controls = controls;
+  TwinModelViewer.loader = loader;
+  TwinModelViewer.floor = floor;
+  TwinModelViewer.ring = ring;
+  TwinModelViewer.resizeObserver = resizeObserver;
+  TwinModelViewer.clock = new THREE.Clock();
+
+  const renderFrame = () => {
+    if (!TwinModelViewer.renderer || !TwinModelViewer.scene || !TwinModelViewer.camera) return;
+    syncDomCameraPoints(TwinModelViewer.cameraAnchors, camera, viewport);
+    renderer.render(scene, camera);
+  };
+
   const animate = () => {
-    const t = clock.getElapsedTime();
+    const t = TwinModelViewer.clock.getElapsedTime();
     ring.material.opacity = 0.12 + (Math.sin(t * 1.35) + 1) * 0.04;
     floor.material.opacity = 0.58 + (Math.sin(t * 0.6) + 1) * 0.03;
 
     controls.update();
-    syncDomCameraPoints(cameraAnchors, camera, viewport);
-    renderer.render(scene, camera);
-    requestAnimationFrame(animate);
+    renderFrame();
+    TwinModelViewer.rafId = requestAnimationFrame(animate);
   };
+  TwinModelViewer.renderFrame = renderFrame;
   animate();
 }
 
-function fitModelToView(modelRoot, camera, controls) {
-  const box = new THREE.Box3().setFromObject(modelRoot);
-  const size = box.getSize(new THREE.Vector3());
-  const center = box.getCenter(new THREE.Vector3());
+async function loadModel(config = {}) {
+  const modelUrl = config.modelUrl || viewport.dataset.modelUrl;
+  const anchorsUrl = config.anchorsUrl || viewport.dataset.anchorsUrl || '';
+  const cacheKey = `${modelUrl}|${anchorsUrl}`;
+  if (!modelUrl || !TwinModelViewer.loader) {
+    setStatus('未配置三维模型路径。');
+    return;
+  }
+  viewport.dataset.modelUrl = modelUrl;
+  viewport.dataset.anchorsUrl = anchorsUrl;
+  if (TwinModelViewer.activeKey === cacheKey && TwinModelViewer.modelRoot) {
+    refreshCameraAnchors(anchorsUrl);
+    if (loadingEl) loadingEl.classList.add('hidden');
+    setModelReady(true);
+    setStatus('建筑模型已加载：拖动旋转，滚轮缩放，右键拖曳平移。');
+    return;
+  }
+  if (TwinModelViewer.loadingKey === cacheKey && TwinModelViewer.loadingPromise) {
+    return TwinModelViewer.loadingPromise;
+  }
 
-  modelRoot.position.sub(center);
+  setModelReady(false);
 
-  const maxAxis = Math.max(size.x, size.y, size.z) || 1;
-  const scale = 4.8 / maxAxis;
-  modelRoot.scale.setScalar(scale);
+  if (loadingEl) {
+    loadingEl.textContent = '正在加载建筑三维模型...';
+    loadingEl.classList.remove('hidden');
+  }
 
-  const scaledBox = new THREE.Box3().setFromObject(modelRoot);
-  const scaledSize = scaledBox.getSize(new THREE.Vector3());
-  const scaledCenter = scaledBox.getCenter(new THREE.Vector3());
+  TwinModelViewer.loadingKey = cacheKey;
+  TwinModelViewer.loadingPromise = (async () => {
+    try {
+      clearCurrentModel();
 
-  modelRoot.position.x -= scaledCenter.x;
-  modelRoot.position.y -= scaledCenter.y;
-  modelRoot.position.z -= scaledCenter.z;
-  modelRoot.position.y += scaledSize.y * 0.5;
+      const [asset, anchorConfig] = await Promise.all([
+        preloadModelAsset(modelUrl),
+        fetchAnchorConfig(modelUrl, anchorsUrl),
+      ]);
 
-  const distance = Math.max(scaledSize.x, scaledSize.y, scaledSize.z) * 2.1;
-  camera.position.set(distance * 0.8, distance * 0.55, distance);
-  camera.lookAt(0, scaledSize.y * 0.35, 0);
+      const modelRoot = asset?.scene || asset?.scenes?.[0] || null;
+      if (!modelRoot) throw new Error('GLB scene is empty');
 
-  controls.target.set(0, scaledSize.y * 0.35, 0);
-  controls.minDistance = Math.max(2.5, distance * 0.35);
-  controls.maxDistance = Math.max(8, distance * 2.2);
+      const meshCount = prepareModelRoot(modelRoot, cacheKey);
+
+      if (meshCount === 0) throw new Error('Model contains no mesh');
+
+      const modelBox = modelRoot.userData.__dtwModelBox || computeTightMeshBox3(modelRoot) || new THREE.Box3().setFromObject(modelRoot);
+      fitModelToView(modelRoot, TwinModelViewer.camera, TwinModelViewer.controls, modelBox);
+      TwinModelViewer.scene.add(modelRoot);
+      TwinModelViewer.modelRoot = modelRoot;
+      TwinModelViewer.activeKey = cacheKey;
+
+      TwinModelViewer.cameraAnchors = createCameraAnchors(
+        modelRoot,
+        Array.from(document.querySelectorAll('#camLayer .dt-cam-point')),
+        anchorConfig,
+        modelBox,
+        meshCount
+      );
+
+      TwinModelViewer.renderFrame();
+      if (loadingEl) loadingEl.classList.add('hidden');
+      setModelReady(true);
+      setStatus('建筑模型已加载：拖动旋转，滚轮缩放，右键拖曳平移。');
+    } catch (error) {
+      console.error('Failed to load building model:', error);
+      if (loadingEl) loadingEl.textContent = '建筑模型加载失败';
+      setModelReady(false);
+      setStatus('建筑模型加载失败，请检查模型文件或锚点配置。');
+    } finally {
+      TwinModelViewer.loadingKey = '';
+      TwinModelViewer.loadingPromise = null;
+    }
+  })();
+
+  return TwinModelViewer.loadingPromise;
+}
+
+async function preloadModelAsset(modelUrl) {
+  if (!modelUrl || !TwinModelViewer.loader) return null;
+  if (!MODEL_ASSET_CACHE.has(modelUrl)) {
+    MODEL_ASSET_CACHE.set(modelUrl, TwinModelViewer.loader.loadAsync(modelUrl));
+  }
+  return MODEL_ASSET_CACHE.get(modelUrl);
+}
+
+function refreshCameraAnchors(anchorsUrl = '') {
+  if (!TwinModelViewer.modelRoot) return;
+  fetchAnchorConfig(viewport.dataset.modelUrl || '', anchorsUrl).then((anchorConfig) => {
+    TwinModelViewer.cameraAnchors = createCameraAnchors(
+      TwinModelViewer.modelRoot,
+      Array.from(document.querySelectorAll('#camLayer .dt-cam-point')),
+      anchorConfig
+    );
+  }).catch(() => {
+    TwinModelViewer.cameraAnchors = createCameraAnchors(
+      TwinModelViewer.modelRoot,
+      Array.from(document.querySelectorAll('#camLayer .dt-cam-point')),
+      null
+    );
+  });
+}
+
+function clearCurrentModel() {
+  if (!TwinModelViewer.scene || !TwinModelViewer.modelRoot) return;
+  removeExistingAnchorNodes(TwinModelViewer.modelRoot);
+  TwinModelViewer.scene.remove(TwinModelViewer.modelRoot);
+  TwinModelViewer.modelRoot = null;
+  TwinModelViewer.cameraAnchors = [];
+}
+
+function prepareModelRoot(modelRoot, cacheKey) {
+  if (TwinModelViewer.preparedKeys.has(cacheKey)) {
+    return Number(modelRoot.userData.__dtwMeshCount || 0);
+  }
+
+  let meshCount = 0;
+  modelRoot.traverse((child) => {
+    if (!child.isMesh) return;
+    meshCount += 1;
+    child.castShadow = true;
+    child.receiveShadow = true;
+    child.frustumCulled = false;
+    if (!child.material || (Array.isArray(child.material) && child.material.length === 0)) {
+      child.material = FALLBACK_MODEL_MATERIAL.clone();
+    }
+    if (Array.isArray(child.material)) {
+      child.material = child.material.map((material) => {
+        const nextMaterial = material || FALLBACK_MODEL_MATERIAL.clone();
+        nextMaterial.side = THREE.DoubleSide;
+        nextMaterial.needsUpdate = true;
+        return nextMaterial;
+      });
+    } else {
+      child.material.side = THREE.DoubleSide;
+      child.material.needsUpdate = true;
+    }
+  });
+
+  modelRoot.userData.__dtwMeshCount = meshCount;
+  modelRoot.userData.__dtwModelBox = computeTightMeshBox3(modelRoot) || new THREE.Box3().setFromObject(modelRoot);
+  TwinModelViewer.preparedKeys.add(cacheKey);
+  return meshCount;
+}
+
+function releaseModelAssets() {
+  clearCurrentModel();
+  TwinModelViewer.activeKey = '';
+  for (const cachedAsset of MODEL_ASSET_CACHE.values()) {
+    Promise.resolve(cachedAsset).then((asset) => {
+      const sceneRoot = asset?.scene || asset?.scenes?.[0];
+      if (sceneRoot) disposeObjectTree(sceneRoot);
+    }).catch(() => {});
+  }
+  MODEL_ASSET_CACHE.clear();
+}
+
+function disposeObjectTree(root) {
+  root.traverse((child) => {
+    if (child.geometry) child.geometry.dispose?.();
+    if (child.material) {
+      if (Array.isArray(child.material)) child.material.forEach((material) => material?.dispose?.());
+      else child.material.dispose?.();
+    }
+  });
+}
+
+function fitModelToView(modelRoot, camera, controls, box = null) {
+  box = box || computeTightMeshBox3(modelRoot) || new THREE.Box3().setFromObject(modelRoot);
+  const rawSize = box.getSize(new THREE.Vector3());
+  const rawCenter = box.getCenter(new THREE.Vector3());
+  const maxAxis = Math.max(rawSize.x, rawSize.y, rawSize.z) || 1;
+
+  modelRoot.position.set(-rawCenter.x, -rawCenter.y, -rawCenter.z);
+  modelRoot.scale.setScalar(12 / maxAxis);
+  modelRoot.updateMatrixWorld(true);
+
+  let fittedBox = new THREE.Box3().setFromObject(modelRoot);
+  const fittedCenter = fittedBox.getCenter(new THREE.Vector3());
+  modelRoot.position.x -= fittedCenter.x;
+  modelRoot.position.z -= fittedCenter.z;
+  modelRoot.position.y -= fittedBox.min.y;
+  modelRoot.updateMatrixWorld(true);
+  fittedBox = new THREE.Box3().setFromObject(modelRoot);
+
+  const sphere = fittedBox.getBoundingSphere(new THREE.Sphere());
+  const radius = Math.max(sphere.radius, 1);
+  const height = fittedBox.max.y - fittedBox.min.y;
+  const targetY = fittedBox.min.y + height * 0.34;
+
+  camera.near = Math.max(0.01, radius / 200);
+  camera.far = Math.max(200, radius * 40);
+  camera.position.set(radius * 0.32, radius * 0.42, radius * 0.74);
+  camera.lookAt(0, targetY, 0);
+  camera.updateProjectionMatrix();
+
+  controls.target.set(0, targetY, 0);
+  controls.minDistance = Math.max(0.8, radius * 0.22);
+  controls.maxDistance = Math.max(8, radius * 3.4);
+  controls.autoRotate = false;
   controls.update();
 }
 
@@ -207,12 +420,19 @@ function setStatus(text) {
   if (statusEl) statusEl.textContent = text;
 }
 
-/** 与 .glb 同路径、扩展名为 .anchors.json 的侧车配置（放在 static/models 下即可） */
-async function fetchAnchorConfig(modelUrl) {
+function setModelReady(ready) {
+  if (!detailLayer) return;
+  detailLayer.classList.toggle('is-model-ready', Boolean(ready));
+}
+
+async function fetchAnchorConfig(modelUrl, explicitAnchorsUrl = '') {
   try {
-    const path = modelUrl.split('?')[0];
-    const jsonUrl = path.replace(/\.(glb|gltf)$/i, '.anchors.json');
-    if (jsonUrl === path) return null;
+    let jsonUrl = explicitAnchorsUrl || '';
+    if (!jsonUrl) {
+      const path = modelUrl.split('?')[0];
+      jsonUrl = path.replace(/\.(glb|gltf)$/i, '.anchors.json');
+      if (jsonUrl === path) return null;
+    }
     const res = await fetch(jsonUrl, { cache: 'no-cache' });
     if (!res.ok) return null;
     const data = await res.json();
@@ -222,12 +442,6 @@ async function fetchAnchorConfig(modelUrl) {
   }
 }
 
-/**
- * 侧车 anchors[camId]：
- * - { "bind": "node", "name": "GLB内节点名", "offset": { "x", "y", "z" } } 锚点挂到该节点下（推荐，不漂移）
- * - { "bind": "parent", "parent": "父节点名", "x", "y", "z" } 在父节点局部坐标系下的位置
- * - { "bind": "modelLocal", "x", "y", "z" } 在 GLB 根（modelRoot）局部坐标系下的位置
- */
 function tryPlaceAnchorFromSidecar(modelRoot, anchor, cfg) {
   if (!cfg || typeof cfg !== 'object') return false;
   const bind = String(cfg.bind || '').toLowerCase();
@@ -246,20 +460,14 @@ function tryPlaceAnchorFromSidecar(modelRoot, anchor, cfg) {
     const parent = modelRoot.getObjectByName(String(cfg.parent).trim());
     if (!parent) return false;
     parent.add(anchor);
-    anchor.position.set(
-      Number(cfg.x) || 0,
-      Number(cfg.y) || 0,
-      Number(cfg.z) || 0
-    );
+    anchor.userData.__dtwCameraAnchor = true;
+    anchor.position.set(Number(cfg.x) || 0, Number(cfg.y) || 0, Number(cfg.z) || 0);
     return true;
   }
   if (bind === 'modellocal' && cfg.x !== undefined && cfg.x !== null) {
     modelRoot.add(anchor);
-    anchor.position.set(
-      Number(cfg.x),
-      Number(cfg.y) || 0,
-      Number(cfg.z) || 0
-    );
+    anchor.userData.__dtwCameraAnchor = true;
+    anchor.position.set(Number(cfg.x), Number(cfg.y) || 0, Number(cfg.z) || 0);
     return true;
   }
   return false;
@@ -270,8 +478,20 @@ function tryPlaceAnchorOnNamedNode(modelRoot, anchor, nodeName, offset) {
   const target = modelRoot.getObjectByName(nodeName.trim());
   if (!target) return false;
   target.add(anchor);
+  anchor.userData.__dtwCameraAnchor = true;
   anchor.position.set(offset?.x || 0, offset?.y || 0, offset?.z || 0);
   return true;
+}
+
+function removeExistingAnchorNodes(root) {
+  if (!root) return;
+  const anchors = [];
+  root.traverse((child) => {
+    if (child?.userData?.__dtwCameraAnchor) anchors.push(child);
+  });
+  anchors.forEach((anchor) => {
+    anchor.parent?.remove(anchor);
+  });
 }
 
 function computeTightMeshBox3(root) {
@@ -302,7 +522,6 @@ function collectModelMeshes(root) {
   return meshes;
 }
 
-/** 仅用「伸到一定高度」的网格并盒，缩小 xz 到楼体附近，排除大平地/路面 */
 function computeAnchorHorizonBox3(root) {
   const loose = new THREE.Box3().setFromObject(root);
   const looseH = loose.max.y - loose.min.y;
@@ -328,7 +547,6 @@ function computeAnchorHorizonBox3(root) {
   return empty ? null : box;
 }
 
-/** 从模型上方垂直打射线，把点落到可见三角面上（屋顶/檐口等），仍随 modelRoot 变换 */
 function worldPointOnBuildingSurface(meshes, modelRoot, boxTight, layout) {
   modelRoot.updateMatrixWorld(true);
   const loose = new THREE.Box3().setFromObject(modelRoot);
@@ -352,6 +570,7 @@ function worldPointOnBuildingSurface(meshes, modelRoot, boxTight, layout) {
   const roofMax = loose.min.y + looseH * 0.58;
   const targetY = loose.min.y + looseH * 0.4;
   const candidates = [];
+
   for (const h of hits) {
     const nMat = new THREE.Matrix3().getNormalMatrix(h.object.matrixWorld);
     const n = h.face.normal.clone().applyMatrix3(nMat).normalize();
@@ -359,6 +578,7 @@ function worldPointOnBuildingSurface(meshes, modelRoot, boxTight, layout) {
     if (h.point.y < roofCut || h.point.y > roofMax) continue;
     candidates.push(h);
   }
+
   let hit = null;
   if (candidates.length > 0) {
     hit = candidates.reduce((bestHit, h) => {
@@ -367,9 +587,7 @@ function worldPointOnBuildingSurface(meshes, modelRoot, boxTight, layout) {
       return d < bd ? h : bestHit;
     });
   }
-  const highHits = hits.filter(
-    (h) => h.point.y >= roofCut && h.point.y <= roofMax
-  );
+  const highHits = hits.filter((h) => h.point.y >= roofCut && h.point.y <= roofMax);
   if (!hit && highHits.length > 0) {
     hit = highHits.reduce((hi, h) => (!hi || h.point.y > hi.point.y ? h : hi));
   }
@@ -384,45 +602,59 @@ function worldPointOnBuildingSurface(meshes, modelRoot, boxTight, layout) {
     p.addScaledVector(n, lift);
     return p;
   }
-  return new THREE.Vector3(
-    wx,
-    boxTight.min.y + spanY * layout.y,
-    wz
-  );
+  return new THREE.Vector3(wx, boxTight.min.y + spanY * layout.y, wz);
 }
 
-function createCameraAnchors(modelRoot, cameraPointButtons, anchorConfig) {
-  modelRoot.updateMatrixWorld(true);
-  const box =
-    computeTightMeshBox3(modelRoot) || new THREE.Box3().setFromObject(modelRoot);
-  const meshes = collectModelMeshes(modelRoot);
+function createCameraAnchors(modelRoot, cameraPointButtons, anchorConfig, box = null, meshCount = 0) {
+  box = box || computeTightMeshBox3(modelRoot) || new THREE.Box3().setFromObject(modelRoot);
+  removeExistingAnchorNodes(modelRoot);
   const anchors = [];
-  const fileAnchors =
-    anchorConfig && anchorConfig.anchors && typeof anchorConfig.anchors === 'object'
-      ? anchorConfig.anchors
-      : null;
+  const fileAnchors = anchorConfig && anchorConfig.anchors && typeof anchorConfig.anchors === 'object'
+    ? anchorConfig.anchors
+    : null;
+
+  if (fileAnchors) {
+    for (const button of cameraPointButtons) {
+      const cameraId = button.getAttribute('data-camera-id') || '';
+      const shortCameraId = button.getAttribute('data-short-camera-id') || cameraId;
+      const anchorKey = button.getAttribute('data-anchor-key') || shortCameraId;
+      const anchor = new THREE.Object3D();
+      anchor.userData.__dtwCameraAnchor = true;
+      const cfg = fileAnchors[anchorKey] || fileAnchors[shortCameraId];
+      if (cfg) {
+        tryPlaceAnchorFromSidecar(modelRoot, anchor, cfg);
+      } else {
+        const layout = CAMERA_ANCHOR_LAYOUT[anchorKey] || CAMERA_ANCHOR_LAYOUT[shortCameraId] || CAMERA_ANCHOR_LAYOUT['CAM-02'];
+        anchor.position.copy(modelRoot.worldToLocal(simpleWorldPointFromLayout(box, layout).clone()));
+        modelRoot.add(anchor);
+      }
+      anchors.push({ cameraId, button, anchor });
+    }
+    return anchors;
+  }
+
+  let meshes = null;
+  let requiresSurfaceFallback = false;
 
   for (const button of cameraPointButtons) {
     const cameraId = button.getAttribute('data-camera-id') || '';
-    const layout = CAMERA_ANCHOR_LAYOUT[cameraId];
-    if (!layout) continue;
-
+    const shortCameraId = button.getAttribute('data-short-camera-id') || cameraId;
+    const anchorKey = button.getAttribute('data-anchor-key') || shortCameraId;
+    const layout = CAMERA_ANCHOR_LAYOUT[anchorKey] || CAMERA_ANCHOR_LAYOUT[shortCameraId] || CAMERA_ANCHOR_LAYOUT['CAM-02'];
     const anchor = new THREE.Object3D();
+    anchor.userData.__dtwCameraAnchor = true;
     let placed = false;
 
-    if (fileAnchors && fileAnchors[cameraId]) {
-      placed = tryPlaceAnchorFromSidecar(modelRoot, anchor, fileAnchors[cameraId]);
+    if (fileAnchors && (fileAnchors[anchorKey] || fileAnchors[shortCameraId])) {
+      placed = tryPlaceAnchorFromSidecar(modelRoot, anchor, fileAnchors[anchorKey] || fileAnchors[shortCameraId]);
     }
     if (!placed) {
-      const nodeName = CAMERA_GLTF_NODE_NAME[cameraId];
-      placed = tryPlaceAnchorOnNamedNode(modelRoot, anchor, nodeName, {
-        x: 0,
-        y: 0,
-        z: 0,
-      });
+      const nodeName = CAMERA_GLTF_NODE_NAME[anchorKey] || CAMERA_GLTF_NODE_NAME[shortCameraId];
+      placed = tryPlaceAnchorOnNamedNode(modelRoot, anchor, nodeName, { x: 0, y: 0, z: 0 });
     }
     if (!placed) {
-      const worldPoint = worldPointOnBuildingSurface(meshes, modelRoot, box, layout);
+      requiresSurfaceFallback = true;
+      const worldPoint = simpleWorldPointFromLayout(box, layout);
       anchor.position.copy(modelRoot.worldToLocal(worldPoint.clone()));
       modelRoot.add(anchor);
     }
@@ -430,13 +662,44 @@ function createCameraAnchors(modelRoot, cameraPointButtons, anchorConfig) {
     anchors.push({ cameraId, button, anchor });
   }
 
+  if (requiresSurfaceFallback && meshCount > 0 && meshCount <= 1500) {
+    meshes = collectModelMeshes(modelRoot);
+    for (const [index, button] of cameraPointButtons.entries()) {
+      const anchorKey = button.getAttribute('data-anchor-key') || '';
+      const shortCameraId = button.getAttribute('data-short-camera-id') || button.getAttribute('data-camera-id') || '';
+      if (fileAnchors && (fileAnchors[anchorKey] || fileAnchors[shortCameraId])) continue;
+      const nodeName = CAMERA_GLTF_NODE_NAME[anchorKey] || CAMERA_GLTF_NODE_NAME[shortCameraId];
+      if (nodeName) continue;
+      const layout = CAMERA_ANCHOR_LAYOUT[anchorKey] || CAMERA_ANCHOR_LAYOUT[shortCameraId] || CAMERA_ANCHOR_LAYOUT['CAM-02'];
+      const worldPoint = worldPointOnBuildingSurface(meshes, modelRoot, box, layout);
+      const anchor = anchors[index]?.anchor;
+      if (!anchor) continue;
+      anchor.position.copy(modelRoot.worldToLocal(worldPoint.clone()));
+    }
+  }
+
   return anchors;
+}
+
+function simpleWorldPointFromLayout(box, layout) {
+  const min = box.min;
+  const max = box.max;
+  const spanX = max.x - min.x;
+  const spanY = max.y - min.y;
+  const spanZ = max.z - min.z;
+  return new THREE.Vector3(
+    min.x + spanX * layout.x,
+    min.y + spanY * layout.y,
+    min.z + spanZ * layout.z
+  );
 }
 
 function syncDomCameraPoints(anchors, camera, container) {
   const layer = document.getElementById('camLayer');
+  if (!layer) return;
+
   const viewRect = container.getBoundingClientRect();
-  const layerRect = layer ? layer.getBoundingClientRect() : viewRect;
+  const layerRect = layer.getBoundingClientRect();
   const width = Math.max(viewRect.width, 1);
   const height = Math.max(viewRect.height, 1);
   const offsetX = viewRect.left - layerRect.left;
@@ -445,7 +708,6 @@ function syncDomCameraPoints(anchors, camera, container) {
   const worldPosition = new THREE.Vector3();
   const projected = new THREE.Vector3();
   const viewDirection = new THREE.Vector3();
-
   camera.getWorldDirection(viewDirection);
 
   for (const item of anchors) {

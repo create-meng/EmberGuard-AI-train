@@ -5,6 +5,7 @@ import cv2
 import tkinter as tk
 import sys
 import os
+import threading
 from PIL import Image, ImageTk
 
 # 处理相对导入和绝对导入
@@ -26,6 +27,9 @@ class ThreadSafeGUIUpdater:
         self.root = root
         self.gui_queue = gui_queue
         self.frame_count = 0
+        self._frame_lock = threading.Lock()
+        self._latest_frame_args = None
+        _, self.max_info_lines, self.max_display_width, self.max_display_height = _import_config()
         
     def process_gui_queue(self):
         """处理GUI更新队列（在主线程中调用）"""
@@ -43,8 +47,6 @@ class ThreadSafeGUIUpdater:
                         self._update_status_direct(args)
                     elif task_type == 'add_info':
                         self._add_info_direct(args)
-                    elif task_type == 'update_frame':
-                        self._update_frame_direct(args)
                     elif task_type == 'update_button_state':
                         self._update_button_state_direct(args)
                     
@@ -52,6 +54,16 @@ class ThreadSafeGUIUpdater:
                     break  # 队列为空，退出循环
         except:
             pass  # 忽略错误，继续运行
+
+        latest_frame_args = None
+        try:
+            with self._frame_lock:
+                latest_frame_args = self._latest_frame_args
+                self._latest_frame_args = None
+            if latest_frame_args is not None:
+                self._update_frame_direct(latest_frame_args)
+        except:
+            pass
         
         # 继续处理队列
         try:
@@ -78,10 +90,9 @@ class ThreadSafeGUIUpdater:
                 info_text.see(tk.END)
                 
                 # 限制信息条数
-                _, MAX_INFO_LINES, _, _ = _import_config()
                 lines = info_text.get("1.0", tk.END).split('\n')
-                if len(lines) > MAX_INFO_LINES:
-                    info_text.delete("1.0", f"{len(lines) - MAX_INFO_LINES}.0")
+                if len(lines) > self.max_info_lines:
+                    info_text.delete("1.0", f"{len(lines) - self.max_info_lines}.0")
         except:
             pass
     
@@ -144,8 +155,19 @@ class ThreadSafeGUIUpdater:
     def update_frame(self, video_label, frame):
         """更新显示的帧（线程安全）"""
         try:
-            _, _, MAX_DISPLAY_WIDTH, MAX_DISPLAY_HEIGHT = _import_config()
-            self.gui_queue.put(('update_frame', [video_label, frame, MAX_DISPLAY_WIDTH, MAX_DISPLAY_HEIGHT]))
+            if frame is None:
+                return
+
+            display_frame = frame
+            height, width = display_frame.shape[:2]
+            if width > self.max_display_width or height > self.max_display_height:
+                scale = min(self.max_display_width / width, self.max_display_height / height)
+                new_width = int(width * scale)
+                new_height = int(height * scale)
+                display_frame = cv2.resize(display_frame, (new_width, new_height))
+
+            with self._frame_lock:
+                self._latest_frame_args = [video_label, display_frame.copy(), self.max_display_width, self.max_display_height]
         except:
             pass
     

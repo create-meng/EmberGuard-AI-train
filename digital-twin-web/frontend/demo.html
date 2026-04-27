@@ -1,270 +1,168 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="color-scheme" content="light" />
-  <meta name="theme-color" content="#f6f7fb" />
-  <title>EmberGuard Demo</title>
+  <meta name="color-scheme" content="dark" />
+  <meta name="theme-color" content="#081a34" />
+  <title>守火者 · 古建筑消防智慧管理平台</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/static/css/style.css" />
+  <link rel="stylesheet" href="/static/css/platform-redesign.css?v=20260426c" />
+  <link rel="stylesheet" href="/static/css/immersive-simple.css?v=20260426c" />
   <script>
     window.EXPERIMENT_PROFILE = "{{ experiment_profile | e }}";
     window.SHOW_TECH_DETAILS_DEFAULT = {{ show_tech_details_default | tojson }};
   </script>
-  <style>
-    #videoImg { display: block; }
-    #overlay {
-      position: absolute;
-      left: 0;
-      top: 0;
-      width: 100%;
-      height: 100%;
-      pointer-events: none;
-    }
-  </style>
 </head>
 <body>
-  <div id="app">
-    <header class="header-bar">
-      <!-- 四个角的装饰 -->
-      <div class="header-corner header-corner-tl"></div>
-      <div class="header-corner header-corner-tr"></div>
-      <div class="header-corner header-corner-bl"></div>
-      <div class="header-corner header-corner-br"></div>
-      
-      <div class="header-left">
-        <div class="header-logo">
-          EmberGuard
+  <div id="app" class="platform-shell platform-shell--immersive-simple">
+    <header class="platform-header">
+      <div class="brand-wrap">
+        <div class="brand-logo">
+          <svg viewBox="0 0 48 48" aria-hidden="true">
+            <path d="M24 4 40 10v11c0 10.8-6.7 18.4-16 23-9.3-4.6-16-12.2-16-23V10L24 4Z" fill="none" stroke="currentColor" stroke-width="2.6" />
+            <path d="M24 14c4.7 3.4 6.7 6.6 6.1 9.9-.6 3.1-3.1 5.8-6.1 7.3-3-1.5-5.5-4.2-6.1-7.3-.6-3.3 1.4-6.5 6.1-9.9Z" fill="currentColor" opacity=".9" />
+          </svg>
+        </div>
+        <div class="brand-text">
+          <div class="brand-heading">
+            <div class="brand-wordmark">守火者</div>
+            <div class="brand-meta">
+              <div class="brand-title">古建筑消防智慧管理平台</div>
+              <div class="brand-subtitle">GIS + BIM + 数字孪生 + 实时监测 + AI预警优化</div>
+            </div>
+          </div>
         </div>
       </div>
-
-      <div class="header-center">
-        <div class="title-decoration-left"></div>
-        <div class="dt-title">
-          <span class="title-text">智慧消防·火灾联合报警数字孪生平台</span>
+      <div class="header-center-clock">
+        <div class="header-time-shell">
+          <div class="header-clock-value" id="headerTime">--:--:--</div>
         </div>
-        <div class="title-decoration-right"></div>
-      </div>
-
-      <div class="header-right">
-        <div class="header-time" id="headerTime">--:--:--</div>
       </div>
     </header>
 
-    <main class="main-container">
-      <aside class="sidebar-left">
-        <section class="sidebar-section">
-          <div class="sidebar-section-title">实时环境监测</div>
-          <div class="dt-block">
-            <div class="dt-gauge-grid">
-              <div class="dt-gauge-card">
-                <div class="dt-gauge">
-                  <svg viewBox="0 0 120 120" aria-hidden="true">
-                    <circle class="dt-gauge__track" cx="60" cy="60" r="46" />
-                    <circle class="dt-gauge__arc" cx="60" cy="60" r="46" />
-                  </svg>
-                  <div class="dt-gauge__center">
-                    <div class="dt-gauge__value" id="envTemp">--</div>
-                    <div class="dt-gauge__unit">℃</div>
-                  </div>
-                </div>
-                <div class="dt-gauge__label">温度</div>
-              </div>
+    <main class="simple-main-stage">
+      <section class="simple-gis-stage" id="mapStage">
+        <div class="simple-gis-canvas" id="overviewViewport">
+          <div class="simple-gis-world" id="overviewWorld">
+            <div class="simple-gis-image" id="mapBaseGrid"></div>
 
-              <div class="dt-gauge-card">
-                <div class="dt-gauge">
-                  <svg viewBox="0 0 120 120" aria-hidden="true">
-                    <circle class="dt-gauge__track" cx="60" cy="60" r="46" />
-                    <circle class="dt-gauge__arc" cx="60" cy="60" r="46" />
-                  </svg>
-                  <div class="dt-gauge__center">
-                    <div class="dt-gauge__value" id="envHum">--</div>
-                    <div class="dt-gauge__unit">%</div>
-                  </div>
-                </div>
-                <div class="dt-gauge__label">湿度</div>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        <section class="sidebar-section">
-          <div class="sidebar-section-title">总体运行态势</div>
-          <div class="dt-block">
-            <div class="dt-metric-list">
-              <div class="dt-metric">
-                <div class="dt-metric__k">在线摄像头</div>
-                <div class="dt-metric__v" id="metricYoloLatency">--</div>
-              </div>
-              <div class="dt-metric">
-                <div class="dt-metric__k">当前告警</div>
-                <div class="dt-metric__v" id="metricFps">--</div>
-              </div>
-              <div class="dt-metric">
-                <div class="dt-metric__k">传感器异常</div>
-                <div class="dt-metric__v" id="metricLstm">--</div>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        <section class="sidebar-section sidebar-section--grow">
-          <div class="sidebar-section-title">实时告警日志流</div>
-          <div class="dt-block dt-block--fill">
-            <div class="dt-alarm-list dt-alarm-list--scroll" id="alarmList">
-              <div class="empty-state">暂无告警</div>
-            </div>
-          </div>
-        </section>
-      </aside>
-
-      <section class="floor-plan-container dt-map-panel">
-        <div class="dt-panel-head">
-          <div class="dt-panel-head__left">
-            <div class="dt-panel-title">3D 数字孪生平面图</div>
-            <div class="muted-text" style="font-size: 12px;">点击摄像头查看实时画面</div>
-          </div>
-          <div class="dt-panel-head__right muted-text" style="font-size: 12px;">-</div>
-        </div>
-
-        <div class="dt-map-stage" id="mapStage">
-          <div
-            class="dt-model-viewport"
-            id="twinModelViewport"
-            data-model-url="/static/models/qinghe-building.glb"
-            aria-label="清河楼三维展示"
-          ></div>
-          <div class="dt-model-loading" id="twinModelLoading">正在加载清河楼三维模型...</div>
-          <div class="dt-model-status" id="twinModelStatus">鼠标拖动可旋转，滚轮可缩放</div>
-
-          <div class="dt-cam-layer" id="camLayer">
-            <button class="dt-cam-point" type="button" data-camera-id="CAM-01" title="东侧监控点位" style="left: 30%; top: 46%;">
-              <span class="dt-cam-dot"></span>
-              <span class="dt-cam-label">CAM-01</span>
+            <button class="simple-building simple-building--yellow" type="button" data-building-id="building_jingxiu">
+              <span class="simple-building__label">敬修堂</span>
             </button>
-            <button class="dt-cam-point" type="button" data-camera-id="CAM-02" title="主殿中轴监控点位" style="left: 50%; top: 33%;">
-              <span class="dt-cam-dot"></span>
-              <span class="dt-cam-label">CAM-02</span>
+            <button class="simple-building simple-building--red" type="button" data-building-id="building_zhenxing">
+              <span class="simple-building__label">振兴堂</span>
             </button>
-            <button class="dt-cam-point" type="button" data-camera-id="CAM-03" title="西侧后区监控点位" style="left: 69%; top: 50%;">
-              <span class="dt-cam-dot"></span>
-              <span class="dt-cam-label">CAM-03</span>
+            <button class="simple-building simple-building--green" type="button" data-building-id="building_wenchang">
+              <span class="simple-building__label">文昌阁</span>
             </button>
           </div>
         </div>
       </section>
 
-      <aside class="sidebar-right">
-        <section class="sidebar-section sidebar-section--grow">
-          <div class="sidebar-section-title">告警态势微趋势</div>
-          <div class="dt-block dt-block--fill">
-            <div class="dt-chart-shell dt-chart-shell--fill" aria-label="趋势图占位">
-              <svg class="dt-sparkline" viewBox="0 0 320 140" role="img" aria-label="趋势图">
-                <defs>
-                  <linearGradient id="sparkGrad" x1="0" x2="0" y1="0" y2="1">
-                    <stop offset="0" stop-color="rgba(var(--color-accent-rgb), 0.28)" />
-                    <stop offset="1" stop-color="rgba(var(--color-accent-rgb), 0.00)" />
-                  </linearGradient>
-                </defs>
-                <path class="dt-sparkline__grid" d="M20 20 L20 120 M20 120 L300 120" />
-                <path class="dt-sparkline__grid" d="M20 80 L300 80" opacity="0.6" />
-                <path class="dt-sparkline__grid" d="M20 40 L300 40" opacity="0.35" />
-                <path class="dt-sparkline__line" d="M20 110 L300 110" />
-                <path class="dt-sparkline__fill" d="M20 110 L300 110 L300 120 L20 120 Z" fill="url(#sparkGrad)" />
-                <g class="dt-sparkline__dots" aria-hidden="true"></g>
-                <text x="20" y="134" class="dt-sparkline__hint">暂无数据</text>
-              </svg>
+      <section class="detail-float hidden" id="detailFloatPanel" aria-label="建筑详情悬浮窗">
+        <div class="detail-float__header">
+          <div>
+            <div class="panel-title" id="detailPanelTitle">建筑模型</div>
+          </div>
+          <button class="platform-ghost-btn" type="button" id="btnBackToOverview">关闭</button>
+        </div>
+        <div class="detail-float__body">
+          <div class="detail-float__model">
+            <div class="dt-detail-layer" id="detailLayer" aria-label="建筑详情">
+              <div class="dt-model-surface" aria-hidden="true">
+                <div class="dt-model-empty">
+                  <span class="dt-model-empty__roof"></span>
+                  <span class="dt-model-empty__body"></span>
+                  <span class="dt-model-empty__base"></span>
+                </div>
+              </div>
+              <div
+                class="dt-model-viewport"
+                id="twinModelViewport"
+                data-model-url="/static/models/qinghe-building.glb"
+                data-anchors-url="/static/models/qinghe-building.anchors.json"
+                aria-label="建筑三维展示"
+              ></div>
+              <div class="dt-cam-layer" id="camLayer"></div>
             </div>
           </div>
-        </section>
-
-        <section class="sidebar-section">
-          <div class="sidebar-section-title">区域安全态势占比</div>
-          <div class="dt-block">
-            <div class="dt-donut-shell" aria-label="占比环形图占位">
-              <svg class="dt-donut" viewBox="0 0 120 120" role="img" aria-label="环形图">
-                <circle class="dt-donut__track" cx="60" cy="60" r="44" />
-                <circle class="dt-donut__glow" cx="60" cy="60" r="44" />
-              </svg>
-              <div class="dt-donut__center">
-                <div class="dt-donut__value">--</div>
-                <div class="dt-donut__label">暂无数据</div>
-              </div>
+          <aside class="detail-float__archive">
+            <div class="archive-panel-title">建筑档案</div>
+            <div class="archive-name" id="buildingArchiveName">--</div>
+            <div class="archive-list">
+              <div class="archive-row"><span>建造年代</span><strong id="archiveYear">--</strong></div>
+              <div class="archive-row"><span>保护等级</span><strong id="archiveProtectionLevel">--</strong></div>
+              <div class="archive-row"><span>结构类型</span><strong id="archiveStructureType">--</strong></div>
+              <div class="archive-row"><span>建筑面积</span><strong id="archiveArea">--</strong></div>
             </div>
-          </div>
-        </section>
-
-        <section class="sidebar-section">
-          <div class="sidebar-section-title">今日告警概览</div>
-          <div class="dt-block dt-block--fill">
-            <div class="dt-metric-list">
-              <div class="dt-metric">
-                <div class="dt-metric__k">今日火警</div>
-                <div class="dt-metric__v" id="metricAlarmFire">--</div>
-              </div>
-              <div class="dt-metric">
-                <div class="dt-metric__k">今日烟雾</div>
-                <div class="dt-metric__v" id="metricAlarmSmoke">--</div>
-              </div>
-              <div class="dt-metric">
-                <div class="dt-metric__k">今日总计</div>
-                <div class="dt-metric__v" id="metricAlarmTotal">--</div>
-              </div>
-            </div>
-          </div>
-        </section>
-      </aside>
+            <div class="archive-keyparts-label">重点保护部位</div>
+            <div class="archive-keyparts-value" id="archiveKeyParts">--</div>
+          </aside>
+        </div>
+      </section>
     </main>
   </div>
 
   <div class="video-modal hidden" id="videoModal" aria-hidden="true">
     <div class="video-modal-content dt-video-float" id="videoModalContent">
-      <div class="video-modal-header" id="videoModalDragHandle">
-        <div class="video-modal-title" id="videoModalTitle">实时监控画面</div>
-        <button class="video-modal-close" id="videoModalClose" type="button" aria-label="关闭">×</button>
-      </div>
+      <div class="video-modal-header" id="videoModalDragHandle"><div class="video-modal-title" id="videoModalTitle">实时监控画面</div><button class="video-modal-close" id="videoModalClose" type="button" aria-label="关闭">×</button></div>
       <div class="video-modal-body">
-        <div class="video-display">
-          <div class="video-frame" style="border-radius: var(--radius-lg);">
-            <div class="video-wrap" id="videoWrap">
-              <img id="videoImg" alt="stream" />
-              <canvas id="overlay"></canvas>
-            </div>
-          </div>
-        </div>
+        <div class="video-display"><div class="video-frame" style="border-radius: 0;"><div class="video-wrap" id="videoWrap"><img id="videoImg" alt="stream" /><canvas id="overlay"></canvas></div></div></div>
         <div class="dt-video-side">
           <div class="sidebar-section-title">综合判定</div>
           <div class="lstm-panel">
-            <div class="lstm-result">
-              <div class="muted-text" style="font-size: 12px; letter-spacing: 0.2px;">最终告警</div>
-              <div class="lstm-status normal" id="finalStatus">-</div>
-              <div class="lstm-confidence" id="finalReason">-</div>
-            </div>
-
-            <div>
-              <div class="sidebar-section-title" style="margin-top: 10px;">现场情况介绍</div>
-              <div class="site-intro-card">
-                <div class="site-intro-text" id="siteIntroText">-</div>
-              </div>
-            </div>
+            <div class="lstm-result"><div class="muted-text" style="font-size: 12px; letter-spacing: 0.2px;">最终告警</div><div class="lstm-status normal" id="finalStatus">-</div><div class="lstm-confidence" id="finalReason">-</div></div>
+            <div><div class="sidebar-section-title" style="margin-top: 10px;">现场情况介绍</div><div class="site-intro-card"><div class="site-intro-text" id="siteIntroText">-</div></div></div>
           </div>
         </div>
       </div>
     </div>
   </div>
 
-  <script type="importmap">
-    {
-      "imports": {
-        "three": "https://unpkg.com/three@0.160.1/build/three.module.js",
-        "three/addons/": "https://unpkg.com/three@0.160.1/examples/jsm/"
-      }
-    }
+  <script type="module" src="/static/js/twin-model.js?v=20260426c"></script>
+  <script src="/static/js/demo.js?v=20260426c"></script>
+  {% if dev_live_reload %}
+  <script>
+    (() => {
+      let firstMessage = true;
+      let sawDisconnect = false;
+      let timer = null;
+
+      const connect = () => {
+        const source = new EventSource('/__dev__/reload');
+
+        source.onopen = () => {
+          if (sawDisconnect) {
+            window.location.reload();
+            return;
+          }
+        };
+
+        source.onmessage = () => {
+          if (firstMessage) {
+            firstMessage = false;
+            return;
+          }
+          window.location.reload();
+        };
+
+        source.onerror = () => {
+          sawDisconnect = true;
+          source.close();
+          clearTimeout(timer);
+          timer = window.setTimeout(connect, 1200);
+        };
+      };
+
+      connect();
+    })();
   </script>
-  <script type="module" src="/static/js/twin-model.js"></script>
-  <script src="/static/js/demo.js"></script>
+  {% endif %}
 </body>
 </html>
+
+

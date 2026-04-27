@@ -1,0 +1,126 @@
+﻿{
+  "overview_id": "village_demo_overview",
+  "name": "古村落总览（GIS数字孪生）",
+  "canvas": {
+    "width": 1400,
+    "height": 920
+  },
+  "roads": [
+    {
+      "id": "road_main_a",
+      "name": "消防通道",
+      "x": 180,
+      "y": 300,
+      "width": 860,
+      "height": 18,
+      "rotation": -8
+    },
+    {
+      "id": "road_main_b",
+      "name": "消防通道",
+      "x": 270,
+      "y": 520,
+      "width": 760,
+      "height": 18,
+      "rotation": 24
+    }
+  ],
+  "water_sources": [
+    {
+      "id": "water_001",
+      "name": "水源点",
+      "x": 1080,
+      "y": 280
+    },
+    {
+      "id": "water_002",
+      "name": "水源点",
+      "x": 250,
+      "y": 610
+    }
+  ],
+  "key_areas": [
+    {
+      "id": "key_area_001",
+      "name": "重点保护区域",
+      "x": 1080,
+      "y": 350,
+      "width": 180,
+      "height": 150
+    }
+  ],
+  "buildings": [
+    {
+      "building_id": "building_jingxiu",
+      "name": "敬修堂",
+      "x": 190,
+      "y": 110,
+      "width": 210,
+      "height": 132,
+      "shape": "rect",
+      "risk_level_default": "attention",
+      "model_url": "/static/models/qinghe-building.glb",
+      "anchors_url": "/static/models/qinghe-building.anchors.json",
+      "camera_anchor_map": {
+        "demo_cam_001": "CAM-01"
+      },
+      "archive": {
+        "year": "清晚期",
+        "protection_level": "县级重点保护建筑",
+        "structure_type": "木结构",
+        "area": "862.3㎡",
+        "key_parts": "木雕梁架、天井、檐柱、屋面"
+      },
+      "camera_ids": ["demo_cam_001"],
+      "sensor_ids": []
+    },
+    {
+      "building_id": "building_zhenxing",
+      "name": "振兴堂",
+      "x": 990,
+      "y": 85,
+      "width": 210,
+      "height": 128,
+      "shape": "rect",
+      "risk_level_default": "alarm",
+      "model_url": "/static/models/qinghe-building.glb",
+      "anchors_url": "/static/models/qinghe-building.anchors.json",
+      "camera_anchor_map": {
+        "demo_cam_002": "CAM-02"
+      },
+      "archive": {
+        "year": "民国初年",
+        "protection_level": "重点历史建筑",
+        "structure_type": "砖木混合",
+        "area": "745.6㎡",
+        "key_parts": "门厅木构、回廊、梁柱节点"
+      },
+      "camera_ids": ["demo_cam_002"],
+      "sensor_ids": []
+    },
+    {
+      "building_id": "building_wenchang",
+      "name": "文昌阁",
+      "x": 650,
+      "y": 490,
+      "width": 220,
+      "height": 138,
+      "shape": "rect",
+      "risk_level_default": "normal",
+      "model_url": "/static/models/qinghe-building.glb",
+      "anchors_url": "/static/models/qinghe-building.anchors.json",
+      "camera_anchor_map": {
+        "demo_cam_003": "CAM-03"
+      },
+      "archive": {
+        "year": "清中期",
+        "protection_level": "重点保护建筑",
+        "structure_type": "木结构",
+        "area": "512.4㎡",
+        "key_parts": "木梁架、斗拱、屋檐、楼梯间"
+      },
+      "camera_ids": ["demo_cam_003"],
+      "sensor_ids": []
+    }
+  ]
+}

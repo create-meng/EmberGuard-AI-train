@@ -7,7 +7,6 @@ import threading
 from datetime import datetime
 import warnings
 import time
-import cv2
 import numpy as np
 
 
@@ -26,9 +25,68 @@ def _abs_repo_path(p: str) -> str:
 
 ALARM_LOG_PATH = os.path.abspath(os.path.join(_HERE, 'alarm_logs.json'))
 ALARM_TREND_PATH = os.path.abspath(os.path.join(_HERE, 'alarm_trend.json'))
+OVERVIEW_CONFIG_PATH = os.path.abspath(os.path.join(_HERE, 'overview_config.json'))
 _JSON_FILE_LOCK = threading.Lock()
 ALARM_LOG_MAX_ITEMS = 20
 ALARM_TREND_MAX_POINTS = 120
+DEV_AUTO_RELOAD = os.environ.get('EMBERGUARD_AUTO_RELOAD', '0') == '1'
+DEV_LIVE_RELOAD = os.environ.get('EMBERGUARD_DEV_LIVE_RELOAD', '0') == '1'
+_DEV_RELOAD_STATE = {
+    'version': 0,
+    'started': False,
+    'lock': threading.Lock(),
+}
+
+
+def _iter_dev_watch_files():
+    watch_roots = [
+        os.path.abspath(os.path.join(_HERE, '../frontend')),
+        os.path.abspath(os.path.join(_HERE, '../static')),
+        _HERE,
+    ]
+    watch_exts = {'.html', '.css', '.js', '.py'}
+
+    for root in watch_roots:
+        if not os.path.isdir(root):
+            continue
+        for dirpath, dirnames, filenames in os.walk(root):
+            dirnames[:] = [d for d in dirnames if d not in {'__pycache__', '.git', 'node_modules'}]
+            for filename in filenames:
+                if os.path.splitext(filename)[1].lower() not in watch_exts:
+                    continue
+                yield os.path.join(dirpath, filename)
+
+
+def _scan_dev_watch_state():
+    state = {}
+    for path in _iter_dev_watch_files():
+        try:
+            state[path] = os.path.getmtime(path)
+        except OSError:
+            continue
+    return state
+
+
+def _dev_reload_watcher():
+    last_state = _scan_dev_watch_state()
+    while True:
+        time.sleep(1.0)
+        current_state = _scan_dev_watch_state()
+        if current_state != last_state:
+            with _DEV_RELOAD_STATE['lock']:
+                _DEV_RELOAD_STATE['version'] += 1
+            last_state = current_state
+
+
+def _ensure_dev_reload_watcher():
+    if not DEV_LIVE_RELOAD:
+        return
+    with _DEV_RELOAD_STATE['lock']:
+        if _DEV_RELOAD_STATE['started']:
+            return
+        t = threading.Thread(target=_dev_reload_watcher, name='dev-reload-watcher', daemon=True)
+        t.start()
+        _DEV_RELOAD_STATE['started'] = True
 
 # 静默警告
 warnings.filterwarnings('ignore', category=FutureWarning)
@@ -42,8 +100,50 @@ sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../.
 
 # 导入管理器
 from config_manager import ConfigManager
-from detection_engine import DetectionEngine
 from sensor_manager import SensorManager
+try:
+    from detection_engine import DetectionEngine
+    DETECTION_BACKEND_AVAILABLE = True
+    DETECTION_BACKEND_ERROR = ''
+except Exception as exc:
+    DETECTION_BACKEND_AVAILABLE = False
+    DETECTION_BACKEND_ERROR = str(exc)
+
+    class DetectionEngine:
+        def __init__(self, *args, **kwargs):
+            self.pipeline_available = False
+            self._camera_id = kwargs.get('camera_id', 'demo_cam_001')
+            self._name = '演示摄像头'
+            self._stream_clients = 0
+
+        def start(self, source: str, name: str = '主摄像头', camera_id: str = 'demo_cam_001'):
+            self._name = name
+            self._camera_id = camera_id
+
+        def get_snapshot(self):
+            return {
+                'camera_id': self._camera_id,
+                'name': self._name,
+                'status': 'offline',
+                'alarm_state': 'normal',
+                'final_level': 'normal',
+                'final_reason': 'OpenCV 未安装，检测后端未启动',
+                'detections': [],
+                'jpeg_ts': None,
+                'stream_clients': self._stream_clients,
+                'lstm_pred': None,
+                'lstm_confidence': None,
+                'experiment_profile': EXPERIMENT_PROFILE,
+            }
+
+        def get_latest_jpeg(self):
+            return None
+
+        def add_stream_client(self):
+            self._stream_clients += 1
+
+        def remove_stream_client(self):
+            self._stream_clients = max(0, self._stream_clients - 1)
 
 # ===== Demo-only 后端 =====
 # - 不使用 Socket.IO
@@ -125,6 +225,8 @@ def _start_demo_devices():
 
 
 _start_demo_devices()
+if not DETECTION_BACKEND_AVAILABLE:
+    print(f"警告: 检测后端未启动，已进入页面降级模式: {DETECTION_BACKEND_ERROR}")
 
 
 def _read_alarm_logs_unlocked():
@@ -309,7 +411,51 @@ def demo_alarm_logs():
 
 @app.route('/')
 def demo_index():
-    return render_template('demo.html', experiment_profile=EXPERIMENT_PROFILE, show_tech_details_default=SHOW_TECH_DETAILS_DEFAULT)
+    _ensure_dev_reload_watcher()
+    return render_template(
+        'demo.html',
+        experiment_profile=EXPERIMENT_PROFILE,
+        show_tech_details_default=SHOW_TECH_DETAILS_DEFAULT,
+        dev_live_reload=DEV_LIVE_RELOAD,
+    )
+
+
+@app.route('/__dev__/reload')
+def dev_reload_events():
+    if not DEV_LIVE_RELOAD:
+        return jsonify({'ok': False, 'error': 'dev live reload disabled'}), 404
+
+    _ensure_dev_reload_watcher()
+
+    def gen():
+        last_version = None
+        while True:
+            with _DEV_RELOAD_STATE['lock']:
+                version = _DEV_RELOAD_STATE['version']
+            if version != last_version:
+                yield f"data: {json.dumps({'version': version, 'ts': time.time()})}\n\n"
+                last_version = version
+            else:
+                yield ': ping\n\n'
+            time.sleep(1.0)
+
+    response = Response(gen(), mimetype='text/event-stream')
+    response.headers['Cache-Control'] = 'no-cache, no-store, must-revalidate'
+    response.headers['Pragma'] = 'no-cache'
+    response.headers['Expires'] = '0'
+    return response
+
+
+@app.route('/demo/overview_config')
+def demo_overview_config():
+    try:
+        with open(OVERVIEW_CONFIG_PATH, 'r', encoding='utf-8') as f:
+            data = json.load(f)
+        if not isinstance(data, dict):
+            data = {}
+        return jsonify(data)
+    except Exception as e:
+        return jsonify({'error': str(e), 'buildings': [], 'roads': [], 'water_sources': [], 'key_areas': []}), 500
 
 
 @app.route('/demo/events')
@@ -407,6 +553,7 @@ if __name__ == '__main__':
     first_engine = list(detection_engines.values())[0] if detection_engines else None
     model_status = '✓' if first_engine and getattr(first_engine, 'pipeline_available', False) else '✗'
     cam_count = len(detection_engines)
-    print(f"🚀 Demo 服务器启动 http://localhost:5000 | 摄像头数量: {cam_count} | 模型: {model_status}")
+    backend_mode = 'full' if DETECTION_BACKEND_AVAILABLE else 'degraded'
+    print(f"🚀 Demo 服务器启动 http://localhost:5000 | 摄像头数量: {cam_count} | 模型: {model_status} | 模式: {backend_mode}")
     app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0
-    app.run(host='0.0.0.0', port=5000, debug=True, use_reloader=False)
+    app.run(host='0.0.0.0', port=5000, debug=True, use_reloader=DEV_AUTO_RELOAD)
